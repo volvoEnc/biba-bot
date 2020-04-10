@@ -1,0 +1,20 @@
+if biba >= 0 && biba < 10
+   - var variant = "🤣"
+else if biba >= 10 && biba < 15
+   - var variant = "🤠"
+else if biba >= 15 && biba < 20
+   - var variant = "😎"
+else if biba >= 20 && biba < 25
+   - var variant = "😋"
+else if biba >= 25
+   - var variant = "🤤"
+
+case template
+  when 1
+    | У [id#{id}|#{first_name}] биба #{biba} см #{variant}
+  when 2
+    | У [id#{id}|#{last_name}] стручок #{biba} см #{variant}
+  when 3
+    | Пиструн [id#{id}|#{first_name}] #{biba} см #{variant}
+  when 4
+    | Биба [id#{id}|#{last_name} #{first_name}] #{biba} см #{variant}
