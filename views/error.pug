@@ -1,0 +1,35 @@
+//- Variables : id, first_name, last_name, f_id, f_first_namem f_last_name
+
+case error 
+  when "not found"
+    case template
+      when 1
+        | Слышь ты, [id#{id}|Гэй] тебя не в базе данных! Напиши 'биба'
+      when 2
+        | [id#{id}|Ты] кто? Тебя нет в нашей фап базе, напиши 'биба'
+      when 3
+        | [id#{id}|Ты] быканул? Напиши 'биба', тебя нет в базе данных.
+  when "no strength"    
+    case template
+      when 1
+        | [id#{id}|#{first_name}] у тебя закончились силы на бибу.
+      when 2
+        | ОСТАНОВИСЬ! [id#{id}|#{first_name}], хватит! Еще один раз и ты помрешь!
+      when 3
+        | Хватит дрочить. У тебя рука сейчас отвалиться. Угомоните этого [id#{id}|Гэя]. 
+  when "fap_biba"
+    case template
+      when 1
+        | У тебя одна биба, а не две!
+      when 2
+        | [id#{id}|#{first_name}] уже фапает.
+      when 3
+        | Ты уже фапаешь [id#{id}|себе] 
+  when "fap_you_biba"
+    case template
+      when 1
+        | Ты уже фапаешь кому-то жди, чертила.
+      when 2
+        | [id#{id}|#{first_name}] решил сделать сюрприз другу и погонять его бибу, но ты ему уже фапаешь.
+      when 3
+        | Каво? У тебя две руки и они заняты уже другим членом. 

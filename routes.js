@@ -1,3 +1,4 @@
 module.exports = [
-  {command: "(!bibametr|bibametr|biba$|биба$|^биба)", controller: 'bibacontroller@index'}
+  {command: "(биба$|^биба)", controller: 'bibaController@profile'},
+  {command: "(дроч$|^дроч|фап$|^фап|дрочить$|^дрочить)", controller: 'fapController@fap'}
 ];

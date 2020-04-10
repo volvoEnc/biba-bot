@@ -21,6 +21,7 @@ module.exports = class Router {
           },
           command: command,
           user_id: data.object.message.peer_id,
+          from_id: data.object.message.from_id,
           data: data
         };
         let toreg = new RegExp("(-[0-9]|[0-9])+", 'i');
@@ -35,6 +36,8 @@ module.exports = class Router {
           options['to_id'] = data.object.message.from_id;
         }
         this.modules[controller[0]][controller[1]](options);
+        access = false;
+        break;
       }
     }
   }
