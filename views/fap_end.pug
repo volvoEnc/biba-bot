@@ -1,11 +1,21 @@
 //- Variables : id, first_name, last_name, time, dick, ran_id ,random_user - это имя 
-
-case template 
-  when 1
-    | [id#{id}|#{last_name} #{first_name}] обкончал весь монитор и получил +#{dick} см.
-  when 2
-    | [id#{id}|Молодой #{last_name}] во время дрочки нашел подушку и это сыграло ему на руку! +#{dick} см!
-  when 3
-    | Поздравляем [id#{id}|#{first_name}] он смог сделать свои скользкие дела! +#{dick} см.
-  when 4
-    | +#{dick} см получает [id#{id}|#{last_name} #{first_name}] за хорошую бибную дрочку.
+if fap == "i"
+  case template 
+    when 1
+      | [id#{id}|#{last_name} #{first_name}] обкончал весь монитор и получил +#{dick} см.
+    when 2
+      | Молодой [id#{id}|#{first_name}] во время дрочки нашел подушку и это сыграло ему на руку! +#{dick} см!
+    when 3
+      | Поздравляю [id#{id}|#{first_name}], ты смог сделать свои скользкие дела! +#{dick} см.
+    when 4
+      | +#{dick} см получает [id#{id}|#{last_name} #{first_name}] за хорошую бибную дрочку.
+else if fap == "you"
+  case template 
+    when 1
+      | [id#{id}|#{last_name} #{first_name}] наконец-то подрочил [id#{friend.id}|другу]. [id#{friend.id}|#{friend.first_name}] твоя биба увеличилась на +#{dick} см.
+    when 2
+      | Молодой [id#{id}|#{first_name}] был выебал в жопу, а [id#{friend.id}|#{friend.first_name}] получает +#{dick} см.
+    when 3
+      | Поздравляю [id#{id}|#{first_name}], ты смог довести до оргазма своего [id#{friend.id}|партнера], [id#{friend.id}|партнер] получает +#{dick} см.
+    when 4
+      | +#{dick} см получает партнер [id#{friend.id}|#{friend.first_name}]. А [id#{id}|#{last_name} #{first_name}] получает на лицо.

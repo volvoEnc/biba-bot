@@ -13,6 +13,9 @@ exports.index = async (data) => {
 
 
 exports.profile = async (data) => {
+  if (data.to_id < 0) {
+    return bot.send('Так делать нельзя!', data.user_id);
+  }
   User.findOrCreate({
     where: {vk_id: data.to_id},
     defaults: {
@@ -38,8 +41,13 @@ exports.profile = async (data) => {
             biba: user.biba,
             power: user.strength,
             max_power: user.max_strength,
-            eventt: null
-          }), data.user_id)
+            eventt: {
+              name: "",
+              time: 0
+            },
+          }), data.user_id, {
+            disable_mentions: 1
+          });
         } else {
           let eventt = await Event.findOne({where: {id: user.event_id}});
           let event_name = render('events', {
@@ -54,8 +62,13 @@ exports.profile = async (data) => {
             biba: user.biba,
             power: user.strength,
             max_power: user.max_strength,
-            eventt: event_name
-          }), data.user_id)
+            eventt: {
+              name: event_name,
+              time: Math.round(  (eventt.time_exit - Date.now() ) / (1000 * 60) )
+            },
+          }), data.user_id, {
+            disable_mentions: 1
+          });
 
         }
       });

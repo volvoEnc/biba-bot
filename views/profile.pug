@@ -1,11 +1,15 @@
 //- *coins power max_power last_name first_name *level biba event id
 
-if eventt == NULL 
+if eventt.name == "" 
   - var eventing = "Ничем не занят"
 else if eventt != NULL
-  - var eventing = eventt
+  - var eventing = eventt.name
   
 | 🔥 Профиль [id#{id}|#{first_name} #{last_name}] 🔥
 | ✊🏻 Дроч Сила #{power}/#{max_power}
 | 🥕 Твоя биба #{biba} см
-| 😪 Чем занят - #{eventing}
+|
+if eventt.time <= 0
+  | 😪 Чем занят - #{eventing}
+else if eventt.time > 0
+  | 😪 Чем занят - #{eventing} (Еще: #{eventt.time} мин.)

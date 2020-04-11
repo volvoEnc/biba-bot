@@ -7,11 +7,20 @@ module.exports = class Router {
 
   run(data) {
     const command = data.object.message.text.toLowerCase();
-    console.log(command);
+    console.log("--------");
+    console.log(command + " " + data.object.message.from_id);
+    console.log("--------");
     // TODO: payload
 
     for (let route of this.routes) {
       let reg = new RegExp(route.command, 'i');
+
+      // if (data.object.message.peer_id == data.object.message.from_id) {
+      //   this.modules['mainController']['private_error'](data);
+      //   break;
+      // }
+
+
       if (reg.test(command)) {
         let controller = route.controller.split('@');
         let options = {

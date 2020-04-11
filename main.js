@@ -37,4 +37,4 @@ bot.on('update', data => {
 
 setInterval(function () {
   access = true;
-}, 2500);
+}, 1000);

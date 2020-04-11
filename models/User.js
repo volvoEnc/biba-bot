@@ -22,6 +22,9 @@ User.init({
   event_id: {
     type: Sequelize.INTEGER
   },
+  bibon: {
+    type: Sequelize.BIGINT
+  },
 
 }, {
   sequelize,
