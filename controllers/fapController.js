@@ -94,6 +94,15 @@ exports.fap = async (data) => {
               disable_mentions: 1
             });
           } else {
+
+            let user2 = await User.findOne({where: {vk_id: data.to_id}})
+
+            let fap_cof = ( Math.round(user2.biba) / 10 );
+            let fap_time = random.int(20, 30) * fap_cof;
+            fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
+
+
+
             eventt = await Event.create({
               user_id: user.id,
               to_id: data.to_id,
@@ -104,13 +113,6 @@ exports.fap = async (data) => {
             });
 
             bot.api('users.get', {user_ids: data.to_id, name_case: 'dat'}).then(async res2 => {
-
-              let user2 = User.findOne({where: {vk_id: data.to_id}})
-
-              let fap_cof = ( Math.round(user2.biba) / 10 );
-              let fap_time = random.int(20, 30) * fap_cof;
-              fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
-
 
               bot.send(render('fap', {
                 time: fap_time,
