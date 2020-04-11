@@ -40,15 +40,17 @@ setInterval(async () => {
 
     }
     else if (eventt.event_sys_name == 'fap_you_biba') {
+      let friend = await User.findOne({where: {vk_id: eventt.to_id}});
+
+      let fap_cof = ( Math.round(friend.biba) / 5 );
       let add_dick = Math.round( ( random.int(60, 300) / fap_cof ) ) / 100;
       let sub_strength = 10;
-      add_dick = user.biba < 1 ? 1 : add_dick;
+      add_dick = friend.biba < 1 ? 1 : add_dick;
 
       user.event_id = null;
       user.strength -= user.strength - sub_strength >= 0 ? sub_strength : user.strength;
       user.save();
 
-      let friend = await User.findOne({where: {vk_id: eventt.to_id}});
       let vk_friend = await bot.api('users.get', {user_ids: friend.vk_id});
       friend.biba += add_dick;
       friend.save();
