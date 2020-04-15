@@ -113,15 +113,17 @@ exports.battle = async (data) => {
       result: status == 'win' ? 1 : 0
     });
 
+    let total_biba = Math.round(user.biba * 100) / 100;
 
     bot.send(render('battle', {
       type: status,
-      template: random.int(1, 12),
+      template: random.int(1, 17),
       biba: biba,
       user1: vk_user1[0],
       user2: vk_user2[0],
       chance: chance,
-      random_int: random_int
+      random_int: random_int,
+      total_biba: total_biba
     }), data.user_id, {
       disable_mentions: 1
     });
