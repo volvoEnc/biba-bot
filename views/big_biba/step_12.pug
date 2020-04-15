@@ -1,0 +1,36 @@
+//- user1 - дат.
+//- user2 - имен.
+if type == "lose"
+  case template
+    when 1
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] кинул кусок говна [id#{user1.id}|#{user1.first_name} #{user1.last_name}] в лицо и провел серию ударов.
+      | ⛔-#{user1.hp} очков жизни.
+    when 2
+      | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] потребовалось одна минута, что бы понять, что его атака не эффективна, но сил уже не осталось.. И [id#{user2.id}|#{user2.first_name} #{user2.last_name}] достал из жопы молот-фалос и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] несколько ударов!
+      | ⛔-#{user1.hp} очков жизни.
+    when 3
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] начал слышать голоса в своей голове. Они твердили ему, что ему пора наступать. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] обезумил и включил режим гэйского берсерка. [id#{user2.id}|#{user2.first_name}] сокрушил [id#{user1.id}|#{user1.first_name} #{user1.last_name}] задницу как и его атаку. И кто теперь тут батя?
+      | ⛔-#{user1.hp} очков жизни.
+    when 4
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отбил все атаки [id#{user1.id}|противника], и во время боя начал фапать. Молниеносно [id#{user2.id}|#{user2.first_name}] завершил свое дело и начал шмалять по [id#{user1.id}|#{user1.last_name} #{user1.first_name}]. Ух.. это было что-то.
+      | ⛔-#{user1.hp} очков жизни.
+    when 5
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] достал из жопы щит и [id#{user1.id}|#{user1.first_name} #{user1.last_name}] не поздаровилось, ведь его атаки были не эффективно! [id#{user1.id}|#{user1.last_name} #{user1.first_name}] пришлось отступать, но этот [id#{user1.id}|неудачник] поскальзнулся на своем же говне! [id#{user2.id}|#{user2.first_name} #{user2.last_name}] достал бибу и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] серию ударов!
+      | ⛔-#{user1.hp} очков жизни.
+else if type == "win"
+  case template
+    when 1
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] уже выдохся и не смог отразить все атаки.. И тут откуда ни возьмись из кустов выпрыгнули гномы и помогли [id#{user1.id}|#{user1.first_name} #{user1.last_name}] разъебать лицо его [id#{user2.id}|оппоненту]!
+      | ✔ -#{user2.hp} очков жизни.
+    when 2
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] позвал на защиту себя красивого стайку бомжей, но он их наебал с оплатой. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] был отмудохан своими же защитниками! [id#{user1.id}|#{user1.first_name} #{user1.last_name}] можно немного восстановить силы после атака!
+      | ✔ -#{user2.hp} очков жизни.
+    when 3
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] как танк впитывал все удары в себя, но он забыл защитить жопу!
+      | ✔ -#{user2.hp} очков жизни.
+    when 4
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] высосал баночку соплей и восстановил немного здоровья, но это не помогло ему отразить все атаки и [id#{user2.id}|#{user2.first_name}] получил в рот. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] начало казаться, что он уже победил!
+      | ✔ -#{user2.hp} очков жизни.
+    when 5
+      | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] во время атаки пришла в голову идея сделать подлый удар в пах.. и это сработало! 
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] получил травму на всю жизнь и потрерял ✔ -#{user2.hp} очков жизни. 

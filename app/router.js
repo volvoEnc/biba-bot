@@ -4,12 +4,19 @@ module.exports = class Router {
     this.routes = require('../routes.js');
     this.init();
   }
-
   run(data) {
+    if (data.object.message.from_id < 0) return; // Сообщение от бота
+
+    if (data.object.message.action != null) {
+      if (data.object.message.action.type == 'chat_invite_user' && data.object.message.action.member_id == -process.env.VK_API_GROUP_ID) {
+        this.modules.mainController.invite_chat();
+      }
+    }
     const command = data.object.message.text.toLowerCase();
     console.log("--------");
     console.log(command + " " + data.object.message.from_id);
     console.log("--------");
+    // console.log(data);
     // TODO: payload
 
     for (let route of this.routes) {
@@ -22,6 +29,8 @@ module.exports = class Router {
 
 
       if (reg.test(command)) {
+        // bot.send('ВК умер, бота выключили пока.', data.object.message.peer_id);
+        // break;
         let controller = route.controller.split('@');
         let options = {
           controller: {
@@ -44,14 +53,17 @@ module.exports = class Router {
         else {
           options['to_id'] = data.object.message.from_id;
         }
+        options['to_id'] = (options['to_id'] == process.env.VK_API_GROUP_ID || options['to_id'] == -process.env.VK_API_GROUP_ID) ? data.object.message.from_id : options['to_id'];
+        this.modules.mainController.conversation(options);
+        global.conversation_message_id = data.object.message.conversation_message_id;
         this.modules[controller[0]][controller[1]](options);
-        access = false;
         break;
       }
     }
   }
   init() {
-    let success_module = [];
+    let success_module = ['mainController'];
+    this.modules['mainController'] = require(`../controllers/mainController.js`);
     this.routes.forEach(route => {
       let name_controller = route.controller.split('@')[0];
       if (success_module.indexOf(name_controller) == -1) {

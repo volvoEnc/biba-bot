@@ -1,7 +1,16 @@
 module.exports = [
   {command: "(биба помощь|биба хелп|biba help|bib help|биба команды|команды бибы)", controller: 'mainController@help'},
+  {command: "(биба инфо|биб инфо|биб инф|инфа биба)", controller: 'mainController@info'},
+  {command: "(топ бибон|бибон топ|топ бибонов|топ бибонс)", controller: 'topController@bibon'},
   {command: "(^топ биб|топ биб$|топ биба|биба топ|биб топ)", controller: 'topController@bibs'},
+  {command: "(^топ фап|топ фап|топ фапы|фапы топ|фапс топ|фап топ)", controller: 'topController@faps'},
+  {command: "(^топ коин|топ коин|топ коины|коины топ|коинс топ|коин топ)", controller: 'topController@coin'},
+  {command: "(^супер бибон|супер бибон$|^большой бибон|большой бибон$|^бибонище|бибонище$|^биг бибон|биг бибон$|^бигбибон|бигбибон$|^бигбон|бигбон$)", controller: 'BigBattleController@start'},
   {command: "(^бибон|бибон$|^бибан|бибан$)", controller: 'battleController@battle'},
+  {command: "(^бибазин|бибазин$)", controller: 'shopController@index'},
+  {command: "(!биба$|^!биба)", controller: 'bibaController@profiles'},
   {command: "(биба$|^биба)", controller: 'bibaController@profile'},
   {command: "(дроч$|^дроч|фап$|^фап|дрочить$|^дрочить)", controller: 'fapController@fap'},
+  {command: "(!бибатест)", controller: 'testController@index'},
+  {command: "(^биб стата|биб стата$)", controller: 'bibaController@statistic'},
 ];

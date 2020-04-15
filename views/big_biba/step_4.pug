@@ -1,0 +1,37 @@
+//- user1 - дат.
+//- user2 - имен.
+if type == "lose"
+  case template
+    when 1
+      | Что происходит?! [id#{user2.id}|#{user2.first_name} #{user2.last_name}] использовал технику ниндзя и пропал на момент атаки! Где он..?
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] появился за спиной и присунул [id#{user1.id}|#{user1.first_name} #{user1.last_name}]!
+      | ⛔-#{user1.hp} очков жизни.
+    when 2
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отразил своей стальной бибой атаку и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] сокрушительный удар в жопу!
+      | ⛔-#{user1.hp} очков жизни.
+    when 3
+      | [id#{user1.id}|Лошара] промахнулся и теперь [id#{user2.id}|#{user2.first_name} #{user2.last_name}] готов прописать [id#{user1.id}|#{user1.last_name} #{user1.first_name}] смачного поджопника!
+      | ⛔-#{user1.hp} очков жизни.
+    when 4
+      | [id#{user1.id}|#{user1.last_name} #{user1.first_name}] нужно сходить к окулисту, ведь он начал атаковать не того! Не, ну ты [id#{user1.id}|Лошара]. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] произнес заклинание и жопу его [id#{user1.id}|соперника] пронзало 100 сантиметровое дилдо!
+      | ⛔-#{user1.hp} очков жизни.
+    when 5
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] как Рикардо Милос увернулся от атак и показал [id#{user1.id}|#{user1.first_name} #{user1.last_name}] свой флекс!
+      | ⛔-#{user1.hp} очков жизни.
+if type == "win"
+  case template
+    when 1
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] не смог отразить атаку и был сильно потрепан! [id#{user1.id}|#{user1.first_name} #{user1.last_name}] остается лишь нанести решающий удар!
+      | ✔ -#{user2.hp} очков жизни.
+    when 2
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] уже был готов отразить атаку, НО ОН ЧИХНУЛ! И вся мощь опракинулась на него. [id#{user1.id}|#{user1.first_name} #{user1.last_name}] оставалось только смотреть как убавляются очки жизни [id#{user2.id}|соперника].
+      | ✔ -#{user2.hp} очков жизни.
+    when 3
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] подумал, что у него стольная биба и попытался отразить атаку, но что-то пошло не так.
+      | ✔ -#{user2.hp} очков жизни.
+    when 4
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отражая атаку поскальзнулся на говне своего [id#{user1.id}|оппонента] и упал жопой на камень.
+      | ✔ -#{user2.hp} очков жизни.
+    when 5
+      | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] пришлось прибегнуть к запрещенной технике и укусить [id#{user2.id}|оппонента] за яйцо. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] стал орать от боли!
+      | ✔ -#{user2.hp} очков жизни.

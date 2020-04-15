@@ -11,10 +11,6 @@ Event.init({
   peer_id: {
     type: Sequelize.BIGINT
   },
-  event_name: {
-    type: Sequelize.TEXT,
-    allowNull: false
-  },
   event_sys_name: {
     type: Sequelize.TEXT,
     allowNull: false

@@ -6,7 +6,7 @@ User.init({
     allowNull: false
   },
   biba: {
-    type: Sequelize.FLOAT(4,2),
+    type: Sequelize.FLOAT(5,2),
     defaultValue: 0
   },
   strength: {
@@ -18,6 +18,12 @@ User.init({
     type: Sequelize.INTEGER,
     defaultValue: 100,
     allowNull: false
+  },
+  count_fap: {
+    type: Sequelize.BIGINT.UNSIGNED
+  },
+  money: {
+    type: Sequelize.INTEGER.UNSIGNED
   },
   event_id: {
     type: Sequelize.INTEGER
@@ -33,3 +39,6 @@ User.init({
 });
 
 global.User = User;
+Bibon.belongsTo(User, {
+  foreignKey: 'user_id'
+});

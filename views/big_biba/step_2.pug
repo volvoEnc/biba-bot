@@ -1,0 +1,36 @@
+//- user1 - дат.
+//- user2 - имен.
+if type == "lose"
+  case template
+    when 1
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] увернулся и [id#{user1.id}|#{user1.first_name} #{user1.last_name}] прилетела биба в рот!
+      | ⛔-#{user1.hp} очков жизни.
+    when 2
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отпрыгнул от удара и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] критический удар!
+      | ⛔-#{user1.hp} очков жизни.
+    when 3
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] заблокировал удар и дал ответку [id#{user1.id}|#{user1.first_name} #{user1.last_name}], что тот упал на коровью лепешку!
+      | ⛔-#{user1.hp} очков жизни.
+    when 4
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] как нео увернулся от всех ударов и пернул в ухо [id#{user1.id}|#{user1.first_name} #{user1.last_name}]!
+      | ⛔-#{user1.hp} очков жизни.
+    when 5
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отскочил от удара и надорвал [id#{user1.id}|#{user1.first_name} #{user1.last_name}] жопу!
+      | ⛔-#{user1.hp} очков жизни.
+else if type == "win"
+  case template
+    when 1
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] не успел отреагировать на удар и потерял
+      | ✔ -#{user2.hp} очков жизни.
+    when 2
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] хотел увернуться как нео, но ты не нео и получил
+      |  ✔ #{user2.hp} урона.
+    when 3
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отпрыгнул от удара, но упал в лужу. 
+      | ✔ -#{user2.hp} очков жизни.
+    when 4
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] хотел заблокировать удар, но не получилось... ну ты и лошара, получай
+      |  ✔ #{user2.hp} урона.
+    when 5
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] решил, что он танк и принял атаку, но ты не танк..
+      | ✔ -#{user2.hp} очков жизни.
