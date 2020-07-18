@@ -6,6 +6,12 @@ exports.start = async (data) => {
 
   // ERRORS
 
+  if (user == null) {
+    return bot.send(render('error', {
+      error: 'not found', template: random.int(1, 3), user: {id: data.from_id}
+    }), data.user_id)
+  }
+
   let bb = await BigBibon.findOne({where: {user_id: user.id, result: null}});
   if (bb != null) { return; }
   bb = await BigBibon.findOne({where: {conversation_id: data.user_id, result: null}});
@@ -19,7 +25,7 @@ exports.start = async (data) => {
       time: Math.round((bb.createdAt - Date.now()) / 1000 / 60)
     }), data.user_id);
   }
-
+  if (user.biba < 5) { return pre_send(render('error', {error: 'little_big_bibon', template: random.int(1, 3)}), data.user_id); }
   if (user.strength < sub_strength) {
     return bot.send(render('error', {
       error: 'no_strength_big_bibon',
@@ -29,8 +35,9 @@ exports.start = async (data) => {
   // END ERRORS
 
 
-  user.strength -= sub_strength;
-  user.strength = user.strength >= 0 ? user.strength : 0;
+  user.change_strength(sub_strength, 'sub');
+  // user.strength -= sub_strength;
+  // user.strength = user.strength >= 0 ? user.strength : 0;
   user.save();
   // Рандомный человек
   if (data.from_id == data.to_id) {

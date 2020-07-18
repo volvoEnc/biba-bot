@@ -8,15 +8,17 @@ global.render = (name, data = {}) => {
 }
 global.send = async (content, peer_id, param = {}) => {
   bot.options.api = { v: "5.103" }
-  await bot.send(content, peer_id, param);
+  try { await bot.send(content, peer_id, Object.assign(param, {random_id: Date.now()})); }
+  catch (e) { return e; }
   bot.options.api = { v: "5.80" }
-  return;
+  return true;
 }
 global.pre_send = async (content, peer_id, param = {}) => {
   global.stack_messages.push({
     send_id: peer_id,
     content: content,
-    param: Object.assign(param, {random_id: global.conversation_message_id})
+    param: param,
+    attempt: 0
   });
 }
 global.get_keyboard = async (name, inline = true) => {
@@ -51,8 +53,36 @@ global.init_actions = async () => {
     });
   });
 }
+global.init_shop = async () => {
+  fs.readdir('./shop/products', function (err, files) {
+    global.products = [];
+    files.forEach(async function (file) {
+      let file_name = file.split('.')[0];
+      global.products[file_name] = require(`../shop/products/${file}`);
+    });
+    global.shop = require(`../shop/init`);
+    global.shop.index();
+  });
+}
 global.init_app = async () => {
   init_models();
   init_events();
   init_actions();
+  init_shop();
+}
+// Перемешивание массива
+global.shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+global.uploadPhotoToVk = async (buffer) => {
+  const { v4: uuidv4 } = require('uuid');
+  let filename = uuidv4() + '.png';
+  fs.writeFileSync('generated/'+filename, buffer);
+  let photo = await bot.uploadPhoto('generated/'+filename);
+  fs.unlinkSync('generated/'+filename);
+  return photo;
 }

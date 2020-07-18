@@ -1,5 +1,15 @@
 module.exports = [
   {command: "(биба помощь|биба хелп|biba help|bib help|биба команды|команды бибы)", controller: 'mainController@help'},
+  {command: "(!бибатест)", controller: 'shopController@list'},
+  {command: "(@catalog)", controller: 'shopController@categories'},
+  {command: "(@products)", controller: 'shopController@products'},
+  {command: "(@product)", controller: 'shopController@product'},
+  {command: "(биба топы)", controller: 'mainController@tops'},
+  {command: "(биба кто)", controller: 'eventController@who'},
+  {command: "(биба почему)", controller: 'eventController@why'},
+  {command: "^биба.*\\?$", controller: 'eventController@question'},
+  {command: "(биба напиши)", controller: 'eventController@write_to_image'},
+  {command: "(биба нарисуй член)", controller: 'eventController@draw_chlen'},
   {command: "(биба инфо|биб инфо|биб инф|инфа биба)", controller: 'mainController@info'},
   {command: "(топ бибон|бибон топ|топ бибонов|топ бибонс)", controller: 'topController@bibon'},
   {command: "(^топ биб|топ биб$|топ биба|биба топ|биб топ)", controller: 'topController@bibs'},
@@ -11,6 +21,8 @@ module.exports = [
   {command: "(!биба$|^!биба)", controller: 'bibaController@profiles'},
   {command: "(биба$|^биба)", controller: 'bibaController@profile'},
   {command: "(дроч$|^дроч|фап$|^фап|дрочить$|^дрочить)", controller: 'fapController@fap'},
-  {command: "(!бибатест)", controller: 'testController@index'},
+  {command: "(!минуссила)", controller: 'testController@sub'},
   {command: "(^биб стата|биб стата$)", controller: 'bibaController@statistic'},
+  {command: "(cпоки|cgjrb)", controller: 'eventController@nudes'},
+  {command: "(😳)", controller: 'eventController@delete'}
 ];

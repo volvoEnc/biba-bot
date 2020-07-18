@@ -1,32 +1,18 @@
+const Op = Sequelize.Op;
 exports.fap = async (data) => {
   bot.api('users.get', {user_ids: data.from_id}).then(res => {
     User.findOne({ where: {vk_id: data.from_id} }).then(async user => {
 
       if (user == null) {
         return bot.send(render('error', {
-          error: 'not found',
-          template: random.int(1, 3),
-          first_name: res[0].first_name,
-          last_name: res[0].last_name,
-          id: data.from_id
+          error: 'not found', template: random.int(1, 3), user: {id: data.from_id}
         }), data.user_id)
       }
+
       let friend_fap = await Event.findOne({where: {to_id: user.vk_id}});
-      // if (friend_fap != null) {
-      //   return bot.send(render('error', {
-      //     error: 'fap_you_error',
-      //     template: random.int(1, 3),
-      //     first_name: res[0].first_name,
-      //     last_name: res[0].last_name,
-      //     id: data.from_id
-      //   }), data.user_id)
-      // }
+      let eventt = await Event.findOne({where: {user_id: user.id, event_sys_name: {[Op.or] : ['fap_biba', 'fap_you_biba']} }});
 
-
-      if (user.event_id != null) {
-
-        let eventt = await Event.findOne({where: {id: user.event_id}});
-
+      if (eventt != null) {
         bot.send(render('error', {
           error: eventt.event_sys_name,
           template: random.int(1, 3),
@@ -55,8 +41,9 @@ exports.fap = async (data) => {
 
         let fap_cof = ( Math.round(user.biba) / 10 );
         let fap_time = random.int(40, 60) * fap_cof;
+        let sub_strength = 5;
         fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
-
+        user.change_strength(sub_strength, 'sub');
 
         let eventt;
         if (data.to_id == data.from_id || data.to_id < 0) {
@@ -96,12 +83,11 @@ exports.fap = async (data) => {
           // } else {
 
             let user2 = await User.findOne({where: {vk_id: data.to_id}})
-
+            let sub_strength = 10;
             let fap_cof = ( Math.round(user2.biba) / 10 );
             let fap_time = random.int(50, 70) * fap_cof;
             fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
-
-
+            user.change_strength(sub_strength, 'sub');
 
             eventt = await Event.create({
               user_id: user.id,
@@ -127,7 +113,6 @@ exports.fap = async (data) => {
                 disable_mentions: 1
               });
             });
-          // }
         }
         user.event_id = eventt.id
         user.save();

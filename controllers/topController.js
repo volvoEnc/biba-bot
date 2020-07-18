@@ -15,11 +15,7 @@ exports.bibs = async (data) => {
     }
     send_users.push(send)
   }
-  bot.send(render('rating/rating', {
-    users: send_users
-  }), data.user_id, {
-    disable_mentions: 1
-  })
+  pre_send(render('rating/rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
 };
 
 exports.faps = async (data) => {
@@ -39,11 +35,7 @@ exports.faps = async (data) => {
     }
     send_users.push(send)
   }
-  bot.send(render('rating/fap_rating', {
-    users: send_users
-  }), data.user_id, {
-    disable_mentions: 1
-  })
+  pre_send(render('rating/fap_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
 };
 
 exports.coin = async (data) => {
@@ -63,11 +55,7 @@ exports.coin = async (data) => {
     }
     send_users.push(send)
   }
-  bot.send(render('rating/coins_rating', {
-    users: send_users
-  }), data.user_id, {
-    disable_mentions: 1
-  })
+  pre_send(render('rating/coins_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
 };
 exports.bibon = async (data) => {
   let bibons = await Bibon.findAll({
@@ -83,5 +71,5 @@ exports.bibon = async (data) => {
     let send = Object.assign(vk_users[i], {bibons: bibons[i].dataValues.bibon});
     send_users.push(send)
   }
-  bot.send(render('rating/bibons_rating', { users: send_users }), data.user_id, { disable_mentions: 1 })
+  pre_send(render('rating/bibons_rating', { users: send_users }), data.user_id, { disable_mentions: 1 })
 };

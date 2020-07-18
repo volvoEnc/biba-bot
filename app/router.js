@@ -3,8 +3,12 @@ module.exports = class Router {
     this.modules = [];
     this.routes = require('../routes.js');
     this.init();
+    this.destroy_session = true;
   }
-  run(data) {
+  async run(data) {
+    this.destroy_session = true;
+    let payload = data.object.message.payload;
+    let command;
     if (data.object.message.from_id < 0) return; // Сообщение от бота
 
     if (data.object.message.action != null) {
@@ -12,25 +16,19 @@ module.exports = class Router {
         this.modules.mainController.invite_chat();
       }
     }
-    const command = data.object.message.text.toLowerCase();
+    let user = await User.findOne({where: {vk_id: data.object.message.from_id}});
+
+    if (user != null && user.session != null) command = user.session;
+    else if (payload == undefined) command = data.object.message.text.toLowerCase();
+    else command = (JSON.parse(payload)).content;
+
     console.log("--------");
     console.log(command + " " + data.object.message.from_id);
     console.log("--------");
-    // console.log(data);
-    // TODO: payload
 
     for (let route of this.routes) {
       let reg = new RegExp(route.command, 'i');
-
-      // if (data.object.message.peer_id == data.object.message.from_id) {
-      //   this.modules['mainController']['private_error'](data);
-      //   break;
-      // }
-
-
       if (reg.test(command)) {
-        // bot.send('ВК умер, бота выключили пока.', data.object.message.peer_id);
-        // break;
         let controller = route.controller.split('@');
         let options = {
           controller: {
@@ -40,6 +38,8 @@ module.exports = class Router {
           command: command,
           user_id: data.object.message.peer_id,
           from_id: data.object.message.from_id,
+          user: user,
+          user_data: data.object.message.text.toLowerCase(),
           data: data
         };
         let toreg = new RegExp("(-[0-9]|[0-9])+", 'i');
@@ -57,8 +57,13 @@ module.exports = class Router {
         this.modules.mainController.conversation(options);
         global.conversation_message_id = data.object.message.conversation_message_id;
         this.modules[controller[0]][controller[1]](options);
+        this.destroy_session = false;
         break;
       }
+    }
+    if (user != null && user.session != null && this.destroy_session == true) {
+      await user.destroy_session();
+      this.run(data);
     }
   }
   init() {

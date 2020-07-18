@@ -1,3 +1,4 @@
+const Op = Sequelize.Op;
 exports.battle = async (data) => {
   try {
 
@@ -6,60 +7,55 @@ exports.battle = async (data) => {
     let vk_user1 = await bot.api('users.get', {user_ids: data.from_id});
     let vk_user2;
     let user2;
+    let money;
 
   // ERROR HANDLER
     if (user == null) {
-      return bot.send(render('error', {
-        error: 'not found',
-        template: random.int(1, 3),
-        first_name: vk_user1[0].first_name,
-        last_name: vk_user1[0].last_name,
-        id: data.from_id
+      return pre_send(render('error', {
+        error: 'not found', template: random.int(1, 3), user: vk_user1[0]
       }), data.user_id)
     }
-
-
     if (user.strength < sub_strength) {
-      return bot.send(render('error', {
+      return pre_send(render('error', {
         error: 'no_strength_bibon',
         template: random.int(1, 3),
         first_name: vk_user1[0].first_name,
         last_name: vk_user1[0].last_name,
         id: data.from_id
-      }), data.user_id, {
-        disable_mentions: 1
-      });
+      }), data.user_id, { disable_mentions: 1 });
     }
-
-    if (user.biba < 1) {
-      return bot.send("Слишком маленькая биба.", data.user_id);
-    }
-
+    if (user.biba < 2) { return pre_send(render('error', {error: 'little_bibon', template: random.int(1, 3)}), data.user_id); }
     if (Date.now() - (1000 * 60) < user.bibon) {
       let time = Math.round((user.bibon - (Date.now() - (1000 * 60)) ) / 1000);
-      return bot.send(render('error', {
+      return pre_send(render('error', {
         error: "bibon_error",
         template: random.int(1, 3),
         user: vk_user1[0],
         time: time
       }), data.user_id);
     }
-  // END ERROR HANDLER
-    if (data.to_id == data.from_id || data.to_id < 0) {
-      bot.send('Ищу соперника...', data.user_id);
-      let count_users = await User.count();
+    // END ERROR HANDLER
 
+
+
+
+    if (data.to_id == data.from_id || data.to_id < 0) {
+      await pre_send('Ищу соперника...', data.user_id);
+      let dip = 10;
+      let count_users;
+      do {
+        count_users = await User.count({where: {biba: { [Op.and]: [ { [Op.gte]: (user.biba - dip) }, {[Op.lte]: (user.biba + dip) } ] }} });
+        dip += 5;
+      } while (count_users < 5);
       do {
         let random_user = random.int(0, (count_users - 1));
-        user2 = await User.findOne({ offset: random_user });
+        user2 = await User.findOne({ offset: random_user, where: {biba: { [Op.and]: [ { [Op.gte]: (user.biba - dip) }, {[Op.lte]: (user.biba + dip) } ] }} });
       } while (user2.id == user.id);
-
       vk_user2 = await bot.api('users.get', {user_ids: user2.vk_id, name_case: 'dat'});
     } else {
       user2 = await User.findOne({where: {vk_id: data.to_id}});
       vk_user2 = await bot.api('users.get', {user_ids: data.to_id, name_case: 'dat'});
     }
-
     let chance = 50;
     let max_bib_abs_win = 50;
     let proc_to_bib = Math.round( (100 / max_bib_abs_win) / 2  );
@@ -83,8 +79,8 @@ exports.battle = async (data) => {
       if (raznica > 0) { biba = ( biba / abs_raznica ) * 2; }
       if (raznica < 0) { biba = ( biba * abs_raznica ) * 2; }
 
-      let add_money = random.int(-50, 3);
-      if (add_money > 0) user.money += add_money;
+      let add_money = random.int(-94, 6);
+      if (add_money > 0) { user.money += add_money; money = add_money}
     }
     else if (status == 'lose') {
       if (raznica > 0) { biba = biba * abs_raznica; }
@@ -98,7 +94,8 @@ exports.battle = async (data) => {
     biba = biba > 10 ? 10 : biba;
 
     user.bibon = Date.now();
-    user.strength -= user.strength - sub_strength >= 0 ? sub_strength : user.strength;
+    user.change_strength(sub_strength, 'sub');
+    // user.strength -= user.strength - sub_strength >= 0 ? sub_strength : user.strength;
     if (status == 'win') user.biba += biba;
     else if (status == 'lose') {
       user.biba -= user.biba - biba >= 0 ? biba : user.biba;
@@ -115,15 +112,15 @@ exports.battle = async (data) => {
 
     let total_biba = Math.round(user.biba * 100) / 100;
 
-    bot.send(render('battle', {
+    await pre_send(render('battle', {
       type: status,
       template: random.int(1, 17),
       biba: biba,
       user1: vk_user1[0],
       user2: vk_user2[0],
       chance: chance,
-      random_int: random_int,
-      total_biba: total_biba
+      total_biba: total_biba,
+      money: money
     }), data.user_id, {
       disable_mentions: 1
     });

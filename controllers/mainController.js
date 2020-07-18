@@ -1,6 +1,10 @@
 const Op = Sequelize.Op;
+exports.tops = async (data) => {
+  if (data.from_id == data.user_id)
+    return pre_send("Топы", data.user_id, { disable_mentions: 1, keyboard: await get_keyboard('RatingKeyboard', false) });
+};
 exports.help = async (data) => {
-  bot.send(render("help"), data.user_id)
+  bot.send(render("app/help"), data.user_id)
 };
 exports.private_error = async (data) => {
   bot.send('В ЛС боту дрочить нельзя. Иди в беседу, и бота туда.', data.object.message.peer_id)

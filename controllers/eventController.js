@@ -1,0 +1,158 @@
+exports.who = async (data) => {
+  if (data.from_id == data.user_id) return;
+  let users;
+  try {
+    users = await bot.api('messages.getConversationMembers', {peer_id: data.user_id});
+  } catch (e) {
+    // Нет прав админа
+    if (e.error_code == 917) {
+      pre_send('Данная функция доступна, когда вы назначите бота Администратором данной беседы', data.user_id)
+      return;
+    } else { return; }
+  }
+  let random_user = users.profiles[random.int(0, (users.profiles.length - 1))];
+  return pre_send(render('biba_who', {user: random_user, template: random.int(1, 10)}), data.user_id, {disable_mentions: 1});
+};
+
+exports.why = async (data) => {
+  if (data.from_id == data.user_id) return;
+
+  let msg = data.data.object.message.text;
+  let why = msg.replace('биба почему ', '');
+  why = why.replace('Биба почему', '');
+  why = why.replace('?', '');
+  why = why.replace('!', '');
+  why = why.replace('.', '');
+  why = why.replace(',', '');
+  why = why.replace('я ', ' ты ');
+  let words = why.split(' ');
+  let phraze;
+  do {
+    words = shuffle(words);
+    phraze = words.join(' ');
+  } while (phraze == why && words.length > 1);
+  phraze = `Потому что, ${phraze}`;
+  if (words.length <= 1) phraze = 'Потому что у тебя маленький член!';
+  pre_send(phraze, data.user_id);
+}
+
+exports.question = async (data) => {
+  if (data.from_id == data.user_id) return;
+
+  let answer = random.int(0, 100) >= 50 ? 'Да' : 'Нет';
+  pre_send(answer, data.user_id);
+}
+
+exports.write_to_image = async (data) => {
+  // if (data.from_id == data.user_id) return;
+
+  //Получаем текст
+  let msg = data.data.object.message.text;
+  let where = msg.replace('биба напиши ', '');
+  if (where == '') {
+    return pre_send('Я бы сам придумал, что написать, да мне лень..', data.user_id);
+  }
+
+  //Генерируем случайные данные
+  let rotate = random.int(-35, 35) / 100;
+  let font_size = random.int(20, 50);
+  let random_color_text = `rgb(${random.int(0,255)},${random.int(0,255)},${random.int(0,255)})`;
+  let random_color_border = `rgb(${random.int(0,255)},${random.int(0,255)},${random.int(0,255)})`;
+  let width = 100 + where.length * 20;
+  if (width > 500) width = 500;
+
+  const canvas = draw.createCanvas(width, width);
+  const ctx = canvas.getContext('2d');
+
+  // Рисуем
+  ctx.fillStyle = random_color_border;
+  ctx.fillRect(0, 0, width, width);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(5, 5, width-10, width-10);
+
+  ctx.font = font_size+'px Impact';
+  ctx.rotate(rotate);
+  ctx.fillStyle = random_color_text;
+  ctx.fillText(where, 25, width/2-30);
+
+  let photo = await uploadPhotoToVk(canvas.toBuffer());
+
+  pre_send('', data.user_id, {
+    attachment: 'photo'+photo.owner_id+'_'+photo.id
+  });
+};
+
+exports.draw_chlen = async (data) => {
+  const canvas = draw.createCanvas(250, 500);
+  const ctx = canvas.getContext('2d');
+
+  let color_egg = `rgb(${random.int(0,255)},${random.int(0,255)},${random.int(0,255)})`;
+  let color_body = `rgb(${random.int(0,255)},${random.int(0,255)},${random.int(0,255)})`;
+  let color_head = `rgb(${random.int(0,255)},${random.int(0,255)},${random.int(0,255)})`;
+  let color_hole = `rgb(${random.int(0,255)},${random.int(0,255)},${random.int(0,255)})`;
+
+
+  let user = await User.findOne({ where: {vk_id: data.from_id} });
+  let width = user.biba;
+  if (width < 15) {
+    return pre_send('Твоя биба слишком маленькая, я не могу ее нарисовать', data.user_id);
+  }
+
+  // рисуем тело
+  ctx.fillStyle = color_body;
+  ctx.beginPath();
+  ctx.moveTo(70, 420);
+  ctx.lineTo(60, 430-width*5);
+  ctx.moveTo(70, 420);
+  ctx.lineTo(113, 420);
+  ctx.lineTo(120, 420-width*5);
+  ctx.lineTo(60, 430-width*5);
+  ctx.fill();
+
+  // рисуем яйцо - левое
+  ctx.fillStyle = color_egg;
+  ctx.beginPath();
+  ctx.arc(50, 450, 40, 0, Math.PI*2, true);
+  ctx.fill();
+
+  // рисуем яйцо - правое
+  ctx.beginPath();
+  ctx.arc(135, 450, 40, 0, Math.PI*2, true);
+  ctx.fill();
+
+  // рисуем голову
+  ctx.fillStyle = color_head;
+  ctx.beginPath();
+  ctx.arc(85, 400-width*5, 40, 0, Math.PI*2, true);
+  ctx.fill();
+
+  //рисуем дырку
+  ctx.strokeStyle = color_hole;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(85, 420-width*5);
+  ctx.lineTo(85, 385-width*5);
+  ctx.stroke();
+
+  //рисуем текст с см
+  ctx.font = 14+'px Impact';
+  ctx.fillStyle = 'color_hole';
+  ctx.fillText('Оля, скинь сиськи', 120, 10);
+  ctx.font = 20+'px Impact';
+  ctx.rotate(-1.55);
+  ctx.fillText(width+' см', -375, 150);
+
+  let photo = await uploadPhotoToVk(canvas.toBuffer());
+  pre_send('', data.user_id, {
+    attachment: 'photo'+photo.owner_id+'_'+photo.id
+  });
+};
+
+exports.nudes = async (data) => {
+  let user = (await bot.api('users.get', {user_ids: data.to_id}))[0];
+  pre_send(`@all Споки, ${user.first_name} <3`, data.user_id);
+}
+
+exports.delete = async (data) => {
+  pre_send("😳", data.user_id);
+}

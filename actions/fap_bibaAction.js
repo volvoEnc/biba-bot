@@ -6,15 +6,13 @@ exports.index = async (occasion) => {
   fap_cof = fap_cof < 0.5 ? 0.5 : fap_cof;
   let add_dick = Math.round( ( random.int(200, 500) / fap_cof ) ) / 100;
   add_dick = user.biba < 1 ? 1 : add_dick;
-  let sub_strength = 10;
 
   user.event_id = null;
-  user.strength -= user.strength - sub_strength >= 0 ? sub_strength : user.strength;
   user.count_fap++;
 
   if (occasion.event_sys_name == 'fap_biba') {
     user.biba += add_dick;
-    bot.send(render('fap_end', {
+    pre_send(render('fap_end', {
       template: random.int(1, 10),
       first_name: vk_user[0].first_name,
       last_name: vk_user[0].last_name,
@@ -31,17 +29,19 @@ exports.index = async (occasion) => {
     add_dick = Math.round( ( random.int(50, 200) / fap_cof ) ) / 100;
     friend.biba += add_dick;
     friend.save();
-    bot.send(render('fap_end', {
+    let add_money = random.int(-10, 3);
+    add_money = add_money < 0 ? 0 : add_money;
+    user.money += add_money;
+    pre_send(render('fap_end', {
       template: random.int(1, 10),
       first_name: vk_user[0].first_name,
       last_name: vk_user[0].last_name,
       id: user.vk_id,
       dick: add_dick,
       friend: vk_friend[0],
-      fap: 'you'
-    }), occasion.peer_id, {
-      disable_mentions: 1
-    });
+      fap: 'you',
+      money: add_money
+    }), occasion.peer_id, { disable_mentions: 1 });
   }
   return user.save();
 };

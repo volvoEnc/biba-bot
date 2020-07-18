@@ -61,3 +61,7 @@ else if fap == "you"
     when 10
       | 💬 [id#{id}|#{last_name} #{first_name}] и [id#{friend.id}|#{friend.first_name} #{friend.last_name}] хорошо провели время!
       | 🔥 +#{dick} получает [id#{friend.id}|#{friend.first_name} #{friend.last_name}]
+  if money > 0
+    - var moneyy = plural(money, '%d дроч коин', '%d дроч коина', '%d дроч коинов')
+    |<br>💦 + #{moneyy}
+      
