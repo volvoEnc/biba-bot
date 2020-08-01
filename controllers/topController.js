@@ -57,6 +57,7 @@ exports.coin = async (data) => {
   }
   pre_send(render('rating/coins_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
 };
+
 exports.bibon = async (data) => {
   let bibons = await Bibon.findAll({
     order: [ [sequelize.fn('COUNT', sequelize.col('bibon.biba')), 'DESC'] ],
@@ -72,4 +73,24 @@ exports.bibon = async (data) => {
     send_users.push(send)
   }
   pre_send(render('rating/bibons_rating', { users: send_users }), data.user_id, { disable_mentions: 1 })
+};
+
+exports.record = async (data) => {
+  let users = await User.findAll({order: [ ['record_biba', 'DESC'] ], limit: 10})
+  let ids = [];
+  users.forEach(user => { ids.push(user.vk_id); });
+
+  let vk_users = await bot.api('users.get', {user_ids: ids});
+  let send_users = [];
+
+  for (let i = 0; i < vk_users.length; i++) {
+    let send = {
+      id: users[i].vk_id,
+      first_name: vk_users[i].first_name,
+      last_name: vk_users[i].last_name,
+      record: users[i].record_biba
+    }
+    send_users.push(send)
+  }
+  pre_send(render('rating/record_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
 };

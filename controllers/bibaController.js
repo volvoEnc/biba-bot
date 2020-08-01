@@ -62,15 +62,24 @@ exports.statistic = async (data) => {
     attributes: [ [ sequelize.fn('COUNT', sequelize.col('bibon.biba')), 'bibon' ] ],
     group: 'user_id', where: {user_id: user.id, result: 0}
   });
+  let rec_biba = user.record_biba;
 
   bot.send(render('profile/stata', {
+    bigbons: await BigBibon.count({where: {user_id: user.id}}),
+    win_bigbon: await BigBibon.count({where: {user_id: user.id, result: 1}}),
+    lose_bigbon: await BigBibon.count({where: {user_id: user.id, result: 0}}),
+    sm_plus_bigbon: await BigBibon.sum('biba', {where: {user_id: user.id, result: 1}}),
+    sm_minus_bigbon: await BigBibon.sum('biba', {where: {user_id: user.id, result: 0}}),
     day: day,
+    record: rec_biba,
     top: top.dataValues.top + 1,
     fap: user.count_fap,
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     bibons: bibons != null ? bibons.dataValues.bibon : 0,
     win_bibon: win_bibon != null ? win_bibon.dataValues.bibon : 0,
-    lose_bibon: lose_bibon != null ? lose_bibon.dataValues.bibon : 0
+    lose_bibon: lose_bibon != null ? lose_bibon.dataValues.bibon : 0,
+    sm_plus_bibon: await Bibon.sum('biba', {where: {user_id: user.id, result: 1}}),
+    sm_minus_bibon: await Bibon.sum('biba', {where: {user_id: user.id, result: 0}})
   }), data.user_id, {
     disable_mentions: 1,
   });

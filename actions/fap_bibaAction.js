@@ -43,5 +43,6 @@ exports.index = async (occasion) => {
       money: add_money
     }), occasion.peer_id, { disable_mentions: 1 });
   }
+  await user.biba_record();
   return user.save();
 };

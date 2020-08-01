@@ -33,6 +33,8 @@ exports.conversation = async (data) => {
 };
 
 exports.info = async (data) => {
+  let zero_users = await User.count({where: {biba: 0}});
+  let active_users = (await User.count()) - zero_users;
   let covs = await Conversation.findAll({
     where: { conversation_id: { [Op.gte]: 2000000000 } },
     attributes: [ [sequelize.fn('DISTINCT', sequelize.col('conversation_id')), 'conversation_id'] ]
@@ -40,13 +42,20 @@ exports.info = async (data) => {
   let count_conv = covs.length;
   return await bot.send(render('app/info', {
     users: await User.count(),
+    zero_users: zero_users,
+    active_users: active_users,
     conversations: count_conv,
     faps: await User.sum('count_fap'),
     bibons: await Bibon.count(),
+    bigbons: await BigBibon.count(),
     all_bibs: Math.round(await User.sum('biba')) / 100,
     sm_plus: await Bibon.sum('biba', {where: {result: 1}}),
     sm_minus: await Bibon.sum('biba', {where: {result: 0}}),
+    big_sm_plus: await BigBibon.sum('biba', {where: {result: 1}}),
+    big_sm_minus: await BigBibon.sum('biba', {where: {result: 0}}),
     bibon_plus: await Bibon.count({where: {result: 1}}),
     bibon_minus: await Bibon.count({where: {result: 0}}),
+    bigbons_plus: await BigBibon.count({where: {result: 1}}),
+    bigbons_minus: await BigBibon.count({where: {result: 0}}),
   }), data.user_id);
 };

@@ -26,6 +26,7 @@ exports.index = async (eventt) => {
   //END
   if (bb.step == 'end') {
     let u;
+    let user_biba = user.biba;
     bb.result = 1;
     if (bb.user_hp <= 0) { u = user; user = user2; user2 = u; bb.result = 0;}
     await bb.save();
@@ -44,9 +45,11 @@ exports.index = async (eventt) => {
       user1: (await bot.api('users.get', {user_ids: user.vk_id}))[0],
       user2: (await bot.api('users.get', {user_ids: user2.vk_id, name_case: 'acc'}))[0],
       biba: bb.biba,
+      user_biba: user_biba,
       money: bb.money,
       result: bb.result
     }), eventt.peer_id, { disable_mentions: 1 });
+    await user.biba_record();
     await user.save();
     await user2.save();
     return;

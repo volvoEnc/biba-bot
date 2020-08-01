@@ -53,6 +53,15 @@ global.init_actions = async () => {
     });
   });
 }
+global.init_middleware = async () => {
+  fs.readdir('./middleware', function (err, files) {
+    global.middleware = [];
+    files.forEach(function (file) {
+      let file_name = file.split('.')[0];
+      global.middleware[file_name] = require(`../middleware/${file}`);
+    });
+  });
+}
 global.init_shop = async () => {
   fs.readdir('./shop/products', function (err, files) {
     global.products = [];
@@ -65,6 +74,7 @@ global.init_shop = async () => {
   });
 }
 global.init_app = async () => {
+  init_middleware();
   init_models();
   init_events();
   init_actions();

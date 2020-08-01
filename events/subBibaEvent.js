@@ -14,7 +14,7 @@ setInterval(async () => {
       user_id: user.user_id,
       peer_id: user.conversation_id,
       event_sys_name: 'subBiba',
-      time_exit: Date.now() + (1000 * 60 * 60 * 48) + random.int(1, 50)
+      time_exit: Date.now() + (1000 * 60 * 60 * 72) + random.int(1, 50)
     });
   });
 

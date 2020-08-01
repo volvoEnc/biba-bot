@@ -23,8 +23,10 @@ case template
     
 | <br> <br>
 if result == 1 
-  | 🥖 [id#{user1.id}|#{user1.first_name}] получает +#{biba} см! <br>
+  | ✔ [id#{user1.id}|#{user1.first_name}] получает +#{biba} см! <br>
 if result == 0 
   | ⛔ У [id#{user2.id}|#{user2.first_name}] биба -#{biba} см! <br>
+| 🥖 Твоя биба : #{user_biba} см.
+|
 if money != 0 
   | 💰 +#{money} дроч коинов. 

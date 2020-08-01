@@ -101,7 +101,7 @@ exports.battle = async (data) => {
       user.biba -= user.biba - biba >= 0 ? biba : user.biba;
     }
     user.save();
-
+    user.biba_record();
 
     Bibon.create({
       user_id: user.id,

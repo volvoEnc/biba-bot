@@ -56,9 +56,14 @@ module.exports = class Router {
         options['to_id'] = (options['to_id'] == process.env.VK_API_GROUP_ID || options['to_id'] == -process.env.VK_API_GROUP_ID) ? data.object.message.from_id : options['to_id'];
         this.modules.mainController.conversation(options);
         global.conversation_message_id = data.object.message.conversation_message_id;
-        this.modules[controller[0]][controller[1]](options);
-        this.destroy_session = false;
-        break;
+
+        if (await global.middleware.gameCommandBloked.execute(options)) {
+          this.modules[controller[0]][controller[1]](options);
+          this.destroy_session = false;
+          break;
+        } else {
+          return await pre_send(render('app/errors', {type: 'command_blocked'}), options.user_id);
+        }
       }
     }
     if (user != null && user.session != null && this.destroy_session == true) {

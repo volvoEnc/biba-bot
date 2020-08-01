@@ -7,12 +7,21 @@ global.sklonenie = require('sklonenie');
 global.draw = require('canvas');
 global.fs = require('fs');
 global.stream = require('streamifier');
+const Morphy = require('phpmorphy');
 const { Bot, Keyboard } = require('node-vk-bot');
 global.Keyboard = Keyboard;
 global.MainRouter = new (require('./app/router.js'));
 global.bot = new Bot({
   token: process.env.VK_API_TOKEN,
   group_id: process.env.VK_API_GROUP_ID
+});
+global.morphy = new Morphy('ru', {
+    storage: Morphy.STORAGE_MEM,
+    predict_by_suffix: true,
+    predict_by_db: true,
+    graminfo_as_text: true,
+    use_ancodes_cache: false,
+    resolve_ancodes: Morphy.RESOLVE_ANCODES_AS_TEXT
 });
 
 

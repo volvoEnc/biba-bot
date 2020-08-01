@@ -6,8 +6,7 @@ exports.who = async (data) => {
   } catch (e) {
     // Нет прав админа
     if (e.error_code == 917) {
-      pre_send('Данная функция доступна, когда вы назначите бота Администратором данной беседы', data.user_id)
-      return;
+      return pre_send(render('app/errors', { type: 'bot_is_not_admin' }), data.user_id);
     } else { return; }
   }
   let random_user = users.profiles[random.int(0, (users.profiles.length - 1))];
@@ -136,11 +135,15 @@ exports.draw_chlen = async (data) => {
 
   //рисуем текст с см
   ctx.font = 14+'px Impact';
-  ctx.fillStyle = 'color_hole';
+  ctx.fillStyle = color_hole;
   ctx.fillText('Оля, скинь сиськи', 120, 10);
   ctx.font = 20+'px Impact';
   ctx.rotate(-1.55);
   ctx.fillText(width+' см', -375, 150);
+  ctx.rotate(0.35);
+  ctx.font = 60+'px Impact';
+  ctx.fillStyle = 'black';
+  ctx.fillText('Copyright ©', -375, 200);
 
   let photo = await uploadPhotoToVk(canvas.toBuffer());
   pre_send('', data.user_id, {

@@ -32,6 +32,12 @@ class User extends Model {
     this.session = val;
     this.save();
   }
+  async biba_record() {
+    if (this.biba >= this.record_biba){
+      this.record_biba = this.biba;
+      this.save();
+    }
+  }
 };
 User.init({
   vk_id: {
@@ -63,6 +69,10 @@ User.init({
   },
   bibon: {
     type: Sequelize.BIGINT
+  },
+  record_biba: {
+    type: Sequelize.FLOAT(5,2),
+    defaultValue: 0
   },
 
 }, {

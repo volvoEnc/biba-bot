@@ -1,4 +1,5 @@
 const Op = Sequelize.Op;
+//Обработка событий
 setInterval(async () => {
   events = await Event.findAll({where: { time_exit: { [Op.lte]: Date.now() }}});
   events.forEach(async (occasion, i) => {
@@ -6,7 +7,7 @@ setInterval(async () => {
     occasion.destroy();
   });
 }, 1000);
-
+//Отправка сообщений вк в порядке очереди
 setInterval(async () => {
   if (global.stack_messages[0] != null) {
     let msg = global.stack_messages[0];
