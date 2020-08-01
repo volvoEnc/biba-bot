@@ -23,12 +23,13 @@ module.exports = class Router {
     else command = (JSON.parse(payload)).content;
 
     console.log("--------");
-    console.log(command + " " + data.object.message.from_id);
+    console.log(command + ' : ' + data.object.message.from_id);
     console.log("--------");
 
     for (let route of this.routes) {
       let reg = new RegExp(route.command, 'i');
       if (reg.test(command)) {
+        Session.userId = user.id;
         let controller = route.controller.split('@');
         let options = {
           controller: {

@@ -25,12 +25,10 @@ class User extends Model {
     return this.strength;
   }
   async destroy_session() {
-    this.session = null;
-    this.save();
+    return await Session.removeAll();
   }
-  async add_session(val) {
-    this.session = val;
-    this.save();
+  async add_session(name, value = undefined, isRoute = false) {
+    return await Session.add(name, value, isRoute, 120);
   }
   async biba_record() {
     if (this.biba >= this.record_biba){
@@ -38,7 +36,7 @@ class User extends Model {
       this.save();
     }
   }
-};
+}
 User.init({
   vk_id: {
     type: Sequelize.BIGINT,
