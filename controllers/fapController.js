@@ -40,7 +40,20 @@ exports.fap = async (data) => {
       else {
 
         let fap_cof = ( Math.round(user.biba) / 10 );
-        let fap_time = random.int(40, 60) * fap_cof;
+        let fap_time;
+
+        if (user.biba >= 201){
+          fap_time = random.int(14, 16) * fap_cof; // 201 см: 281,4 - 321,6 мин., 300 см: 420 - 480 мин.
+        } else if (user.biba >= 101){
+          fap_time = random.int(15, 17) * fap_cof; // 101 см: 151,5 - 171,7 мин., 200 см: 300 - 340 мин.
+        } else if (user.biba >= 51){
+          fap_time = random.int(16, 18) * fap_cof; // 51 см: 81 - 91,8 мин., 100 см: 160 - 180 мин.
+        } else if (user.biba >= 26){
+          fap_time = random.int(17, 19) * fap_cof; // 26 см: 44,2 - 49,4 мин., 50см: 85 - 95 мин.
+        } else {
+          fap_time = random.int(18, 20) * fap_cof; // 5 см: 9 - 10 мин., 25 см: 45 - 50 мин.
+        }
+
         let sub_strength = 5;
         fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
         user.change_strength(sub_strength, 'sub');
@@ -57,7 +70,7 @@ exports.fap = async (data) => {
 
           bot.send(render('fap', {
             time: fap_time,
-            template: random.int(1, 10),
+            template: random.int(1, 14),
             first_name: res[0].first_name,
             last_name: res[0].last_name,
             id: data.from_id,
@@ -85,7 +98,19 @@ exports.fap = async (data) => {
             let user2 = await User.findOne({where: {vk_id: data.to_id}})
             let sub_strength = 10;
             let fap_cof = ( Math.round(user2.biba) / 10 );
-            let fap_time = random.int(50, 70) * fap_cof;
+
+            if (user.biba >= 201){
+              fap_time = random.int(16, 18) * fap_cof;
+            } else if (user.biba >= 101){
+              fap_time = random.int(17, 19) * fap_cof;
+            } else if (user.biba >= 51){
+             fap_time = random.int(18, 20) * fap_cof;
+           } else if (user.biba >= 26){
+             fap_time = random.int(19, 21) * fap_cof;
+           } else {
+              fap_time = random.int(22, 23) * fap_cof;
+            }
+
             fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
             user.change_strength(sub_strength, 'sub');
 
@@ -101,7 +126,7 @@ exports.fap = async (data) => {
 
               bot.send(render('fap', {
                 time: fap_time,
-                template: random.int(1, 10),
+                template: random.int(1, 14),
                 first_name: res[0].first_name,
                 last_name: res[0].last_name,
                 id: data.from_id,
