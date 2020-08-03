@@ -29,7 +29,7 @@ module.exports = class Router {
     for (let route of this.routes) {
       let reg = new RegExp(route.command, 'i');
       if (reg.test(command)) {
-        Session.userId = user.id;
+        if (user !== null) {Session.userId = user.id;}
         let controller = route.controller.split('@');
         let options = {
           controller: {
