@@ -26,19 +26,22 @@ exports.index = async (eventt) => {
   //END
   if (bb.step == 'end') {
     let u;
+    let user_biba;
     bb.result = 1;
     if (bb.user_hp <= 0) { u = user; user = user2; user2 = u; bb.result = 0;}
     await bb.save();
 
     if (bb.opponent_hp <= 0) {
       user.biba += bb.biba;
+      user_biba = user.biba;
       user.money += bb.money
     }
     else {
       user2.biba -= bb.biba;
       user2.biba = user2.biba < 0 ? 0 : user2.biba;
+      user_biba = user2.biba;
     }
-    let user_biba = user.biba;
+    user_biba = Math.round(user_biba * 100) / 100;
 
     pre_send(render('big_biba/end', {
       template: random.int(1, 5),
