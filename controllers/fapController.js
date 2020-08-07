@@ -11,9 +11,9 @@ exports.fap = async (data) => {
 
       let friend_fap = await Event.findOne({where: {to_id: user.vk_id}});
       let eventt = await Event.findOne({where: {user_id: user.id, event_sys_name: {[Op.or] : ['fap_biba', 'fap_you_biba']} }});
-      let time_exit = Math.round(  (eventt.time_exit - Date.now() ) / (1000 * 60) );
 
       if (eventt != null) {
+        let time_exit = Math.round(  (eventt.time_exit - Date.now() ) / (1000 * 60) );
         bot.send(render('error', {
           error: eventt.event_sys_name,
           time: time_exit,
