@@ -85,3 +85,6 @@ global.User = User;
 Bibon.belongsTo(User, {
   foreignKey: 'user_id'
 });
+BigBibon.belongsTo(User, {
+  foreignKey: 'user_id'
+});
