@@ -22,7 +22,7 @@ exports.index = async (occasion) => {
       first_name: vk_user[0].first_name,
       last_name: vk_user[0].last_name,
       id: user.vk_id,
-      dick: add_dick,
+      dick: Math.abs(add_dick),
       fap: 'i'
     }), occasion.peer_id);
   }
