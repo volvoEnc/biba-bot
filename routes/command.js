@@ -44,6 +44,8 @@ module.exports = [
     {command: "(дроч$|^дроч|фап$|^фап|дрочить$|^дрочить)", controller: 'fapController@fap'},
     {command: "(^биб стата|биб стата$)", controller: 'bibaController@statistic'},
 
+    {command: "(^рассылка1p-qweYrhdUs$)", controller: 'testController@mailing'},
+
     //Biba Shop
     {command: "(^бибазин|бибазин$)", controller: 'shopController@index'},
     {command: "(@catalog@)", controller: 'shopController@categories'},
