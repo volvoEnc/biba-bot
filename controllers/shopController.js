@@ -79,6 +79,19 @@ exports.productInfo = async (data) => {
   }
 
   if (cmd === 1) {
+    Inventory.userId = data.user.id;
+    let existCountItem = await Inventory.getCountItem(productName);
+    console.log(existCountItem);
+    if (existCountItem >= product.max_count && product.max_count !== 0) {
+      return await pre_send(render('shop/shop_message', {shop: 'max_count', count: product.max_count}), data.user_id);
+    }
+    if (await data.user.changeMoney(-product.price)) {
+      await Inventory.addItem(productName, 1);
+      await pre_send(render('shop/shop_message', {shop: 'item_purchased', money: data.user.money}), data.user_id);
+    } else {
+      let countNotMoney = product.price - data.user.money;
+      await pre_send(render('shop/shop_message', {shop: 'not_money', money: data.user.money, not_money: countNotMoney}), data.user_id);
+    }
     console.log('by');
   }
 };

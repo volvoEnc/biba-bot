@@ -1,5 +1,25 @@
 const Model = Sequelize.Model;
 class User extends Model {
+
+
+  /**
+   * Изменение количества дроч-коинов у пользователя.
+   *
+   * @param {int} money
+   * @returns {Promise<boolean>}
+   */
+  async changeMoney(money) {
+    let previewMoney = this.money;
+    this.money += money;
+    if (this.money < 0) {
+      this.money = previewMoney;
+      return false;
+    }
+    await this.save();
+    return true;
+  }
+
+
   async change_strength(count, type) {
     if (type == 'sub') {
       this.strength -= count;

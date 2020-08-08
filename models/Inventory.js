@@ -16,15 +16,15 @@ class Inventory extends Model {
      */
     static async addItem(itemName, count = 1) {
         if (!await Catalog.checkExists(itemName)) {
-            console.error('Item not exists');
+            console.log('Item not exists');
             return false;
         }
 
-        let item = this.getItem(itemName);
+        let item = await this.getItem(itemName);
         if (item === null) {
             item = new Inventory({
                 'user_id': this.userId,
-                'item_name': itemName.system_name,
+                'item_name': itemName,
                 'count': count,
                 'is_active': true
             });
@@ -34,8 +34,8 @@ class Inventory extends Model {
         try {
             await item.save();
         } catch (e) {
-            console.error('При сохранении предмета в инвентарь, произошла ошибка: ');
-            console.error(e);
+            console.log('При сохранении предмета в инвентарь, произошла ошибка: ');
+            console.log(e);
             return false;
         }
         return true;
@@ -116,6 +116,10 @@ class Inventory extends Model {
         return await this.findOne({where: {user_id: this.userId, item_name: itemName}});
     }
 
+    static async getCountItem(itemName) {
+        return (await this.getItem(itemName)).count;
+    }
+
     static async getItemsByType(typeName, onlyActive = true) {
         return await this.findAll({where: {}});
     }
@@ -137,7 +141,7 @@ Inventory.init({
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    is_route: {
+    is_active: {
         type: Sequelize.BOOLEAN,
         allowNull: false
     }
