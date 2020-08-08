@@ -5,20 +5,26 @@ const Model = Sequelize.Model;
  * Класс для управления сессиями пользователей
  */
 class Session extends Model {
-    static userId;
 
     /**
      * Создание сессии (контекста) для пользователя
      *
+     * @param {int|null} userId - UserId пользователя в нашей системе
      * @param {string} name - Название сессии
      * @param {string=} value - Значение сессии
      * @param {boolean} [isRoute=false] - это сессия является маршрутом?
-     * @param {int} [expiresAt=60] - Время жизни сессии в секундах
+     * @param {int|null} [expiresAt=60] - Время жизни сессии в секундах
      * @returns {Promise<boolean>}
      */
-    static async add(name, value, isRoute = false, expiresAt= 60) {
-        let userId = this.userId;
-        expiresAt = expiresAt * 1000 + Date.now(); // Превращаем из ms в s и прибавляем к текущей дате для получения timestamp
+    static async add(userId, name, value, isRoute = false, expiresAt) {
+        // Если null сессия безсрочная
+        if (expiresAt !== null) {
+            if (expiresAt === undefined) {
+                expiresAt = 60;
+            }
+            expiresAt = expiresAt * 1000 + Date.now(); // Превращаем из ms в s и прибавляем к текущей дате для получения timestamp
+        }
+
         let session = new Session({
             user_id: userId,
             name: name,
@@ -27,7 +33,7 @@ class Session extends Model {
             expires_at: expiresAt
         });
         try {
-            await this.remove(name);
+            await this.remove(userId, name);
             await session.save();
         } catch (e) {
             //TODO: тут нужно писать в лог ошибку
@@ -40,33 +46,32 @@ class Session extends Model {
 
     /**
      * Получение сесии для пользователя по имени
-     *
+     * @param {int|null} userId - UserId пользователя в нашей системе
      * @param {string} name - Название сессии
      * @return {(Promise<Session>|Promise<null>)} - Сессия, либо null
      */
-    static async get(name) {
-        let userId = this.userId;
-        return await this.findOne({where: {user_id : userId, name : name}});
+    static async get(userId, name) {
+        return (await this.findOne({where: {user_id : userId, name : name}})).value;
     }
 
     /**
      * Получение маршрутной сессии для пользователя
      *
+     * @param {int} userId - UserId пользователя в нашей системе
      * @return {(Promise<Session>|Promise<null>)} - Сессия, либо null
      */
-    static async getRouteSession() {
-        let userId = this.userId;
+    static async getRouteSession(userId) {
         return await this.findOne({where: {user_id : userId, is_route: true}});
     }
 
     /**
      * Проверка на наличие сессии
      *
+     * @param {int|null} userId - UserId пользователя в нашей системе
      * @param {string} name - Название сессии
      * @returns {Promise<boolean>}
      */
-    static async isExists(name) {
-        let userId = this.userId;
+    static async isExists(userId, name) {
         let session = await this.findOne({where: {user_id : userId, name: name}});
         return session !== null;
     }
@@ -74,37 +79,38 @@ class Session extends Model {
     /**
      * Удаление сессии по имени
      *
+     * @param {int|null} userId - UserId пользователя в нашей системе
      * @param {string} name - Название сессии
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>}
      */
-    static async remove(name) {
-        let userId = this.userId;
+    static async remove(userId, name) {
         return await this.destroy({where: {user_id : userId, name : name}});
     }
 
     /**
      * Удаление всех сессий пользователя
      *
-     * @returns {Promise<void>}
+     * @param {int|null} userId - UserId пользователя в нашей системе
+     * @returns {Promise<int>}
      */
-    static async removeAll() {
-        let userId = this.userId;
+    static async removeAll(userId) {
         return await this.destroy({where: {user_id : userId}});
     }
 
     /**
      * Удаление "протухших" сессий
+     *
      * @param {number} [expireTime=Date.now()]
-     * @returns {Promise<void>}
+     * @returns {Promise<int>}
      */
     static async removeExpire(expireTime = Date.now()) {
-        this.destroy({where: {expires_at: {[Op.lte]: expireTime}}});
+        return await this.destroy({where: {expires_at: {[Op.lte]: expireTime}}});
     }
 }
 Session.init({
     user_id: {
         type: Sequelize.BIGINT,
-        allowNull: false
+        allowNull: true
     },
     name: {
         type: Sequelize.STRING(255),
@@ -120,7 +126,7 @@ Session.init({
     },
     expires_at: {
         type: Sequelize.BIGINT,
-        allowNull: false
+        allowNull: true
     }
 }, {
     sequelize,

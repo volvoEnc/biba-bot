@@ -2,57 +2,83 @@ exports.index = async (data) => {
   bot.send('Магазин закрыт на карантин', data.user_id)
 };
 
-// Список категорий
+// Вход в магазин и список категорий
 exports.list = async (data) => {
   let catalog = await Catalog.findAll({ attributes: [ [sequelize.fn('DISTINCT', sequelize.col('category')), 'category'] ] });
   let categories = [];
   catalog.forEach(category => { categories.push(category.dataValues.category); });
-  await Session.add('catalog', undefined, false);
-  await Session.add('catalogs', 'значение', true, 120);
-  // console.log(await Session.isExists('catalogins'));
-  return await pre_send(render('shop/categories', {categories: categories}), data.user_id, 600);
+  await Session.add(data.user.id, 'catalog', '', true);
+  return await pre_send(render('shop/categories', {categories: categories}), data.user_id);
 };
 
-// Список продуктов в категории
-exports.categories = async (data, session) => {
-  let cat = data.user_data;
-  if (cat == 0) {
-    await pre_send(render('shop/shop_message', {shop: 'exit_shop'}), data.user_id);
-    return data.user.destroy_session();
-  }
-  else {
-    let catalog = await Catalog.findAll({ attributes: [ [sequelize.fn('DISTINCT', sequelize.col('category')), 'category'], "system_category" ] });
-    let categories = [];
-    catalog.forEach(category => { categories.push(category.dataValues.category); });
 
-    let select = categories[cat - 1];
-    if (select === undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
-    let category = await Catalog.findAll({where: {category: select}});
-    await data.user.add_session(`products|${catalog[cat - 1].dataValues.system_category}`);
-    return await pre_send(render('shop/products', {products:category}), data.user_id);
+exports.catalog = async (data, session) => {
+  let cat = Number(data.user_data);
+
+  // Выход из магазина
+  if (cat === 0) {
+    await Session.remove(data.user.id, 'catalog');
+    return await pre_send(render('shop/shop_message', {shop: 'exit_shop'}), data.user_id);
   }
+
+  let catalog = await Catalog.findAll({ attributes: [ [sequelize.fn('DISTINCT', sequelize.col('category')), 'category'], "system_category" ] });
+  let categories = [];
+  catalog.forEach(category => { categories.push(category.dataValues.system_category); });
+
+  let select = categories[cat - 1];
+  if (select === undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
+  let category = await Catalog.findAll({where: {system_category: select}});
+
+  await Session.remove(data.user.id, 'catalog');
+  await Session.add(data.user.id, 'productsByCategory', select, true, 90);
+  await Session.add(data.user.id, 'previewData', cat, false, null);
+
+  return await pre_send(render('shop/products', {products:category}), data.user_id);
 };
 
-// конкретный продукт в категории
-exports.products = async (data, session) => {
+// Продукты в категории
+exports.productsByCategory = async (data, session) => {
   let cmd = data.user_data;
-  let category = (data.user.session.split("|"))[1];
+
   if (cmd == 0) {
-    await data.user.add_session('catalog');
-    MainRouter.modules.shopController.list(data);
+    await Session.remove(data.user.id, 'productsByCategory');
+    return await MainRouter.modules.shopController.list(data);
   }
-  // return;
-  // await data.user.add_session('@product');
+
+  let category = await Session.get(data.user.id, 'productsByCategory');
+  await Session.remove(data.user.id, 'productsByCategory');
   let products = await Catalog.findAll({where: {system_category: category}});
   let prd = [];
   products.forEach(p => { prd.push(p.system_name); });
+
   let select = prd[cmd - 1];
-  if (select == undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
-  console.log(select);
+  if (select === undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
+
+  await Session.add(data.user.id, 'productInfo', select, true, 90);
+  await Session.add(data.user.id, 'productInfoCategory', category, false, 90);
+
+  let product = await global.products[category][select]();
+  if (product === undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
+
+  return pre_send(render('shop/product', {product: product}), data.user_id);
 };
 
 // Действия с продуктом
-exports.product = async (data, session) => {
-  let cmd = data.user_data;
-  if (cmd == 0) return data.user.destroy_session();
+exports.productInfo = async (data) => {
+  let cmd = Number(data.user_data);
+  let categoryName = await Session.get(data.user.id, 'productInfoCategory');
+  let productName = await Session.get(data.user.id, 'productInfo');
+  let product = await global.products[categoryName][productName]();
+
+  if (cmd === 0) {
+    data.user_data = await Session.get(data.user.id, 'previewData');
+    await Session.remove(data.user.id, 'productInfo');
+    await Session.remove(data.user.id, 'productInfoCategory');
+    await Session.add(data.user.id, 'productsByCategory', categoryName, true, 90);
+    return await MainRouter.modules.shopController.catalog(data);
+  }
+
+  if (cmd === 1) {
+    console.log('by');
+  }
 };

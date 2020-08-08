@@ -1,7 +1,8 @@
 module.exports = class Router {
   constructor() {
     this.modules = [];
-    this.routes = require('../routes.js');
+    this.routes = require('../routes/command.js');
+    this.sessionRoutes = require('../routes/session.js');
     this.init();
     this.destroy_session = true;
   }
@@ -13,23 +14,26 @@ module.exports = class Router {
 
     if (data.object.message.action != null) {
       if (data.object.message.action.type == 'chat_invite_user' && data.object.message.action.member_id == -process.env.VK_API_GROUP_ID) {
-        this.modules.mainController.invite_chat();
+        await this.modules.mainController.invite_chat();
       }
     }
     let user = await User.findOne({where: {vk_id: data.object.message.from_id}});
 
-    if (user != null && user.session != null) command = user.session;
-    else if (payload == undefined) command = data.object.message.text.toLowerCase();
+    if (payload == undefined) command = data.object.message.text.toLowerCase();
     else command = (JSON.parse(payload)).content;
 
-    console.log("--------");
-    console.log(command + ' : ' + data.object.message.from_id);
-    console.log("--------");
-
-    for (let route of this.routes) {
+    let isSessionCommand = false;
+    if (user !== null) {
+      let sessionCommand = await Session.getRouteSession(user.id);
+      if (sessionCommand !== null) {
+        command = sessionCommand.name;
+        isSessionCommand = true;
+      }
+    }
+    let routes = isSessionCommand ? this.sessionRoutes : this.routes;
+    for (let route of routes) {
       let reg = new RegExp(route.command, 'i');
       if (reg.test(command)) {
-        if (user !== null) {Session.userId = user.id;}
         let controller = route.controller.split('@');
         let options = {
           controller: {
