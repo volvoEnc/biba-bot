@@ -57,6 +57,13 @@ exports.battle = async (data) => {
       vk_user2 = await bot.api('users.get', {user_ids: data.to_id, name_case: 'dat'});
     }
     let chance = 50;
+
+    // let items = Inventory.getItemsByType('chance');
+    // items.forEach(item => {
+    //   chance = Inventory.executeActionItem(item, chance);
+    // });
+
+
     let max_bib_abs_win = 50;
     let proc_to_bib = Math.round( (100 / max_bib_abs_win) / 2  );
 

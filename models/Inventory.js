@@ -124,7 +124,7 @@ class Inventory extends Model {
         return await this.findAll({where: {}});
     }
 
-    async executeActionItem() {
+    static async executeActionItem(items, data) {
 
     }
 }
