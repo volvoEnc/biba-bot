@@ -9,7 +9,7 @@ exports.index = async (occasion) => {
 
   let fap_cof = ( Math.round(user.biba) / 100 + (user.count_fap / 200));
   fap_cof = fap_cof < 0.4 ? 0.4 : fap_cof;
-  let add_dick = Math.round( ( random.int(100, 200) / 100 ))+ fap_cof;
+  let add_dick = (Math.round( ( random.int(100, 200) / 100 ))+ fap_cof).toFixed(2);
 
 
   user.event_id = null;
@@ -36,7 +36,7 @@ exports.index = async (occasion) => {
 
     let fap_cof = ( Math.round(user.biba) / 150 );
     fap_cof = fap_cof < 0.13 ? 0.13 : fap_cof;
-    let add_dick = Math.round( ( random.int(50, 100) / 100 )) + fap_cof;
+    let add_dick = (Math.round( ( random.int(50, 100) / 100 )) + fap_cof).toFixed(2);
 
     friend.biba += add_dick;
     friend.save();
