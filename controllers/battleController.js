@@ -119,18 +119,20 @@ exports.battle = async (data) => {
 
     let total_biba = Math.round(user.biba * 100) / 100;
 
-    await pre_send(render('battle', {
-      type: status,
-      template: random.int(1, 17),
-      biba: biba,
-      user1: vk_user1[0],
-      user2: vk_user2[0],
-      chance: chance,
-      total_biba: total_biba,
-      money: money
-    }), data.user_id, {
-      disable_mentions: 1
-    });
+    setTimeout(async () => {
+      await pre_send(render('battle', {
+        type: status,
+        template: random.int(1, 17),
+        biba: biba,
+        user1: vk_user1[0],
+        user2: vk_user2[0],
+        chance: chance,
+        total_biba: total_biba,
+        money: money
+      }), data.user_id, {
+        disable_mentions: 1
+      });
+    }, 1500);
 
   } catch (e) {
     console.log(e);

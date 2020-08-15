@@ -30,6 +30,18 @@ if fap == "i"
     when 10
       | 💬 Было сложно, но [id#{id}|#{last_name} #{first_name}] пульнул свое семя!
       | 🔥 +#{dick} см.
+    when 11
+      | 💬 Псc.. А [id#{id}|#{last_name} #{first_name}] пофапал.
+      | 🔥 +#{dick} см.
+    when 12
+      | 💬 Да! Да! Да! [id#{id}|#{last_name} #{first_name}] все таки смог сделать это..
+      | 🔥 +#{dick} см.
+    when 13
+      | 💬 [id#{id}|#{last_name} #{first_name}] задушил своего удава.
+      | 🔥 +#{dick} см.
+    when 14
+      | 💬 [id#{id}|#{last_name} #{first_name}] "фапнул" себе на руку.
+      | 🔥 +#{dick} см.
 else if fap == "you"
   case template 
     when 1
@@ -60,6 +72,18 @@ else if fap == "you"
       | 🔥 +#{dick} получает [id#{friend.id}|#{friend.first_name} #{friend.last_name}]
     when 10
       | 💬 [id#{id}|#{last_name} #{first_name}] и [id#{friend.id}|#{friend.first_name} #{friend.last_name}] хорошо провели время!
+      | 🔥 +#{dick} получает [id#{friend.id}|#{friend.first_name} #{friend.last_name}]
+    when 11
+      | 💬 [id#{id}|#{last_name} #{first_name}] закончил свои грязные дела.
+      | 🔥 +#{dick} получает [id#{friend.id}|#{friend.first_name} #{friend.last_name}]
+    when 12
+      | 💬 [id#{id}|#{last_name} #{first_name}] и [id#{friend.id}|#{friend.first_name} #{friend.last_name}] закончили просмотр журнала ля взрослых.
+      | 🔥 +#{dick} получает [id#{friend.id}|#{friend.first_name} #{friend.last_name}]
+    when 13
+      | 💬 [id#{friend.id}|#{friend.first_name} #{friend.last_name}] упал на пол, после того как [id#{id}|#{last_name} #{first_name}] задушил его удава.
+      | 🔥 +#{dick} получает [id#{friend.id}|#{friend.first_name} #{friend.last_name}]
+    when 14
+      | 💬 [id#{friend.id}|#{friend.first_name} #{friend.last_name}] фапнул в окно. [id#{id}|#{last_name} #{first_name}] не был к такому готов.
       | 🔥 +#{dick} получает [id#{friend.id}|#{friend.first_name} #{friend.last_name}]
   if money > 0
     - var moneyy = plural(money, '%d дроч коин', '%d дроч коина', '%d дроч коинов')
