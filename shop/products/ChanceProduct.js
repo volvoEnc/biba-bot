@@ -6,7 +6,7 @@ exports.RingAbsolution = async () => {
     description: "Повышает шанс победы на 2.5%",
     category: "Шансы",
     price: 15,
-    max_count: 10,
+    max_count: 20,
     count: 500,
     system_category: "chance",
     type: "chance",

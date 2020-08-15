@@ -23,7 +23,7 @@ global.morphy = new Morphy('ru', {
     use_ancodes_cache: false,
     resolve_ancodes: Morphy.RESOLVE_ANCODES_AS_TEXT
 });
-
+global.sessionCode = 998283123568172731; // Случайные циферки
 
 global.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,

@@ -3,7 +3,21 @@ class Catalog extends Model {
   static async getProduct(category, name) {
     return await global.products[category][name]();
   }
-};
+
+  static async getProductByName(name) {
+    return await this.findOne({where: {system_name: name}});
+  }
+
+  /**
+   * Проверка на существование предмета
+   * @param name
+   * @returns {Promise<boolean>}
+   */
+  static async checkExists(name) {
+    let item = await this.findOne({where: {system_name: name}});
+    return item !== null;
+  }
+}
 Catalog.init({
   name: {
     type: Sequelize.STRING(255),

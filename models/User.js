@@ -1,5 +1,25 @@
 const Model = Sequelize.Model;
 class User extends Model {
+
+
+  /**
+   * Изменение количества дроч-коинов у пользователя.
+   *
+   * @param {int} money
+   * @returns {Promise<boolean>}
+   */
+  async changeMoney(money) {
+    let previewMoney = this.money;
+    this.money += money;
+    if (this.money < 0) {
+      this.money = previewMoney;
+      return false;
+    }
+    await this.save();
+    return true;
+  }
+
+
   async change_strength(count, type) {
     if (type == 'sub') {
       this.strength -= count;
@@ -25,12 +45,10 @@ class User extends Model {
     return this.strength;
   }
   async destroy_session() {
-    this.session = null;
-    this.save();
+    return await Session.removeAll();
   }
-  async add_session(val) {
-    this.session = val;
-    this.save();
+  async add_session(name, value = undefined, isRoute = false) {
+    return await Session.add(name, value, isRoute, 120);
   }
   async biba_record() {
     if (this.biba >= this.record_biba){
@@ -38,7 +56,7 @@ class User extends Model {
       this.save();
     }
   }
-};
+}
 User.init({
   vk_id: {
     type: Sequelize.BIGINT,
