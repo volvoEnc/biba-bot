@@ -36,6 +36,7 @@ module.exports = [
     {command: "(^топ биб|топ биб$|топ биба|биба топ|биб топ)", controller: 'topController@bibs'},
     {command: "(^топ фап|топ фап|топ фапы|фапы топ|фапс топ|фап топ)", controller: 'topController@faps'},
     {command: "(^топ коин|топ коин|топ коины|коины топ|коинс топ|коин топ)", controller: 'topController@coin'},
+    {command: "(^топ бигбон|топ бигбонс|топ бигбоны|бигбоны топ|бигбонс топ|бигбон топ)", controller: 'topController@bigbon'},
     {command: "(^рейтинг биб|рейт биб|биб рейтинг|биба рейтинг|бибрейт|рейтбиб|биб рейт)", controller: 'topController@record'},
     {command: "(^супер бибон|супер бибон$|^большой бибон|большой бибон$|^бибонище|бибонище$|^биг бибон|биг бибон$|^бигбибон|бигбибон$|^бигбон|бигбон$)", controller: 'BigBattleController@start'},
     {command: "(^бибон|бибон$|^бибан|бибан$)", controller: 'battleController@battle'},
