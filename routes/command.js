@@ -30,6 +30,7 @@ module.exports = [
     {command: "(cпоки|cgjrb)", controller: 'eventController@nudes'},
     {command: "(😳)", controller: 'eventController@delete'},
     // main commands
+    {command: "(^биба мой топ|биба мой топ$)", controller: 'bibaController@mytop'},
     {command: "(биба помощь|биба хелп|biba help|bib help|биба команды|команды бибы)", controller: 'mainController@help'},
     {command: "(биба инфо|биб инфо|биб инф|инфа биба)", controller: 'mainController@info'},
     {command: "(топ бибон|бибон топ|топ бибонов|топ бибонс)", controller: 'topController@bibon'},
@@ -44,7 +45,6 @@ module.exports = [
     {command: "(биба$|^биба)", controller: 'bibaController@profile'},
     {command: "(дроч$|^дроч|фап$|^фап|дрочить$|^дрочить)", controller: 'fapController@fap'},
     {command: "(^биб стата|биб стата$)", controller: 'bibaController@statistic'},
-    {command: "(^биб мой топ|биб мой топ$|тест123)", controller: 'bibaController@mytop'},
 
     {command: "(^рассылка1p-qweYrhdUs$)", controller: 'testController@mailing'},
 

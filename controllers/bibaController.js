@@ -87,6 +87,21 @@ exports.statistic = async (data) => {
     disable_mentions: 1,
   });
 };
-exports.mytop = async (data) => {
 
+exports.mytop = async (data) => {
+  let user = await User.findOne({ where: {vk_id: data.to_id} });
+  let record_biba = await Top.getTop('record_biba', user);
+  let biba_top = await Top.getTop('biba_top', user);
+  let fap_top = await Top.getTop('fap_top', user);
+  let coin_top = await Top.getTop('coin_top', user);
+
+  bot.send(render('profile/mytop', {
+    user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
+    biba_top: biba_top,
+    record_biba: record_biba,
+    fap_top: fap_top,
+    coin_top: coin_top,
+  }), data.user_id, {
+    disable_mentions: 1,
+  })
 }
