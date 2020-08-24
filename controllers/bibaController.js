@@ -11,6 +11,7 @@ exports.index = async (data) => {
     }), data.user_id)
   })
 }
+
 exports.profile = async (data) => {
   // let [user, created] = await User.findOrCreate({ where: {vk_id: data.to_id}, defaults: { vk_id: data.to_id } });
   let user = await User.findOne({where: {vk_id: data.to_id}});
@@ -26,6 +27,7 @@ exports.profile = async (data) => {
   let eventt = await Event.findOne({where: {user_id: user.id, event_sys_name: {[Op.or] : ['fap_biba', 'fap_you_biba']} }});
   let ev = { name: "", time: 0 };
   let keyboard;
+  let top = await Top.getUsers('profile_biba');
   if (eventt != null) {
     ev.name = render('events', { template: random.int(1, 3), eventt: eventt.event_sys_name });
     ev.time = Math.round(  (eventt.time_exit - Date.now() ) / (1000 * 60) );
@@ -36,9 +38,10 @@ exports.profile = async (data) => {
   else keyboard = await get_keyboard('ProfileKeyboard');
   return pre_send(render('profile', {
     vk_user: vk_user[0], user: user, eventt: ev,
-    top: await User.findOne({order: [ ['biba', 'DESC'] ], offset: 9})
+    top: top
   }), data.user_id, { disable_mentions: 1, keyboard: keyboard });
 }
+
 exports.statistic = async (data) => {
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let top = await User.findOne({
@@ -84,3 +87,6 @@ exports.statistic = async (data) => {
     disable_mentions: 1,
   });
 };
+exports.mytop = async (data) => {
+
+}

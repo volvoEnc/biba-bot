@@ -42,11 +42,13 @@ exports.battle = async (data) => {
     if (data.to_id == data.from_id || data.to_id < 0) {
       await pre_send('Ищу соперника...', data.user_id);
       let dip = 10;
+      let dip_plus = 15;
+      let top = await Top.getUsers('bibon_users');
       let count_users;
       do {
-        count_users = await User.count({where: {biba: { [Op.and]: [ { [Op.gte]: (user.biba - dip) }, {[Op.lte]: (user.biba + dip) } ] }} });
+        count_users = await User.count({where: {biba: { [Op.and]: [ { [Op.gte]: (user.biba - dip) }, {[Op.lte]: (user.biba + dip_plus) } ] }} });
         dip += 5;
-      } while (count_users < 5);
+      } while (count_users < top);
       do {
         let random_user = random.int(0, (count_users - 1));
         user2 = await User.findOne({ offset: random_user, where: {biba: { [Op.and]: [ { [Op.gte]: (user.biba - dip) }, {[Op.lte]: (user.biba + dip) } ] }} });
