@@ -94,13 +94,33 @@ exports.mytop = async (data) => {
   let biba_top = await Top.getTop('biba_top', user);
   let fap_top = await Top.getTop('fap_top', user);
   let coin_top = await Top.getTop('coin_top', user);
+  let local_top = await Top.getTop('local_top', user);
 
-  bot.send(render('profile/mytop', {
+  let users = await User.findAll({order: [ ['biba', 'DESC'] ], limit: 5, offset: local_top})
+  let ids = [];
+  users.forEach(user => { ids.push(user.vk_id); });
+
+  let vk_users = await bot.api('users.get', {user_ids: ids});
+  let send_users = [];
+
+  for (let i = 0; i < vk_users.length; i++) {
+    let send = {
+      id: users[i].vk_id,
+      first_name: vk_users[i].first_name,
+      last_name: vk_users[i].last_name,
+      biba: users[i].biba
+    }
+    send_users.push(send)
+  }
+
+  pre_send(render('profile/mytop', {
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     biba_top: biba_top,
     record_biba: record_biba,
     fap_top: fap_top,
     coin_top: coin_top,
+    users: send_users,
+    offset: local_top,
   }), data.user_id, {
     disable_mentions: 1,
   })

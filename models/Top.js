@@ -41,8 +41,22 @@ class Top extends Model {
             let coin_top = await User.findOne({
                 where: { money: { [Op.gte]: user.money }, id: { [Op.ne]: user.id } },
                 attributes: [ [sequelize.fn('COUNT', sequelize.col('id')), 'top'] ]
-            });
+            })
             return coin_top.dataValues.top + 1;
+        }
+       else if (type == 'local_top'){
+            let biba_top = await User.findOne({
+                where: { biba: { [Op.gte]: user.biba }, id: { [Op.ne]: user.id } },
+                attributes: [ [sequelize.fn('COUNT', sequelize.col('id')), 'top'] ]
+            });
+            let biba = biba_top.dataValues.top;
+            let offset;
+
+            if (biba <= 1) offset = 0;
+            else offset = biba - 2;
+
+            return offset;
+
         }
     }
 }
