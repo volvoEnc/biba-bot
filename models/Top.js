@@ -1,5 +1,4 @@
-const Model = Sequelize.Model;
-class Top extends Model {
+class Top {
     static async getUsers(type){
         let users_count = await User.count(type);
 
@@ -12,9 +11,8 @@ class Top extends Model {
             else return 5;
         }
     }
-    static async getTop(type, u){
+    static async getTop(type, user){
         const Op = Sequelize.Op;
-        let user = u;
 
         if (type == 'record_biba'){
             let record_biba = await User.findOne({
