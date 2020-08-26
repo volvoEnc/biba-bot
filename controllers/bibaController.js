@@ -95,6 +95,8 @@ exports.mytop = async (data) => {
   let fap_top = await Top.getTop('fap_top', user);
   let coin_top = await Top.getTop('coin_top', user);
   let local_top = await Top.getTop('local_top', user);
+  let bibon_top = await Top.getTop('bibon_top', user);
+  let bigbon_top = await  Top.getTop('bigbon_top', user);
 
   let users = await User.findAll({order: [ ['biba', 'DESC'] ], limit: 5, offset: local_top})
   let ids = [];
@@ -121,6 +123,8 @@ exports.mytop = async (data) => {
     coin_top: coin_top,
     users: send_users,
     offset: local_top,
+    bibon_top: bibon_top,
+    bigbon_top: bigbon_top,
   }), data.user_id, {
     disable_mentions: 1,
   })

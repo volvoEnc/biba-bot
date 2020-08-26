@@ -64,7 +64,6 @@ exports.bibon = async (data) => {
     attributes: [ [ sequelize.fn('COUNT', sequelize.col('bibon.biba')), 'bibon' ] ],
     group: 'user_id', limit: 10, include: [User]
   });
-  console.log(bibons);
   let ids = [];
   bibons.forEach(bibon => { ids.push(bibon.user.vk_id); });
   let vk_users = await bot.api('users.get', {user_ids: ids});

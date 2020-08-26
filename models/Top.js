@@ -56,7 +56,32 @@ class Top extends Model {
             else offset = biba - 2;
 
             return offset;
+        }
+       else if (type == 'bibon_top'){
+           let bibon_top = await sequelize.query("SET @n = 0");
+           bibon_top = await sequelize.query(`SELECT * FROM 
+                (SELECT *, @n := @n + 1 as place FROM 
+                (SELECT user_id, COUNT(biba) as bibon FROM bibons GROUP BY user_id ORDER BY bibon DESC) as t1 ORDER BY @n ASC) as t2 WHERE user_id = ${user.id}`);
 
+           let check;
+
+           if (bibon_top[1][0] === undefined) check = 0;
+           else check = bibon_top[1][0].place;
+
+           return check;
+        }
+        else if (type == 'bigbon_top'){
+            let bigbon_top = await sequelize.query("SET @n = 0");
+            bigbon_top = await sequelize.query(`SELECT * FROM 
+                (SELECT *, @n := @n + 1 as place FROM 
+                (SELECT user_id, COUNT(biba) as bigbon FROM big_bibons GROUP BY user_id ORDER BY bigbon DESC) as t1 ORDER BY @n ASC) as t2 WHERE user_id = ${user.id}`);
+
+            let check;
+
+            if (bigbon_top[1][0] === undefined) check = 0;
+            else check = bigbon_top[1][0].place;
+
+            return check;
         }
     }
 }
