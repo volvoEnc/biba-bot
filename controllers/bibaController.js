@@ -11,6 +11,7 @@ exports.index = async (data) => {
     }), data.user_id)
   })
 }
+
 exports.profile = async (data) => {
   // let [user, created] = await User.findOrCreate({ where: {vk_id: data.to_id}, defaults: { vk_id: data.to_id } });
   let user = await User.findOne({where: {vk_id: data.to_id}});
@@ -26,6 +27,7 @@ exports.profile = async (data) => {
   let eventt = await Event.findOne({where: {user_id: user.id, event_sys_name: {[Op.or] : ['fap_biba', 'fap_you_biba']} }});
   let ev = { name: "", time: 0 };
   let keyboard;
+  let top = await Top.getUsers('profile_biba');
   if (eventt != null) {
     ev.name = render('events', { template: random.int(1, 3), eventt: eventt.event_sys_name });
     ev.time = Math.round(  (eventt.time_exit - Date.now() ) / (1000 * 60) );
@@ -36,9 +38,10 @@ exports.profile = async (data) => {
   else keyboard = await get_keyboard('ProfileKeyboard');
   return pre_send(render('profile', {
     vk_user: vk_user[0], user: user, eventt: ev,
-    top: await User.findOne({order: [ ['biba', 'DESC'] ], offset: 9})
+    top: top
   }), data.user_id, { disable_mentions: 1, keyboard: keyboard });
 }
+
 exports.statistic = async (data) => {
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let top = await User.findOne({
@@ -84,3 +87,45 @@ exports.statistic = async (data) => {
     disable_mentions: 1,
   });
 };
+
+exports.mytop = async (data) => {
+  let user = await User.findOne({ where: {vk_id: data.to_id} });
+  let record_biba = await Top.getTop('record_biba', user);
+  let biba_top = await Top.getTop('biba_top', user);
+  let fap_top = await Top.getTop('fap_top', user);
+  let coin_top = await Top.getTop('coin_top', user);
+  let local_top = await Top.getTop('local_top', user);
+  let bibon_top = await Top.getTop('bibon_top', user);
+  let bigbon_top = await  Top.getTop('bigbon_top', user);
+
+  let users = await User.findAll({order: [ ['biba', 'DESC'] ], limit: 5, offset: local_top})
+  let ids = [];
+  users.forEach(user => { ids.push(user.vk_id); });
+
+  let vk_users = await bot.api('users.get', {user_ids: ids});
+  let send_users = [];
+
+  for (let i = 0; i < vk_users.length; i++) {
+    let send = {
+      id: users[i].vk_id,
+      first_name: vk_users[i].first_name,
+      last_name: vk_users[i].last_name,
+      biba: users[i].biba
+    }
+    send_users.push(send)
+  }
+
+  pre_send(render('profile/mytop', {
+    user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
+    biba_top: biba_top,
+    record_biba: record_biba,
+    fap_top: fap_top,
+    coin_top: coin_top,
+    users: send_users,
+    offset: local_top,
+    bibon_top: bibon_top,
+    bigbon_top: bigbon_top,
+  }), data.user_id, {
+    disable_mentions: 1,
+  })
+}

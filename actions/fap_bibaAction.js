@@ -7,9 +7,9 @@ exports.index = async (occasion) => {
   // let add_dick = Math.round( ( random.int(200, 500) / fap_cof ) ) / 100;
   // add_dick = user.biba < 1 ? 2 : add_dick;
 
-  let fap_cof = ( Math.round(user.biba + user.count_fap) / 100 );
+  let fap_cof = ( Math.round(user.biba) / 100 + (user.count_fap / 200));
   fap_cof = fap_cof < 0.4 ? 0.4 : fap_cof;
-  let add_dick = Math.round( ( random.int(10, 20) / 10 ) + fap_cof);
+  let add_dick = (Math.round( ( random.int(100, 200) / 100 ))+ fap_cof);
 
 
   user.event_id = null;
@@ -22,7 +22,7 @@ exports.index = async (occasion) => {
       first_name: vk_user[0].first_name,
       last_name: vk_user[0].last_name,
       id: user.vk_id,
-      dick: add_dick,
+      dick: Math.abs(add_dick).toFixed(2),
       fap: 'i'
     }), occasion.peer_id);
   }
@@ -35,8 +35,8 @@ exports.index = async (occasion) => {
     // add_dick = Math.round( ( random.int(50, 200) / fap_cof ) ) / 100;
 
     let fap_cof = ( Math.round(user.biba) / 150 );
-    fap_cof = fap_cof < 0.4 ? 0.4 : fap_cof;
-    let add_dick = Math.round( ( random.int(0.5, 1) / 10 )+ fap_cof);
+    fap_cof = fap_cof < 0.13 ? 0.13 : fap_cof;
+    let add_dick = (Math.round( ( random.int(50, 100) / 100 )) + fap_cof);
 
     friend.biba += add_dick;
     friend.save();
@@ -48,7 +48,7 @@ exports.index = async (occasion) => {
       first_name: vk_user[0].first_name,
       last_name: vk_user[0].last_name,
       id: user.vk_id,
-      dick: add_dick,
+      dick: Math.abs(add_dick).toFixed(2),
       friend: vk_friend[0],
       fap: 'you',
       money: add_money
