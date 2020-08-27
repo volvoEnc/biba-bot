@@ -1,5 +1,9 @@
 exports.who = async (data) => {
-  if (data.from_id == data.user_id) return;
+  if (data.from_id == data.user_id) {
+    return pre_send(render('error', {
+      error: 'command_ls_bot_error', template: 1
+    }), data.user_id)
+  };
   let users;
   try {
     users = await bot.api('messages.getConversationMembers', {peer_id: data.user_id});
@@ -14,7 +18,11 @@ exports.who = async (data) => {
 };
 
 exports.why = async (data) => {
-  if (data.from_id == data.user_id) return;
+  if (data.from_id == data.user_id) {
+    return pre_send(render('error', {
+      error: 'command_ls_bot_error', template: 1
+    }), data.user_id)
+  };
 
   let msg = data.data.object.message.text;
   let why = msg.replace('биба почему ', '');
@@ -36,8 +44,6 @@ exports.why = async (data) => {
 }
 
 exports.question = async (data) => {
-  if (data.from_id == data.user_id) return;
-
   let answer = random.int(0, 100) >= 50 ? 'Да' : 'Нет';
   pre_send(answer, data.user_id);
 }
