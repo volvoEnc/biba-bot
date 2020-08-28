@@ -1,3 +1,4 @@
+const Op = Sequelize.Op;
 const Model = Sequelize.Model;
 class User extends Model {
 
@@ -56,19 +57,41 @@ class User extends Model {
       this.save();
     }
   }
-  static async checking_spam(check_spam, user_id) {
-    if (check_spam.message == 'a_lot_of_spam'){
-      pre_send(render('error', {
-        error: 'spam', template: random.int(1, 2), time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000)
-      }), user_id);
-      return true;
+  static async checkingSpam(user_id, user_vk_id){
+    let checking_session = await Session.isExists(user_id, 'spam');
+    let time_exit;
+
+    if (checking_session == false){
+      await Session.add(user_id, 'spam', 1, false, 60);
     }
-    else if (check_spam.message == 'spam_error'){
-      pre_send(render('error', {
-        error: 'spam', template: 3, time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000 / 60)
-      }), user_id);
-      return true;
-    }else if (check_spam.message == 'block_spam') return false;
+    else if (checking_session == true){
+      let checking_spam = await Session.get(user_id, 'spam');
+       checking_spam = Number.parseInt(checking_spam);
+
+      if (checking_spam >= 11){
+        return true;
+      }
+      else if (checking_spam == 10){
+        checking_spam += 1;
+        time_exit = await Session.updateTime(user_id,'spam', checking_spam, 300);
+        pre_send(render('error', {
+          error: 'spam', template: 3, time_exit: Math.round((time_exit - Date.now()) / 1000 / 60)
+        }), user_vk_id);
+        return true;
+      }
+      else if (checking_spam <= 5){
+        checking_spam += 1;
+        await Session.updateTime(user_id,'spam', checking_spam, 10);
+      }
+      else {
+        checking_spam += 1;
+        time_exit = await Session.updateTime(user_id,'spam', checking_spam, 10);
+        pre_send(render('error', {
+          error: 'spam', template: random.int(1, 2), time_exit: Math.round((time_exit - Date.now()) / 1000)
+        }), user_vk_id);
+        return true;
+      }
+    }
   }
 }
 User.init({

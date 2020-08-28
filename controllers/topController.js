@@ -119,14 +119,13 @@ exports.tops = async (data) => {
     }), data.user_id)
   };
 
-  let check_spam = await Session.checkingSpam(data.user.id);
-  check_spam = await User.checking_spam(check_spam, data.user_id);
+  let check_spam = await User.checkingSpam(data.user.id, data.user_id);
   if (check_spam == true) return;
 
   await MainRouter.modules.topController.record(data);
-  await MainRouter.modules.topController.bibs(data);
-  await MainRouter.modules.topController.faps(data);
-  await MainRouter.modules.topController.bibon(data);
-  await MainRouter.modules.topController.bigbon(data);
-  await MainRouter.modules.topController.coin(data);
+  // await MainRouter.modules.topController.bibs(data);
+  // await MainRouter.modules.topController.faps(data);
+  // await MainRouter.modules.topController.bibon(data);
+  // await MainRouter.modules.topController.bigbon(data);
+  // await MainRouter.modules.topController.coin(data);
 }

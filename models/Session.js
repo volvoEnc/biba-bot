@@ -107,49 +107,26 @@ class Session extends Model {
         return await this.destroy({where: {expires_at: {[Op.lte]: expireTime}}});
     }
 
-    static async checkingSpam(user_id){
-        let checking_session = await Session.isExists(user_id, 'spam');
-        let answer_spam = {message: '', time_exit: 0};
+    /**
+     *
+     * Обновление времени сессий
+     *
+     * @param {int} user_id
+     * @param {string} name
+     * @param {int} expires_at - в секундах
+     * @param {string|null} value
+     * @returns {int} new expires_at
+     */
+    static async updateTime(user_id, name, value, expires_at ){
+        let session = await this.findOne({where: {user_id : user_id, name : name}});
 
-        if (checking_session == false){
-            await Session.add(user_id, 'spam', 1, false, 60);
-            return answer_spam;
-        }
-        else if (checking_session == true){
-            let checking_spam = await this.findOne({where: {user_id : user_id, name : 'spam'}});
-            let time_exit = checking_spam.expires_at;
-            checking_spam = checking_spam.value;
-            checking_spam = Number.parseInt(checking_spam);
+        if (value == null) value = session.value;
 
-            if (checking_spam >= 11){
-                answer_spam = {message: 'block_spam'};
-                return answer_spam;
-            }
-            else if (checking_spam == 10){
-                checking_spam += 1;
-                await this.update(
-                    { value: checking_spam, expires_at: time_exit + (1000 * 60 * 5)},
-                    { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
-                answer_spam = {message: 'spam_error', time_exit: time_exit + (1000 * 60 * 5)};
-                return answer_spam;
-            }
-            else if (checking_spam <= 5){
-                checking_spam += 1;
-                await this.update(
-                    { value: checking_spam, expires_at: time_exit + (1000 * 10)},
-                    { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
-                return answer_spam;
-            }
-            else {
-                checking_spam += 1;
-                await this.update(
-                    { value: checking_spam, expires_at: time_exit + (1000 * 10)},
-                    { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
-                answer_spam = {message: 'a_lot_of_spam', time_exit: time_exit + (1000 * 10)};
-                return answer_spam;
-            }
-        }
+        let time = ((session.expires_at + (expires_at * 1000)) - Date.now()) / 1000;
+        await Session.add(user_id, name, value, false, time);
+        return session.expires_at + (expires_at * 1000);
     }
+
 }
 Session.init({
     user_id: {
