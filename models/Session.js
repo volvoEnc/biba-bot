@@ -106,6 +106,44 @@ class Session extends Model {
     static async removeExpire(expireTime = Date.now()) {
         return await this.destroy({where: {expires_at: {[Op.lte]: expireTime}}});
     }
+
+    static async checkingSpam(user_id){
+        let checking_session = await Session.isExists(user_id, 'spam');
+
+        if (checking_session == false){
+            await Session.add(user_id, 'spam', 1, false, 60);
+        }
+        else if (checking_session == true){
+            let checking_spam = await this.findOne({where: {user_id : user_id, name : 'spam'}});
+            let time_exit = checking_spam.expires_at;
+            checking_spam = checking_spam.value;
+            checking_spam = Number.parseInt(checking_spam);
+
+            if (checking_spam >= 11){
+                return 'block_spam'
+            }
+            else if (checking_spam == 10){
+                checking_spam += 1;
+                await this.update(
+                    { value: checking_spam, expires_at: time_exit + (1000 * 60 * 5)},
+                    { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
+                return 'spam_error'
+            }
+            else if (checking_spam <= 5){
+                checking_spam += 1;
+                await this.update(
+                    { value: checking_spam, expires_at: time_exit + (1000 * 10)},
+                    { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
+            }
+            else {
+                checking_spam += 1;
+                await this.update(
+                    { value: checking_spam, expires_at: time_exit + (1000 * 10)},
+                    { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
+                return 'a_lot_of_spam'
+            }
+        }
+    }
 }
 Session.init({
     user_id: {

@@ -30,6 +30,7 @@ module.exports = [
     {command: "(cпоки|cgjrb)", controller: 'eventController@nudes'},
     {command: "(😳)", controller: 'eventController@delete'},
     // main commands
+    {command: "(^биба все топы|биба топс)", controller: 'topController@tops'},
     {command: "(^биба мой топ|биба мой топ$)", controller: 'bibaController@mytop'},
     {command: "(биба помощь|биба хелп|biba help|bib help|биба команды|команды бибы)", controller: 'mainController@help'},
     {command: "(биба инфо|биб инфо|биб инф|инфа биба)", controller: 'mainController@info'},

@@ -142,14 +142,11 @@ exports.draw_chlen = async (data) => {
   //рисуем текст с см
   ctx.font = 14+'px Impact';
   ctx.fillStyle = color_hole;
-  ctx.fillText('Оля, скинь сиськи', 120, 10);
+  ctx.fillText('Copyright ©', 160, 15);
   ctx.font = 20+'px Impact';
   ctx.rotate(-1.55);
   ctx.fillText(width+' см', -375, 150);
-  ctx.rotate(0.35);
-  ctx.font = 60+'px Impact';
-  ctx.fillStyle = 'black';
-  ctx.fillText('Copyright ©', -375, 200);
+
 
   let photo = await uploadPhotoToVk(canvas.toBuffer());
   pre_send('', data.user_id, {

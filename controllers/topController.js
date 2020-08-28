@@ -111,3 +111,25 @@ exports.record = async (data) => {
   }
   pre_send(render('rating/record_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
 };
+
+exports.tops = async (data) => {
+  let check_spam = await Session.checkingSpam(data.user.id);
+
+  if (check_spam == 'a_lot_of_spam'){
+    return pre_send(render('error', {
+      error: 'spam', template: random.int(1, 2)
+    }), data.user_id)
+  }
+  else if (check_spam == 'spam_error'){
+    return pre_send(render('error', {
+      error: 'spam', template: 3
+    }), data.user_id)
+  }else if (check_spam == 'block_spam') return;
+
+  await MainRouter.modules.topController.record(data);
+  await MainRouter.modules.topController.bibs(data);
+  await MainRouter.modules.topController.faps(data);
+  await MainRouter.modules.topController.bibon(data);
+  await MainRouter.modules.topController.bigbon(data);
+  await MainRouter.modules.topController.coin(data);
+}
