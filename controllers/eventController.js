@@ -1,7 +1,7 @@
 exports.who = async (data) => {
   if (data.from_id == data.user_id) {
     return pre_send(render('error', {
-      error: 'command_ls_bot_error', template: 1
+      error: 'the_command_is_disabled_here', template: 1
     }), data.user_id)
   };
   let users;
@@ -20,7 +20,7 @@ exports.who = async (data) => {
 exports.why = async (data) => {
   if (data.from_id == data.user_id) {
     return pre_send(render('error', {
-      error: 'command_ls_bot_error', template: 1
+      error: 'the_command_is_disabled_here', template: 1
     }), data.user_id)
   };
 

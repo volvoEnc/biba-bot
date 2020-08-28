@@ -113,18 +113,15 @@ exports.record = async (data) => {
 };
 
 exports.tops = async (data) => {
-  let check_spam = await Session.checkingSpam(data.user.id);
+  if (data.from_id != data.user_id) {
+    return pre_send(render('error', {
+      error: 'the_command_is_disabled_here', template: 2
+    }), data.user_id)
+  };
 
-  if (check_spam.message == 'a_lot_of_spam'){
-    return pre_send(render('error', {
-      error: 'spam', template: random.int(1, 2), time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000)
-    }), data.user_id)
-  }
-  else if (check_spam.message == 'spam_error'){
-    return pre_send(render('error', {
-      error: 'spam', template: 3, time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000 / 60)
-    }), data.user_id)
-  }else if (check_spam.message == 'block_spam') return;
+  let check_spam = await Session.checkingSpam(data.user.id);
+  check_spam = await User.checking_spam(check_spam, data.user_id);
+  if (check_spam == true) return;
 
   await MainRouter.modules.topController.record(data);
   await MainRouter.modules.topController.bibs(data);

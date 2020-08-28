@@ -56,6 +56,20 @@ class User extends Model {
       this.save();
     }
   }
+  static async checking_spam(check_spam, user_id) {
+    if (check_spam.message == 'a_lot_of_spam'){
+      pre_send(render('error', {
+        error: 'spam', template: random.int(1, 2), time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000)
+      }), user_id);
+      return true;
+    }
+    else if (check_spam.message == 'spam_error'){
+      pre_send(render('error', {
+        error: 'spam', template: 3, time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000 / 60)
+      }), user_id);
+      return true;
+    }else if (check_spam.message == 'block_spam') return false;
+  }
 }
 User.init({
   vk_id: {

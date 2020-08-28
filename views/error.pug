@@ -141,10 +141,12 @@ case error
         | ⛔ Биба еще не выросла для таких игр! Нужно более 5 см.
       when 3 
         | ⛔ АХАХАХА. Ты свою бибу видел? Большой бибон доступен после 5 см.
-  when 'command_ls_bot_error'
+  when 'the_command_is_disabled_here'
     case template
       when 1
-        | ⛔ Это команда отключена в ЛС бота.
+        | ⛔ Эта команда отключена в ЛС бота.
+      when 2
+        | ⛔ Эта команда доступна только в ЛС бота.
   when 'spam'
     case template
       when 1

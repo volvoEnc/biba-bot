@@ -122,7 +122,7 @@ class Session extends Model {
             checking_spam = Number.parseInt(checking_spam);
 
             if (checking_spam >= 11){
-                answer_spam.message = 'block_spam'
+                answer_spam = {message: 'block_spam'};
                 return answer_spam;
             }
             else if (checking_spam == 10){
