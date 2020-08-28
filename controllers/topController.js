@@ -123,9 +123,9 @@ exports.tops = async (data) => {
   if (check_spam == true) return;
 
   await MainRouter.modules.topController.record(data);
-  // await MainRouter.modules.topController.bibs(data);
-  // await MainRouter.modules.topController.faps(data);
-  // await MainRouter.modules.topController.bibon(data);
-  // await MainRouter.modules.topController.bigbon(data);
-  // await MainRouter.modules.topController.coin(data);
+  await MainRouter.modules.topController.bibs(data);
+  await MainRouter.modules.topController.faps(data);
+  await MainRouter.modules.topController.bibon(data);
+  await MainRouter.modules.topController.bigbon(data);
+  await MainRouter.modules.topController.coin(data);
 }
