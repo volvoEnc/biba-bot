@@ -115,16 +115,16 @@ exports.record = async (data) => {
 exports.tops = async (data) => {
   let check_spam = await Session.checkingSpam(data.user.id);
 
-  if (check_spam == 'a_lot_of_spam'){
+  if (check_spam.message == 'a_lot_of_spam'){
     return pre_send(render('error', {
-      error: 'spam', template: random.int(1, 2)
+      error: 'spam', template: random.int(1, 2), time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000)
     }), data.user_id)
   }
-  else if (check_spam == 'spam_error'){
+  else if (check_spam.message == 'spam_error'){
     return pre_send(render('error', {
-      error: 'spam', template: 3
+      error: 'spam', template: 3, time_exit: Math.round((check_spam.time_exit - Date.now()) / 1000 / 60)
     }), data.user_id)
-  }else if (check_spam == 'block_spam') return;
+  }else if (check_spam.message == 'block_spam') return;
 
   await MainRouter.modules.topController.record(data);
   await MainRouter.modules.topController.bibs(data);

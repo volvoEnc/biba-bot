@@ -109,9 +109,11 @@ class Session extends Model {
 
     static async checkingSpam(user_id){
         let checking_session = await Session.isExists(user_id, 'spam');
+        let answer_spam = {message: '', time_exit: 0};
 
         if (checking_session == false){
             await Session.add(user_id, 'spam', 1, false, 60);
+            return answer_spam;
         }
         else if (checking_session == true){
             let checking_spam = await this.findOne({where: {user_id : user_id, name : 'spam'}});
@@ -120,27 +122,31 @@ class Session extends Model {
             checking_spam = Number.parseInt(checking_spam);
 
             if (checking_spam >= 11){
-                return 'block_spam'
+                answer_spam.message = 'block_spam'
+                return answer_spam;
             }
             else if (checking_spam == 10){
                 checking_spam += 1;
                 await this.update(
                     { value: checking_spam, expires_at: time_exit + (1000 * 60 * 5)},
                     { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
-                return 'spam_error'
+                answer_spam = {message: 'spam_error', time_exit: time_exit + (1000 * 60 * 5)};
+                return answer_spam;
             }
             else if (checking_spam <= 5){
                 checking_spam += 1;
                 await this.update(
                     { value: checking_spam, expires_at: time_exit + (1000 * 10)},
                     { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
+                return answer_spam;
             }
             else {
                 checking_spam += 1;
                 await this.update(
                     { value: checking_spam, expires_at: time_exit + (1000 * 10)},
                     { where: { user_id: { [Op.eq]: user_id }, name: { [Op.eq]: 'spam' } } } );
-                return 'a_lot_of_spam'
+                answer_spam = {message: 'a_lot_of_spam', time_exit: time_exit + (1000 * 10)};
+                return answer_spam;
             }
         }
     }

@@ -11,7 +11,6 @@ exports.index = async (occasion) => {
   fap_cof = fap_cof < 0.4 ? 0.4 : fap_cof;
   let add_dick = (Math.round( ( random.int(100, 200) / 100 ))+ fap_cof);
 
-
   user.event_id = null;
   user.count_fap++;
 
