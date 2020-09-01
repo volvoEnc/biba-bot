@@ -68,59 +68,14 @@ class Top {
             return check;
         }
     }
-    static async getLocalTop(type, user){
-        if (type == 'biba_top'){
-            let biba_top = await User.findOne({
-                where: { biba: { [Op.gte]: user.biba }, id: { [Op.ne]: user.id } },
-                attributes: [ [sequelize.fn('COUNT', sequelize.col('id')), 'top'] ]
-            });
-            let biba = biba_top.dataValues.top;
-            let offset;
+    static async getLocalTop(place){
+        console.log(place)
+        let offset;
 
-            if (biba <= 1) offset = 0;
-            else offset = biba - 2;
+        if (place <= 2) offset = 0;
+        else offset = place - 3;
 
-            return offset;
-        }
-        else if (type == 'fap_top'){
-            let biba_top = await User.findOne({
-                where: { count_fap: { [Op.gte]: user.count_fap }, id: { [Op.ne]: user.id } },
-                attributes: [ [sequelize.fn('COUNT', sequelize.col('id')), 'top'] ]
-            });
-            let biba = biba_top.dataValues.top;
-            let offset;
-
-            if (biba <= 1) offset = 0;
-            else offset = biba - 2;
-
-            return offset;
-        }
-        else if (type == 'money_top'){
-            let biba_top = await User.findOne({
-                where: { money: { [Op.gte]: user.money }, id: { [Op.ne]: user.id } },
-                attributes: [ [sequelize.fn('COUNT', sequelize.col('id')), 'top'] ]
-            });
-            let biba = biba_top.dataValues.top;
-            let offset;
-
-            if (biba <= 1) offset = 0;
-            else offset = biba - 2;
-
-            return offset;
-        }
-        else if (type == 'record_top'){
-            let biba_top = await User.findOne({
-                where: { record_biba: { [Op.gte]: user.record_biba }, id: { [Op.ne]: user.id } },
-                attributes: [ [sequelize.fn('COUNT', sequelize.col('id')), 'top'] ]
-            });
-            let biba = biba_top.dataValues.top;
-            let offset;
-
-            if (biba <= 1) offset = 0;
-            else offset = biba - 2;
-
-            return offset;
-        }
+        return offset;
     }
 }
 

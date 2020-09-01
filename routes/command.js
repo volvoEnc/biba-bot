@@ -31,9 +31,12 @@ module.exports = [
     {command: "(😳)", controller: 'eventController@delete'},
     // main commands
     {command: "(^биба все топы|^биба топс)", controller: 'topController@tops'},
+    {command: "(^биба все мои топы)", controller: 'topController@local_tops'},
     {command: "(^биба мой топ|^биба мой топ)", controller: 'bibaController@mytop'},
     {command: "(^биба помощь|^биба хелп|^biba help|^bib help|^биба команды|^команды бибы)", controller: 'mainController@help'},
     {command: "(^биба инфо|^биб инфо|^биб инф|^инфа биба)", controller: 'mainController@info'},
+    {command: "(^биба мой топ бибон|^мой топ бибон|^мой топ бибонс)", controller: 'topController@local_bibon'},
+    {command: "(^биба мой топ бигбон|^мой топ бигбон|^мой топ бигбонс)", controller: 'topController@local_bigbon'},
     {command: "(^биба мой топ биб|^мой топ биб|^мой топ биба|^мой биба топ)", controller: 'topController@local_biba'},
     {command: "(^биба мой топ фап|^мой топ фап|^мой топ фапов|^мой фап топ)", controller: 'topController@local_fap'},
     {command: "(^биба мой топ коин|^мой топ коин|^мой топ коинс|^мой коин топ)", controller: 'topController@local_money'},

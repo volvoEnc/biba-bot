@@ -113,11 +113,11 @@ class Session extends Model {
      *
      * @param {int} user_id
      * @param {string} name
-     * @param {int} expires_at - в секундах
      * @param {string|null} value
+     * @param {int} expires_at - в секундах
      * @returns {int} new expires_at
      */
-    static async updateTime(user_id, name, value, expires_at ){
+    static async updateTime(user_id, name, value, expires_at){
         let session = await this.findOne({where: {user_id : user_id, name : name}});
 
         if (value === null) value = session.value;

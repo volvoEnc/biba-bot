@@ -98,7 +98,7 @@ exports.mytop = async (data) => {
   let biba_top = await Top.getTop('biba_top', user);
   let fap_top = await Top.getTop('fap_top', user);
   let coin_top = await Top.getTop('coin_top', user);
-  let local_top = await Top.getLocalTop('biba_top', user);
+  let local_top = await Top.getTop('biba_top', user);
   let bibon_top = await Top.getTop('bibon_top', user);
   let bigbon_top = await  Top.getTop('bigbon_top', user);
 
