@@ -1,5 +1,6 @@
 exports.who = async (data) => {
   if (User.the_command_is_disabled_here(1, data.user_id, data.from_id)) return;
+  if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let users;
   try {
     users = await bot.api('messages.getConversationMembers', {peer_id: data.user_id});
@@ -15,6 +16,7 @@ exports.who = async (data) => {
 
 exports.why = async (data) => {
   if (User.the_command_is_disabled_here(1, data.user_id, data.from_id)) return;
+  if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let msg = data.data.object.message.text;
   let why = msg.replace('биба почему ', '');
@@ -36,11 +38,13 @@ exports.why = async (data) => {
 }
 
 exports.question = async (data) => {
+  if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let answer = random.int(0, 100) >= 50 ? 'Да' : 'Нет';
   pre_send(answer, data.user_id);
 }
 
 exports.write_to_image = async (data) => {
+  if (await User.checkingSpam(data.user.id, data.user_id)) return;
   // if (data.from_id == data.user_id) return;
 
   //Получаем текст
@@ -80,6 +84,7 @@ exports.write_to_image = async (data) => {
 };
 
 exports.draw_chlen = async (data) => {
+  if (await User.checkingSpam(data.user.id, data.user_id)) return;
   const canvas = draw.createCanvas(250, 500);
   const ctx = canvas.getContext('2d');
 
@@ -151,5 +156,6 @@ exports.nudes = async (data) => {
 }
 
 exports.delete = async (data) => {
+  if (await User.checkingSpam(data.user.id, data.user_id)) return;
   pre_send("😳", data.user_id);
 }

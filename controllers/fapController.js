@@ -37,6 +37,7 @@ exports.fap = async (data) => {
         });
       }
 
+      else if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
       else {
 
