@@ -1,9 +1,5 @@
 exports.who = async (data) => {
-  if (data.from_id == data.user_id) {
-    return pre_send(render('error', {
-      error: 'the_command_is_disabled_here', template: 1
-    }), data.user_id)
-  };
+  if (User.the_command_is_disabled_here(1, data.user_id, data.from_id)) return;
   let users;
   try {
     users = await bot.api('messages.getConversationMembers', {peer_id: data.user_id});
@@ -18,11 +14,7 @@ exports.who = async (data) => {
 };
 
 exports.why = async (data) => {
-  if (data.from_id == data.user_id) {
-    return pre_send(render('error', {
-      error: 'the_command_is_disabled_here', template: 1
-    }), data.user_id)
-  };
+  if (User.the_command_is_disabled_here(1, data.user_id, data.from_id)) return;
 
   let msg = data.data.object.message.text;
   let why = msg.replace('биба почему ', '');
@@ -146,7 +138,6 @@ exports.draw_chlen = async (data) => {
   ctx.font = 20+'px Impact';
   ctx.rotate(-1.55);
   ctx.fillText(width+' см', -375, 150);
-
 
   let photo = await uploadPhotoToVk(canvas.toBuffer());
   pre_send('', data.user_id, {

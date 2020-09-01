@@ -113,14 +113,8 @@ exports.record = async (data) => {
 };
 
 exports.tops = async (data) => {
-  if (data.from_id != data.user_id) {
-    return pre_send(render('error', {
-      error: 'the_command_is_disabled_here', template: 2
-    }), data.user_id)
-  };
-
-  let check_spam = await User.checkingSpam(data.user.id, data.user_id);
-  if (check_spam == true) return;
+  if (await User.the_command_is_disabled_here(2, data.user_id, data.from_id)) return;
+  if (await User.checkingSpam(data.user.id, data.user_id)) return ;
 
   await MainRouter.modules.topController.record(data);
   await MainRouter.modules.topController.bibs(data);

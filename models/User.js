@@ -57,14 +57,19 @@ class User extends Model {
       this.save();
     }
   }
+
+  /**
+   *
+   * @param {int} user_id
+   * @param {int} user_vk_id
+   * @returns {Promise<boolean>}
+   */
   static async checkingSpam(user_id, user_vk_id){
-    let checking_session = await Session.isExists(user_id, 'spam');
     let time_exit;
 
-    if (checking_session == false){
+    if (await Session.isExists(user_id, 'spam') === false){
       await Session.add(user_id, 'spam', 1, false, 60);
-    }
-    else if (checking_session == true){
+    } else {
       let checking_spam = await Session.get(user_id, 'spam');
        checking_spam = Number.parseInt(checking_spam);
 
@@ -73,7 +78,7 @@ class User extends Model {
       }
       else if (checking_spam == 10){
         checking_spam += 1;
-        time_exit = await Session.updateTime(user_id,'spam', checking_spam, 300);
+        time_exit = await Session.updateTime(user_id, 'spam', checking_spam, 300);
         pre_send(render('error', {
           error: 'spam', template: 3, time_exit: Math.round((time_exit - Date.now()) / 1000 / 60)
         }), user_vk_id);
@@ -81,7 +86,7 @@ class User extends Model {
       }
       else if (checking_spam <= 5){
         checking_spam += 1;
-        await Session.updateTime(user_id,'spam', checking_spam, 10);
+        await Session.updateTime(user_id, 'spam', checking_spam, 10);
       }
       else {
         checking_spam += 1;
@@ -92,6 +97,32 @@ class User extends Model {
         return true;
       }
     }
+  }
+
+  /**
+   *
+    * @param {int} code_error. 1 - ls, 2 - not ls
+   * @param {int} user_id
+   * @param {int} from_id
+   * @returns {Promise<boolean>}
+   */
+  static async the_command_is_disabled_here(code_error, user_id, from_id){
+    if (code_error == 1){
+      if (from_id == user_id){
+        pre_send(render('error', {
+          error: 'the_command_is_disabled_here', template: code_error
+        }), user_id);
+        return true;
+      }
+    } else {
+      if (from_id != user_id){
+        pre_send(render('error', {
+          error: 'the_command_is_disabled_here', template: code_error
+        }), user_id);
+        return true;
+      }
+    }
+
   }
 }
 User.init({

@@ -120,7 +120,7 @@ class Session extends Model {
     static async updateTime(user_id, name, value, expires_at ){
         let session = await this.findOne({where: {user_id : user_id, name : name}});
 
-        if (value == null) value = session.value;
+        if (value === null) value = session.value;
 
         let time = ((session.expires_at + (expires_at * 1000)) - Date.now()) / 1000;
         await Session.add(user_id, name, value, false, time);
