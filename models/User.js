@@ -78,7 +78,7 @@ class User extends Model {
       }
       else if (checking_spam == 10){
         checking_spam += 1;
-        time_exit = await Session.updateTime(user_id, 'spam', checking_spam, 300);
+        time_exit = await Session.updateTime(user_id, 'spam', checking_spam, 150);
         pre_send(render('error', {
           error: 'spam', template: 3, time_exit: Math.round((time_exit - Date.now()) / 1000 / 60)
         }), user_vk_id);
@@ -86,11 +86,11 @@ class User extends Model {
       }
       else if (checking_spam <= 5){
         checking_spam += 1;
-        await Session.updateTime(user_id, 'spam', checking_spam, 10);
+        await Session.updateTime(user_id, 'spam', checking_spam, 5);
       }
       else {
         checking_spam += 1;
-        time_exit = await Session.updateTime(user_id,'spam', checking_spam, 10);
+        time_exit = await Session.updateTime(user_id,'spam', checking_spam, 5);
         pre_send(render('error', {
           error: 'spam', template: random.int(1, 2), time_exit: Math.round((time_exit - Date.now()) / 1000)
         }), user_vk_id);

@@ -92,12 +92,13 @@ exports.statistic = async (data) => {
 
 exports.mytop = async (data) => {
   if (await User.checkingSpam(data.user.id, data.user_id)) return;
+
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let record_biba = await Top.getTop('record_biba', user);
   let biba_top = await Top.getTop('biba_top', user);
   let fap_top = await Top.getTop('fap_top', user);
   let coin_top = await Top.getTop('coin_top', user);
-  let local_top = await Top.getTop('local_top', user);
+  let local_top = await Top.getLocalTop('biba_top', user);
   let bibon_top = await Top.getTop('bibon_top', user);
   let bigbon_top = await  Top.getTop('bigbon_top', user);
 

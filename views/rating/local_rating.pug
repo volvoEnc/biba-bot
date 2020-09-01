@@ -3,24 +3,15 @@
 
 - for ( let i = 0; i < users.length; i++ )
   - var biba = plural(users[i].biba, '%d см', '%d см', '%d см');
+  - var place = offset + i + 1;
   case i
     when 0
-      | 1. 👑[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
+      | #{place}. [id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
     when 1
-      | 2. 🥇[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
+      | #{place}. [id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
     when 2
-      | 3. 🥈[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
+      | #{place}. [id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
     when 3
-      | 4. 🥉[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
+      | #{place}. [id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
     when 4
-      | 5. 🥉[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
-    when 5
-      | 6. 🎖[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
-    when 6
-      | 7. 🎖[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
-    when 7
-      | 8. 🎖[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
-    when 8
-      | 9. 🎖[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
-    when 9
-      | 10. 🎖[id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
+      | #{place}. [id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
