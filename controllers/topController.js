@@ -1,5 +1,5 @@
 exports.bibs = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['biba', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -20,7 +20,7 @@ exports.bibs = async (data) => {
 };
 
 exports.faps = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['count_fap', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -41,7 +41,7 @@ exports.faps = async (data) => {
 };
 
 exports.coin = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['money', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -62,7 +62,7 @@ exports.coin = async (data) => {
 };
 
 exports.bibon = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let bibons = await Bibon.findAll({
     order: [ [sequelize.fn('COUNT', sequelize.col('bibon.biba')), 'DESC'] ],
     attributes: [ [ sequelize.fn('COUNT', sequelize.col('bibon.biba')), 'bibon' ] ],
@@ -80,7 +80,7 @@ exports.bibon = async (data) => {
 };
 
 exports.bigbon = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let big_bibons = await BigBibon.findAll({
     order: [ [sequelize.fn('COUNT', sequelize.col('big_bibon.biba')), 'DESC'] ],
     attributes: [ [ sequelize.fn('COUNT', sequelize.col('big_bibon.biba')), 'big_bibon' ] ],
@@ -98,7 +98,7 @@ exports.bigbon = async (data) => {
 };
 
 exports.record = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['record_biba', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -120,28 +120,25 @@ exports.record = async (data) => {
 
 exports.tops = async (data) => {
   if (await User.the_command_is_disabled_here(2, data.user_id, data.from_id)) return;
+  data.check_spam = false;
 
   await MainRouter.modules.topController.record(data);
-  await Session.updateTime(data.user.id, 'spam', 1, 5);
   await MainRouter.modules.topController.bibs(data);
   await MainRouter.modules.topController.faps(data);
   await MainRouter.modules.topController.bibon(data);
   await MainRouter.modules.topController.bigbon(data);
   await MainRouter.modules.topController.coin(data);
-  await Session.updateTime(data.user.id, 'spam', 1, 5);
 }
 
 exports.local_tops = async (data) => {
   if (await User.the_command_is_disabled_here(2, data.user_id, data.from_id)) return;
 
   await MainRouter.modules.topController.local_record(data);
-  await Session.updateTime(data.user.id, 'spam', 1, 5);
   await MainRouter.modules.topController.local_biba(data);
   await MainRouter.modules.topController.local_fap(data);
   await MainRouter.modules.topController.local_bibon(data);
   await MainRouter.modules.topController.local_bigbon(data);
   await MainRouter.modules.topController.local_money(data);
-  await Session.updateTime(data.user.id, 'spam', 1, 5);
 }
 
 exports.local_biba = async (data) => {
