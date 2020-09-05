@@ -1,12 +1,14 @@
 html
     head
+        title Online сообщения
         block scripts
             script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js')
             script(src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js')
 
     body
         div(class='main_box' id='vue_app')
-            div(class='conversation_box' v-for='conversation in conversations')
+            h1(v-if='conversations.length <= 0') Ждем сообщения...
+            div(class='conversation_box' v-for='conversation in conversations' :key="conversation.id")
                 div(class='conversation_head')
                     h4 {{conversation.title}}
                 div(class='messages')
@@ -15,26 +17,34 @@ html
                         div(class='text') {{message.text}}
 
 script.
-    const socket = io('192.162.246.78:3205');
+    const socket = io('192.162.246.78:#{port}');
 
-    socket.on('message', data => {
-        console.log(vue.conversations)
-        vue.conversations[0].messages.push(
-            {
-                author: 'Денис Аверин', text: data.text
+    socket.on('new_message', data => {
+        let add = true;
+        let conv_idx;
+        vue.conversations.forEach((conv, index) => {
+            if (conv.id == data.conversation.id) {
+                add = false;
+                conv_idx = index;
             }
-       );
+        });
+        if (add) {
+            let ob = {
+                id: data.conversation.id,
+                title: data.conversation.title,
+                messages: [
+                    {author: data.user.display_name, text: data.text}
+                ]}
+            vue.conversations.push(ob);
+        } else {
+            vue.conversations[conv_idx].messages.push({author: data.user.display_name, text: data.text});
+        }
     });
 
     let vue = new Vue({
         el: '#vue_app',
         data: {
-            conversations: [
-                {
-                    title: 'Ценители орных мемов',
-                    messages: []
-                }
-            ]
+            conversations: []
         }
     });
 

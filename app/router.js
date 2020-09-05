@@ -12,6 +12,10 @@ module.exports = class Router {
     let command;
     if (data.object.message.from_id < 0) return; // Сообщение от бота
 
+    if (data.object.message.from_id != data.object.message.peer_id && data.type == 'message_new') {
+      await SocketService.sendMessage(data.object.message);
+    }
+
     if (data.object.message.action != null) {
       if (data.object.message.action.type == 'chat_invite_user' && data.object.message.action.member_id == -process.env.VK_API_GROUP_ID) {
         await this.modules.mainController.invite_chat();
@@ -66,7 +70,6 @@ module.exports = class Router {
         global.conversation_message_id = data.object.message.conversation_message_id;
 
         if (await global.middleware.gameCommandBloked.execute(options)) {
-          console.log(options);
           this.modules[controller[0]][controller[1]](options);
           this.destroy_session = false;
           break;
