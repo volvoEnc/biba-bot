@@ -119,7 +119,7 @@ exports.record = async (data) => {
 };
 
 exports.tops = async (data) => {
-  if (await User.the_command_is_disabled_here(2, data.user_id, data.from_id)) return;
+  if (await User.theCommandIsDisabledHere(2, data.user_id, data.from_id)) return;
   data.check_spam = false;
 
   await MainRouter.modules.topController.record(data);
@@ -131,7 +131,7 @@ exports.tops = async (data) => {
 }
 
 exports.local_tops = async (data) => {
-  if (await User.the_command_is_disabled_here(2, data.user_id, data.from_id)) return;
+  if (await User.theCommandIsDisabledHere(2, data.user_id, data.from_id)) return;
 
   await MainRouter.modules.topController.local_record(data);
   await MainRouter.modules.topController.local_biba(data);

@@ -106,7 +106,7 @@ class User extends Model {
    * @param {int} from_id
    * @returns {Promise<boolean>}
    */
-  static async the_command_is_disabled_here(code_error, user_id, from_id){
+  static async theCommandIsDisabledHere(code_error, user_id, from_id){
     if (code_error == 1){
       if (from_id == user_id){
         pre_send(render('error', {

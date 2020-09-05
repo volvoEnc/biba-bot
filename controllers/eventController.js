@@ -1,5 +1,5 @@
 exports.who = async (data) => {
-  if (User.the_command_is_disabled_here(1, data.user_id, data.from_id)) return;
+  if (User.theCommandIsDisabledHere(1, data.user_id, data.from_id)) return;
   if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let users;
   try {
@@ -15,7 +15,7 @@ exports.who = async (data) => {
 };
 
 exports.why = async (data) => {
-  if (User.the_command_is_disabled_here(1, data.user_id, data.from_id)) return;
+  if (User.theCommandIsDisabledHere(1, data.user_id, data.from_id)) return;
   if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let msg = data.data.object.message.text;
