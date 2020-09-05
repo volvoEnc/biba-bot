@@ -89,10 +89,13 @@ class User extends Model {
         await Session.updateTime(user_id, 'spam', checking_spam, 5);
       }
       else {
+        let template = random.int(1, 2);
         checking_spam += 1;
         time_exit = await Session.updateTime(user_id,'spam', checking_spam, 5);
+        time_exit = Math.round((time_exit - Date.now()) / 1000);
+        if (time_exit < 0) template = 4;
         pre_send(render('error', {
-          error: 'spam', template: random.int(1, 2), time_exit: Math.round((time_exit - Date.now()) / 1000)
+          error: 'spam', template: template, time_exit: Math.round((time_exit - Date.now()) / 1000)
         }), user_vk_id);
         return true;
       }
