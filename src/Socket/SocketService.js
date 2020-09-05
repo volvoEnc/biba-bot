@@ -1,6 +1,7 @@
 class SocketService {
     static users = [];
     static conversations = [];
+    static history = [];
 
     static getUserInfoCache(userId) {
         return this.users[userId];
@@ -33,10 +34,25 @@ class SocketService {
         return conversation;
     }
 
+    static saveMessage(data) {
+        this.history.push(data);
+        if (this.history.length > 100) {
+            this.history.pop();
+        }
+    }
+    static loadMessage(socket) {
+        let time = 100;
+        this.history.forEach((message, index) => {
+            setTimeout(() => {
+                socket.emit('new_message', message);
+            }, time * index);
+        });
+    }
     static async sendMessage(message) {
         if (message.from_id !== undefined &&
             message.peer_id !== undefined &&
-            message.text !== undefined
+            message.text !== undefined &&
+            message.text !== ''
         ) {
             let conversation = await this.getConversationInfo(message.peer_id);
             if (conversation.count <= 0) return;
@@ -46,7 +62,8 @@ class SocketService {
             let data = {
                 conversation: {
                     id: message.peer_id,
-                    title: conversation.items[0].chat_settings.title
+                    title: conversation.items[0].chat_settings.title,
+                    count: conversation.items[0].chat_settings.members_count
                 },
                 user: {
                     id: message.from_id,
@@ -55,6 +72,7 @@ class SocketService {
                 text: message.text
             };
             socketIo.emit('new_message', data);
+            this.saveMessage(data);
         }
     }
 }

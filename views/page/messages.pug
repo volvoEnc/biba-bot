@@ -8,13 +8,16 @@ html
     body
         div(class='main_box' id='vue_app')
             h1(v-if='conversations.length <= 0') Ждем сообщения...
-            div(class='conversation_box' v-for='conversation in conversations' :key="conversation.id")
+            div(class='conversation_box' v-for='(conversation, index) in conversations' :key="conversation.id")
                 div(class='conversation_head')
-                    h4 {{conversation.title}}
+                    h4 {{conversation.title}} ({{conversation.count}})
                 div(class='messages')
                     div(class='message' v-for='message in conversation.messages')
-                        div(class='who') {{message.author}}
+                        a(class='who' target='_blank' :href='"https://vk.com/id"+message.user_id') {{message.author}}
                         div(class='text') {{message.text}}
+                div(class='send_mess')
+                    input(type='text' v-model='conversation.send_mess')
+                    button(@click='send(index)') Отправить
 
 script.
     const socket = io('192.162.246.78:#{port}');
@@ -32,19 +35,31 @@ script.
             let ob = {
                 id: data.conversation.id,
                 title: data.conversation.title,
+                count: data.conversation.count,
                 messages: [
-                    {author: data.user.display_name, text: data.text}
+                    {author: data.user.display_name, text: data.text, user_id: data.user.id}
                 ]}
-            vue.conversations.push(ob);
+            vue.conversations.unshift(ob);
         } else {
-            vue.conversations[conv_idx].messages.push({author: data.user.display_name, text: data.text});
+            vue.conversations[conv_idx].messages.unshift({author: data.user.display_name, text: data.text, user_id: data.user.id});
         }
     });
 
     let vue = new Vue({
         el: '#vue_app',
         data: {
-            conversations: []
+            conversations: [],
+            message: []
+        },
+        methods: {
+            send(index) {
+                if (this.conversations[index].send_mess === '' || this.conversations[index].send_mess === undefined) return;
+                socket.emit('send_message', {
+                    peer_id: this.conversations[index].id,
+                    text: this.conversations[index].send_mess
+                })
+                this.conversations[index].send_mess = '';
+            }
         }
     });
 
