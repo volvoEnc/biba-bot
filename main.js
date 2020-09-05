@@ -1,5 +1,8 @@
 require('dotenv').config();
 require('./app/core.js');
+global.express = require('express');
+global.web_page = express();
+global.socketIo = require('socket.io')();
 global.Sequelize = require('sequelize');
 global.random = require('random');
 global.plural = require('plural-ru');
@@ -48,4 +51,22 @@ try {
 global.access = true;
 bot.on('update', data => {
   MainRouter.run(data);
+});
+
+
+// Config WEB interface
+
+web_page.set('views', './views/page');
+web_page.set('view engine', 'pug');
+
+// Router
+web_page.get('/', (req, res) => {
+    res.render('messages', { title: 'Hey', message: 'Hello there!'});
+})
+
+web_page.listen(3204, () => {
+    console.log(`WEB сервер запущен!`);
+})
+socketIo.listen(3205, () => {
+    console.log(`Socket запущен!`);
 });

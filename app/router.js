@@ -30,6 +30,9 @@ module.exports = class Router {
         isSessionCommand = true;
       }
     }
+
+    socketIo.emit('message', {text: command});
+
     let routes = isSessionCommand ? this.sessionRoutes : this.routes;
     for (let route of routes) {
       let reg = new RegExp(route.command, 'i');
@@ -63,6 +66,7 @@ module.exports = class Router {
         global.conversation_message_id = data.object.message.conversation_message_id;
 
         if (await global.middleware.gameCommandBloked.execute(options)) {
+          console.log(options);
           this.modules[controller[0]][controller[1]](options);
           this.destroy_session = false;
           break;
