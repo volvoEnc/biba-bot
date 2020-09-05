@@ -119,6 +119,7 @@ exports.record = async (data) => {
 };
 
 exports.tops = async (data) => {
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   if (await User.theCommandIsDisabledHere(2, data.user_id, data.from_id)) return;
   data.check_spam = false;
 
@@ -131,7 +132,9 @@ exports.tops = async (data) => {
 }
 
 exports.local_tops = async (data) => {
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   if (await User.theCommandIsDisabledHere(2, data.user_id, data.from_id)) return;
+  data.check_spam = false;
 
   await MainRouter.modules.topController.local_record(data);
   await MainRouter.modules.topController.local_biba(data);
@@ -142,7 +145,7 @@ exports.local_tops = async (data) => {
 }
 
 exports.local_biba = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('biba_top', user));
@@ -174,7 +177,7 @@ exports.local_biba = async (data) => {
 }
 
 exports.local_fap = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('fap_top', user));
@@ -206,7 +209,7 @@ exports.local_fap = async (data) => {
 }
 
 exports.local_money = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('coin_top', user));
@@ -238,7 +241,7 @@ exports.local_money = async (data) => {
 }
 
 exports.local_record = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('record_biba', user));
@@ -270,7 +273,7 @@ exports.local_record = async (data) => {
 }
 
 exports.local_bibon = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('bibon_top', user));
@@ -295,7 +298,7 @@ exports.local_bibon = async (data) => {
 }
 
 exports.local_bigbon = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('bibon_top', user));

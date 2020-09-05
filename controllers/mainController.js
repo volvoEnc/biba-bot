@@ -4,7 +4,7 @@ exports.tops = async (data) => {
     return pre_send("Топы", data.user_id, { disable_mentions: 1, keyboard: await get_keyboard('RatingKeyboard', false) });
 };
 exports.help = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   bot.send(render("app/help"), data.user_id)
 };
 exports.private_error = async (data) => {
@@ -34,7 +34,7 @@ exports.conversation = async (data) => {
 };
 
 exports.info = async (data) => {
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let zero_users = await User.count({where: {biba: 0}});
   let active_users = (await User.count()) - zero_users;
   let covs = await Conversation.findAll({

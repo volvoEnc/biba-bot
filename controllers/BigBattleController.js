@@ -32,7 +32,7 @@ exports.start = async (data) => {
       template: random.int(1, 3)
     }), data.user_id);
   }
-  if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   // END ERRORS
 
 

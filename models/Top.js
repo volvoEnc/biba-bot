@@ -69,7 +69,6 @@ class Top {
         }
     }
     static async getLocalTop(place){
-        console.log(place)
         let offset;
 
         if (place <= 2) offset = 0;
