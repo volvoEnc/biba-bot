@@ -13,7 +13,8 @@ html
                     h4 {{conversation.title}} ({{conversation.count}})
                 div(class='messages')
                     div(class='message' v-for='message in conversation.messages')
-                        a(class='who' target='_blank' :href='"https://vk.com/id"+message.user_id') {{message.author}}
+                        a(class='who' v-if='message.is_bot == false' target='_blank' :href='"https://vk.com/id"+message.user_id') {{message.author}}
+                        div(class='who' v-else) Бот
                         div(class='text') {{message.text}}
                 div(class='send_mess')
                     input(type='text' v-model='conversation.send_mess')
@@ -36,12 +37,20 @@ script.
                 id: data.conversation.id,
                 title: data.conversation.title,
                 count: data.conversation.count,
-                messages: [
-                    {author: data.user.display_name, text: data.text, user_id: data.user.id}
-                ]}
+                messages: [{
+                    author: data.user.display_name,
+                    text: data.text,
+                    user_id: data.user.id,
+                    is_bot: data.user.is_bot
+                }]}
             vue.conversations.unshift(ob);
         } else {
-            vue.conversations[conv_idx].messages.unshift({author: data.user.display_name, text: data.text, user_id: data.user.id});
+            vue.conversations[conv_idx].messages.unshift({
+                author: data.user.display_name,
+                text: data.text,
+                user_id: data.user.id,
+                is_bot: data.user.is_bot
+            });
         }
     });
 
@@ -55,7 +64,12 @@ script.
             send(index) {
                 if (this.conversations[index].send_mess === '' || this.conversations[index].send_mess === undefined) return;
                 socket.emit('send_message', {
-                    peer_id: this.conversations[index].id,
+                    conversation: {
+                        id: this.conversations[index].id,
+                        title: this.conversations[index].title,
+                        count: this.conversations[index].count
+                    },
+                    user: { id: '', display_name: '', is_bot: true},
                     text: this.conversations[index].send_mess
                 })
                 this.conversations[index].send_mess = '';

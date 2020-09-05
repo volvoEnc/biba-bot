@@ -48,6 +48,11 @@ class SocketService {
             }, time * index);
         });
     }
+    static botMessage(message) {
+        message.user.is_bot = true;
+        socketIo.emit('new_message', message);
+        this.saveMessage(message);
+    }
     static async sendMessage(message) {
         if (message.from_id !== undefined &&
             message.peer_id !== undefined &&
@@ -67,7 +72,8 @@ class SocketService {
                 },
                 user: {
                     id: message.from_id,
-                    display_name: display_name
+                    display_name: display_name,
+                    is_bot: false
                 },
                 text: message.text
             };
