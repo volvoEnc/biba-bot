@@ -12,6 +12,10 @@ module.exports = class Router {
     let command;
     if (data.object.message.from_id < 0) return; // Сообщение от бота
 
+    if (data.object.message.from_id != data.object.message.peer_id && data.type == 'message_new') {
+      await SocketService.sendMessage(data.object.message);
+    }
+
     if (data.object.message.action != null) {
       if (data.object.message.action.type == 'chat_invite_user' && data.object.message.action.member_id == -process.env.VK_API_GROUP_ID) {
         await this.modules.mainController.invite_chat();
@@ -30,6 +34,9 @@ module.exports = class Router {
         isSessionCommand = true;
       }
     }
+
+    socketIo.emit('message', {text: command});
+
     let routes = isSessionCommand ? this.sessionRoutes : this.routes;
     for (let route of routes) {
       let reg = new RegExp(route.command, 'i');

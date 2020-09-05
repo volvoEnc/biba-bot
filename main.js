@@ -1,5 +1,8 @@
 require('dotenv').config();
 require('./app/core.js');
+global.express = require('express');
+global.web_page = express();
+global.socketIo = require('socket.io')();
 global.Sequelize = require('sequelize');
 global.random = require('random');
 global.plural = require('plural-ru');
@@ -23,6 +26,8 @@ global.morphy = new Morphy('ru', {
     use_ancodes_cache: false,
     resolve_ancodes: Morphy.RESOLVE_ANCODES_AS_TEXT
 });
+require('./routes/web.js')
+require('./routes/socket.js')
 global.sessionCode = 998283123568172731; // Случайные циферки
 
 global.sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
@@ -48,4 +53,15 @@ try {
 global.access = true;
 bot.on('update', data => {
   MainRouter.run(data);
+});
+
+// Config WEB interface
+web_page.set('views', './views/page');
+web_page.set('view engine', 'pug');
+
+web_page.listen(process.env.PORT_WEB, () => {
+    console.log(`WEB сервер запущен!`);
+})
+socketIo.listen(process.env.PORT_SOCKET, () => {
+    console.log(`Socket запущен!`);
 });

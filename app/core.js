@@ -73,12 +73,24 @@ global.init_shop = async () => {
     global.shop.index();
   });
 }
+global.init_src = async (path = './src') => {
+  fs.readdir(path, {'withFileTypes' : true}, (err, files) => {
+    files.forEach(file => {
+      if (file.isDirectory()) {
+        init_src(path + '/' + file.name)
+      } else if (file.isFile()) {
+        require('.' + path + '/' + file.name);
+      }
+    });
+  });
+}
 global.init_app = async () => {
   init_middleware();
   init_models();
   init_events();
   init_actions();
   init_shop();
+  init_src();
 }
 // Перемешивание массива
 global.shuffle = (array) => {
