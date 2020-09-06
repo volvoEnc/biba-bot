@@ -64,7 +64,7 @@ class User extends Model {
    * @param {int} user_vk_id
    * @returns {Promise<boolean>}
    */
-  static async checkingSpam(user_id, user_vk_id){
+  static async checkSpam(user_id, user_vk_id){
     let time_exit;
 
     if (await Session.isExists(user_id, 'spam') === false){
@@ -116,7 +116,8 @@ class User extends Model {
         }), user_id);
         return true;
       }
-    } else {
+    }
+    else if (code_error == 2){
       if (from_id != user_id){
         pre_send(render('error', {
           error: 'the_command_is_disabled_here', template: code_error
@@ -124,7 +125,6 @@ class User extends Model {
         return true;
       }
     }
-
   }
 }
 User.init({

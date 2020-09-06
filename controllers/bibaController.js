@@ -23,7 +23,7 @@ exports.profile = async (data) => {
     created = true;
     user = await User.create({vk_id: data.from_id, money: 0});
   }
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let vk_user = await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'});
   let eventt = await Event.findOne({where: {user_id: user.id, event_sys_name: {[Op.or] : ['fap_biba', 'fap_you_biba']} }});
   let ev = { name: "", time: 0 };
@@ -44,7 +44,7 @@ exports.profile = async (data) => {
 }
 
 exports.statistic = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let top = await User.findOne({
     where: { biba: { [Op.gte]: user.biba }, id: { [Op.ne]: user.id } },
@@ -91,7 +91,7 @@ exports.statistic = async (data) => {
 };
 
 exports.mytop = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let record_biba = await Top.getTop('record_biba', user);

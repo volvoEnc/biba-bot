@@ -34,7 +34,7 @@ exports.battle = async (data) => {
         time: time
       }), data.user_id);
     }
-    if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+    if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
     // END ERROR HANDLER
 
 
