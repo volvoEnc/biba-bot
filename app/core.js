@@ -108,3 +108,16 @@ global.uploadPhotoToVk = async (buffer) => {
   fs.unlinkSync('generated/'+filename);
   return photo;
 }
+global.uploadVoiceMessageToVk = async (data, filename) => {
+  let vkServerLink = (await bot.api('docs.getMessagesUploadServer', {type: 'audio_message', peer_id: data.user_id})).upload_url;
+  let resp = await rq({
+    method: 'POST',
+    uri: vkServerLink,
+    formData: {
+      file: fs.createReadStream('static/audio/good_night/'+filename+'.ogg')
+    },
+    json: true
+  });
+  let finalDocs = await bot.api('docs.save', {file: resp.file});
+  return finalDocs[0];
+}
