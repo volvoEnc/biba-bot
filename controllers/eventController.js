@@ -151,8 +151,16 @@ exports.draw_chlen = async (data) => {
 };
 
 exports.nudes = async (data) => {
-  let user = (await bot.api('users.get', {user_ids: data.to_id}))[0];
-  pre_send(`@all Споки, ${user.first_name} <3`, data.user_id);
+  let filename = 'all';
+  if (data.from_id === 171707143) {
+    filename = 'danil';
+  } else if (data.from_id === 133124411) {
+    filename = 'ilia';
+  }
+  let audio_message = await uploadVoiceMessageToVk(data, filename);
+  await pre_send(null, data.user_id, {
+    attachment: 'doc'+audio_message.owner_id+'_'+audio_message.id
+  })
 }
 
 exports.delete = async (data) => {

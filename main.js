@@ -1,6 +1,7 @@
 require('dotenv').config();
 require('./app/core.js');
 global.express = require('express');
+global.rq = require("request-promise-native");
 global.web_page = express();
 global.socketIo = require('socket.io')();
 global.Sequelize = require('sequelize');
