@@ -1,3 +1,4 @@
+const Op = Sequelize.Op;
 const Model = Sequelize.Model;
 class User extends Model {
 
@@ -55,6 +56,76 @@ class User extends Model {
       this.record_biba = this.biba;
       this.save();
     }
+  }
+
+  /**
+   *
+   * @param {int} user_id
+   * @param {int} user_vk_id
+   * @returns {Promise<boolean>}
+   */
+  static async checkingSpam(user_id, user_vk_id){
+    let time_exit;
+
+    if (await Session.isExists(user_id, 'spam') === false){
+      await Session.add(user_id, 'spam', 1, false, 60);
+    } else {
+      let checking_spam = await Session.get(user_id, 'spam');
+       checking_spam = Number.parseInt(checking_spam);
+
+      if (checking_spam >= 11){
+        return true;
+      }
+      else if (checking_spam == 10){
+        checking_spam += 1;
+        time_exit = await Session.updateTime(user_id, 'spam', checking_spam, 150);
+        pre_send(render('error', {
+          error: 'spam', template: 3, time_exit: Math.round((time_exit - Date.now()) / 1000 / 60)
+        }), user_vk_id);
+        return true;
+      }
+      else if (checking_spam <= 5){
+        checking_spam += 1;
+        await Session.updateTime(user_id, 'spam', checking_spam, 5);
+      }
+      else {
+        let template = random.int(1, 2);
+        checking_spam += 1;
+        time_exit = await Session.updateTime(user_id,'spam', checking_spam, 5);
+        time_exit = Math.round((time_exit - Date.now()) / 1000);
+        if (time_exit < 0) template = 4;
+        pre_send(render('error', {
+          error: 'spam', template: template, time_exit: Math.round((time_exit - Date.now()) / 1000)
+        }), user_vk_id);
+        return true;
+      }
+    }
+  }
+
+  /**
+   *
+    * @param {int} code_error. 1 - ls, 2 - not ls
+   * @param {int} user_id
+   * @param {int} from_id
+   * @returns {Promise<boolean>}
+   */
+  static async theCommandIsDisabledHere(code_error, user_id, from_id){
+    if (code_error == 1){
+      if (from_id == user_id){
+        pre_send(render('error', {
+          error: 'the_command_is_disabled_here', template: code_error
+        }), user_id);
+        return true;
+      }
+    } else {
+      if (from_id != user_id){
+        pre_send(render('error', {
+          error: 'the_command_is_disabled_here', template: code_error
+        }), user_id);
+        return true;
+      }
+    }
+
   }
 }
 User.init({

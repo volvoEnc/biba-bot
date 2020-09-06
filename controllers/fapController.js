@@ -18,7 +18,8 @@ exports.fap = async (data) => {
           template: random.int(1, 3),
           first_name: res[0].first_name,
           last_name: res[0].last_name,
-          id: data.from_id
+          id: data.from_id,
+          time_exit: Math.round((eventt.time_exit - Date.now()) / 1000 / 60)
         }), data.user_id, {
           disable_mentions: 1
         });
@@ -36,6 +37,7 @@ exports.fap = async (data) => {
         });
       }
 
+      else if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
       else {
 

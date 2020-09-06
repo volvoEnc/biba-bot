@@ -29,6 +29,7 @@ exports.add = async data => {
 };
 
 exports.portrait = async data => {
+    if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
     // if (data.from_id == data.user_id) return;
     let wordC = exports.randomWord(await Words.getWords('С'));
     let wordPrich = exports.randomWord(await Words.getWords('ПРИЧАСТИЕ'));

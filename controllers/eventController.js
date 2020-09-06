@@ -1,5 +1,6 @@
 exports.who = async (data) => {
-  if (data.from_id == data.user_id) return;
+  if (User.theCommandIsDisabledHere(1, data.user_id, data.from_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let users;
   try {
     users = await bot.api('messages.getConversationMembers', {peer_id: data.user_id});
@@ -14,7 +15,8 @@ exports.who = async (data) => {
 };
 
 exports.why = async (data) => {
-  if (data.from_id == data.user_id) return;
+  if (User.theCommandIsDisabledHere(1, data.user_id, data.from_id)) return;
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
 
   let msg = data.data.object.message.text;
   let why = msg.replace('биба почему ', '');
@@ -36,13 +38,13 @@ exports.why = async (data) => {
 }
 
 exports.question = async (data) => {
-  if (data.from_id == data.user_id) return;
-
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   let answer = random.int(0, 100) >= 50 ? 'Да' : 'Нет';
   pre_send(answer, data.user_id);
 }
 
 exports.write_to_image = async (data) => {
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   // if (data.from_id == data.user_id) return;
 
   //Получаем текст
@@ -82,6 +84,7 @@ exports.write_to_image = async (data) => {
 };
 
 exports.draw_chlen = async (data) => {
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   const canvas = draw.createCanvas(250, 500);
   const ctx = canvas.getContext('2d');
 
@@ -136,14 +139,10 @@ exports.draw_chlen = async (data) => {
   //рисуем текст с см
   ctx.font = 14+'px Impact';
   ctx.fillStyle = color_hole;
-  ctx.fillText('Оля, скинь сиськи', 120, 10);
+  ctx.fillText('Copyright ©', 160, 15);
   ctx.font = 20+'px Impact';
   ctx.rotate(-1.55);
   ctx.fillText(width+' см', -375, 150);
-  ctx.rotate(0.35);
-  ctx.font = 60+'px Impact';
-  ctx.fillStyle = 'black';
-  ctx.fillText('Copyright ©', -375, 200);
 
   let photo = await uploadPhotoToVk(canvas.toBuffer());
   pre_send('', data.user_id, {
@@ -157,5 +156,6 @@ exports.nudes = async (data) => {
 }
 
 exports.delete = async (data) => {
+  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
   pre_send("😳", data.user_id);
 }

@@ -1,3 +1,4 @@
+const Op = Sequelize.Op;
 class Top {
     static async getUsers(type){
         let users_count = await User.count(type);
@@ -12,8 +13,6 @@ class Top {
         }
     }
     static async getTop(type, user){
-        const Op = Sequelize.Op;
-
         if (type == 'record_biba'){
             let record_biba = await User.findOne({
                 where: { record_biba: { [Op.gte]: user.record_biba}, id: { [Op.ne]: user.id } },
@@ -42,19 +41,6 @@ class Top {
             })
             return coin_top.dataValues.top + 1;
         }
-       else if (type == 'local_top'){
-            let biba_top = await User.findOne({
-                where: { biba: { [Op.gte]: user.biba }, id: { [Op.ne]: user.id } },
-                attributes: [ [sequelize.fn('COUNT', sequelize.col('id')), 'top'] ]
-            });
-            let biba = biba_top.dataValues.top;
-            let offset;
-
-            if (biba <= 1) offset = 0;
-            else offset = biba - 2;
-
-            return offset;
-        }
        else if (type == 'bibon_top'){
            let bibon_top = await sequelize.query("SET @n = 0");
            bibon_top = await sequelize.query(`SELECT * FROM 
@@ -81,6 +67,14 @@ class Top {
 
             return check;
         }
+    }
+    static async getLocalTop(place){
+        let offset;
+
+        if (place <= 2) offset = 0;
+        else offset = place - 3;
+
+        return offset;
     }
 }
 

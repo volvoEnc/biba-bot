@@ -52,7 +52,8 @@ module.exports = class Router {
           from_id: data.object.message.from_id,
           user: user,
           user_data: data.object.message.text.toLowerCase(),
-          data: data
+          data: data,
+          check_spam: true
         };
         let toreg = new RegExp("(-[0-9]|[0-9])+", 'i');
         if (data.object.message.reply_message != undefined) {
