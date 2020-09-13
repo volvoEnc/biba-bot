@@ -27,7 +27,8 @@ module.exports = [
     {command: "^биба.*\\?$", controller: 'eventController@question'},
     {command: "(^биба напиши)", controller: 'eventController@write_to_image'},
     {command: "(^биба нарисуй член)", controller: 'eventController@draw_chlen'},
-    {command: "(споки|спок|я спать|доброй ночи)", controller: 'eventController@nudes'},
+    {command: "(споки|спок|я спать|доброй ночи)", controller: 'eventController@nudes', name: 'goodNight'},
+    {command: "@goodMorning", controller: 'eventController@goodMorning', name: 'goodMorning'},
     {command: "(😳)", controller: 'eventController@delete'},
     // main commands
     {command: "(^биба все топы|^биба топс)", controller: 'topController@tops'},
