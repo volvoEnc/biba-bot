@@ -1,0 +1,12 @@
+case template
+    when 1
+        | Доброе утро [id#{user.id}|#{user.first_name}] 💥
+    when 2
+        | Как спалось [id#{user.id}|#{user.first_name}]?
+    when 3
+        | Утро доброе, [id#{user.id}|уважаемый] ⭐
+    when 4
+        | Оп, а кто это проснулся у нас?
+        | 👏🏻👏🏻 [id#{user.id}|#{user.first_name}] 👏🏻
+    when 5
+        | Добро пожаловать обратно в АД [id#{user.id}|#{user.first_name}] ✨

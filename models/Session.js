@@ -9,14 +9,14 @@ class Session extends Model {
     /**
      * Создание сессии (контекста) для пользователя
      *
-     * @param {int|null} userId - UserId пользователя в нашей системе
+     * @param {int|null} peerId - UserId or ConversationId
      * @param {string} name - Название сессии
      * @param {string=} value - Значение сессии
      * @param {boolean} [isRoute=false] - это сессия является маршрутом?
      * @param {int|null} [expiresAt=60] - Время жизни сессии в секундах
      * @returns {Promise<boolean>}
      */
-    static async add(userId, name, value, isRoute = false, expiresAt) {
+    static async add(peerId, name, value, isRoute = false, expiresAt) {
         // Если null сессия безсрочная
         if (expiresAt !== null) {
             if (expiresAt === undefined) {
@@ -26,14 +26,14 @@ class Session extends Model {
         }
 
         let session = new Session({
-            user_id: userId,
+            peer_id: peerId,
             name: name,
             value: value,
             is_route: isRoute,
             expires_at: expiresAt
         });
         try {
-            await this.remove(userId, name);
+            await this.remove(peerId, name);
             await session.save();
         } catch (e) {
             //TODO: тут нужно писать в лог ошибку
@@ -46,55 +46,55 @@ class Session extends Model {
 
     /**
      * Получение сесии для пользователя по имени
-     * @param {int|null} userId - UserId пользователя в нашей системе
+     * @param {int|null} peerId - UserId or ConversationId
      * @param {string} name - Название сессии
      * @return {(Promise<Session>|Promise<null>)} - Сессия, либо null
      */
-    static async get(userId, name) {
-        return (await this.findOne({where: {user_id : userId, name : name}})).value;
+    static async get(peerId, name) {
+        return (await this.findOne({where: {peer_id : peerId, name : name}})).value;
     }
 
     /**
      * Получение маршрутной сессии для пользователя
      *
-     * @param {int} userId - UserId пользователя в нашей системе
+     * @param {int} peerId - UserId or ConversationId
      * @return {(Promise<Session>|Promise<null>)} - Сессия, либо null
      */
-    static async getRouteSession(userId) {
-        return await this.findOne({where: {user_id : userId, is_route: true}});
+    static async getRouteSession(peerId) {
+        return await this.findOne({where: {peer_id : peerId, is_route: true}});
     }
 
     /**
      * Проверка на наличие сессии
      *
-     * @param {int|null} userId - UserId пользователя в нашей системе
+     * @param {int|null} peerId - UserId or ConversationId
      * @param {string} name - Название сессии
      * @returns {Promise<boolean>}
      */
-    static async isExists(userId, name) {
-        let session = await this.findOne({where: {user_id : userId, name: name}});
+    static async isExists(peerId, name) {
+        let session = await this.findOne({where: {peer_id : peerId, name: name}});
         return session !== null;
     }
 
     /**
      * Удаление сессии по имени
      *
-     * @param {int|null} userId - UserId пользователя в нашей системе
+     * @param {int|null} peerId - UserId or ConversationId
      * @param {string} name - Название сессии
      * @returns {Promise<boolean>}
      */
-    static async remove(userId, name) {
-        return await this.destroy({where: {user_id : userId, name : name}});
+    static async remove(peerId, name) {
+        return await this.destroy({where: {peer_id : peerId, name : name}});
     }
 
     /**
      * Удаление всех сессий пользователя
      *
-     * @param {int|null} userId - UserId пользователя в нашей системе
+     * @param {int|null} peerId - UserId or ConversationId
      * @returns {Promise<int>}
      */
-    static async removeAll(userId) {
-        return await this.destroy({where: {user_id : userId}});
+    static async removeAll(peerId) {
+        return await this.destroy({where: {peer_id : peerId}});
     }
 
     /**
@@ -111,25 +111,25 @@ class Session extends Model {
      *
      * Обновление времени сессий
      *
-     * @param {int} user_id
+     * @param {int} peerId - UserId or ConversationId
      * @param {string} name
      * @param {string|null} value
      * @param {int} expires_at - в секундах
      * @returns {int} new expires_at
      */
-    static async updateTime(user_id, name, value, expires_at){
-        let session = await this.findOne({where: {user_id : user_id, name : name}});
+    static async updateTime(peerId, name, value, expires_at){
+        let session = await this.findOne({where: {peer_id : peerId, name : name}});
 
         if (value === null) value = session.value;
 
         let time = ((session.expires_at + (expires_at * 1000)) - Date.now()) / 1000;
-        await Session.add(user_id, name, value, false, time);
+        await Session.add(peerId, name, value, false, time);
         return session.expires_at + (expires_at * 1000);
     }
 
 }
 Session.init({
-    user_id: {
+    peer_id: {
         type: Sequelize.BIGINT,
         allowNull: true
     },
