@@ -26,6 +26,16 @@ global.get_keyboard = async (name, inline = true) => {
   keyboard.obj.inline = inline;
   return keyboard;
 }
+global.middleware_execute = async (data, isAll = true) => {
+  for (let i = 0; i < middleware.length; i++) {
+    if (await middleware[i].is_all() === isAll) {
+      if (!await middleware[i].execute(data)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 global.init_models = async () => {
   fs.readdir('./models', function (err, files) {
     global.models = [];
@@ -56,9 +66,9 @@ global.init_actions = async () => {
 global.init_middleware = async () => {
   fs.readdir('./middleware', function (err, files) {
     global.middleware = [];
-    files.forEach(function (file) {
+    files.forEach(function (file, index) {
       let file_name = file.split('.')[0];
-      global.middleware[file_name] = require(`../middleware/${file}`);
+      global.middleware[index] = require(`../middleware/${file}`);
     });
   });
 }
@@ -114,7 +124,7 @@ global.uploadVoiceMessageToVk = async (data, filename) => {
     method: 'POST',
     uri: vkServerLink,
     formData: {
-      file: fs.createReadStream('static/audio/good_night/'+filename+'.ogg')
+      file: fs.createReadStream('static/audio/'+filename+'.ogg')
     },
     json: true
   });

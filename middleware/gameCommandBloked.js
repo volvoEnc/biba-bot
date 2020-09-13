@@ -1,5 +1,18 @@
+/**
+ * Если false, то выполняется только при команде
+ * Объект data как в контроллере
+ */
+exports.is_all = async () => {
+  return false;
+}
+/**
+ * Проверка на доступность игровых комманд в беседе
+ * Если недоступны, то пишем ошибку в беседу - 1 раз в 2 минуты, чтобы ошибками не спамили
+ *
+ * Используемые сессии: blockedCommandSpamControl = 2min
+ */
 exports.execute = async data => {
-  if (data.from_id == data.user_id) return true;
+  if (data.from_id === data.user_id) return true;
 
   let bloked = false;
   let checkController = data.controller.name;
@@ -17,7 +30,7 @@ exports.execute = async data => {
 
   if (rule != null && rule.enable == 1) {
     bloked_controlles.forEach(name => {
-      if (checkController == name) {
+      if (checkController === name) {
         bloked = true;
       }
     });
@@ -29,5 +42,12 @@ exports.execute = async data => {
       });
     }
   }
-  return !bloked;
+  if (bloked) {
+    if (!await Session.isExists(data.from_id, 'blockedCommandSpamControl')) {
+      await pre_send(render('app/errors', {type: 'command_blocked'}), data.user_id);
+      await Session.add(data.from_id, 'blockedCommandSpamControl', '', false, 120);
+    }
+    return false;
+  }
+  return true;
 }

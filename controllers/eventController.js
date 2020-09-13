@@ -151,13 +151,26 @@ exports.draw_chlen = async (data) => {
 };
 
 exports.nudes = async (data) => {
-  let filename = 'all';
-  if (data.from_id === 171707143) {
-    filename = 'danil';
-  } else if (data.from_id === 133124411) {
-    filename = 'ilia';
-  }
+  let random_audio = random.int(0, 6);
+  let filename = 'good_night/all_' + random_audio;
+
+  if (data.from_id === 171707143) filename = 'good_night/danil';
+  else if (data.from_id === 133124411) filename = 'good_night/ilia';
+
   let audio_message = await uploadVoiceMessageToVk(data, filename);
+  let vk_user = await bot.api('users.get', {user_ids: data.from_id});
+  await pre_send(render('VoiceWishes/GoodNight', {user: vk_user[0], template: random.int(1, 5)}), data.user_id)
+  await pre_send(null, data.user_id, {
+    attachment: 'doc'+audio_message.owner_id+'_'+audio_message.id
+  })
+}
+
+exports.goodMorning = async data => {
+  let random_audio = random.int(0, 2);
+  let filename = 'good_morning/all_' + random_audio;
+  let audio_message = await uploadVoiceMessageToVk(data, filename);
+  let vk_user = await bot.api('users.get', {user_ids: data.from_id});
+  await pre_send(render('VoiceWishes/GoodMorning', {user: vk_user[0], template: random.int(1, 5)}), data.user_id)
   await pre_send(null, data.user_id, {
     attachment: 'doc'+audio_message.owner_id+'_'+audio_message.id
   })

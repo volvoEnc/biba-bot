@@ -7,6 +7,11 @@ module.exports = class Router {
     this.destroy_session = true;
   }
   async run(data) {
+
+    if (!await middleware_execute(data, true)) {
+      return false;
+    }
+
     this.destroy_session = true;
     let payload = data.object.message.payload;
     let command;
@@ -53,6 +58,7 @@ module.exports = class Router {
           user: user,
           user_data: data.object.message.text.toLowerCase(),
           data: data,
+          alias: route.name,
           check_spam: true
         };
         let toreg = new RegExp("(-[0-9]|[0-9])+", 'i');
@@ -70,18 +76,18 @@ module.exports = class Router {
         this.modules.mainController.conversation(options);
         global.conversation_message_id = data.object.message.conversation_message_id;
 
-        if (await global.middleware.gameCommandBloked.execute(options)) {
-          this.modules[controller[0]][controller[1]](options);
-          this.destroy_session = false;
-          break;
-        } else {
-          return await pre_send(render('app/errors', {type: 'command_blocked'}), options.user_id);
+        if (!await middleware_execute(options, false)) {
+          return false;
         }
+
+        this.modules[controller[0]][controller[1]](options);
+        this.destroy_session = false;
+        break;
       }
     }
-    if (user != null && user.session != null && this.destroy_session == true) {
+    if (user != null && user.session != null && this.destroy_session === true) {
       await user.destroy_session();
-      this.run(data);
+      await this.run(data);
     }
   }
   init() {

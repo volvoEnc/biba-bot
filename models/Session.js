@@ -33,7 +33,7 @@ class Session extends Model {
             expires_at: expiresAt
         });
         try {
-            await this.remove(userId, name);
+            await this.remove(peerId, name);
             await session.save();
         } catch (e) {
             //TODO: тут нужно писать в лог ошибку
