@@ -1,0 +1,2 @@
+ALTER TABLE sessions DROP FOREIGN KEY users;
+ALTER TABLE `sessions` CHANGE `user_id` `peer_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL;
