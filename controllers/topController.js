@@ -301,7 +301,7 @@ exports.local_bigbon = async (data) => {
   if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
-  let local_top = await Top.getLocalTop(await Top.getTop('bibon_top', user));
+  let local_top = await Top.getLocalTop(await Top.getTop('bigbon_top', user));
 
   let big_bibons = await BigBibon.findAll({
     order: [ [sequelize.fn('COUNT', sequelize.col('big_bibon.biba')), 'DESC'] ],

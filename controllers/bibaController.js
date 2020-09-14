@@ -101,8 +101,9 @@ exports.mytop = async (data) => {
   let local_top = await Top.getTop('biba_top', user);
   let bibon_top = await Top.getTop('bibon_top', user);
   let bigbon_top = await  Top.getTop('bigbon_top', user);
+  let offset = await Top.getLocalTop(local_top);
 
-  let users = await User.findAll({order: [ ['biba', 'DESC'] ], limit: 5, offset: local_top})
+  let users = await User.findAll({order: [ ['biba', 'DESC'] ], limit: 5, offset: offset})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
 
