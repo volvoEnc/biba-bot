@@ -1,5 +1,5 @@
 exports.bibs = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['biba', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -20,7 +20,7 @@ exports.bibs = async (data) => {
 };
 
 exports.faps = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['count_fap', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -41,7 +41,7 @@ exports.faps = async (data) => {
 };
 
 exports.coin = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['money', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -62,7 +62,7 @@ exports.coin = async (data) => {
 };
 
 exports.bibon = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let bibons = await Bibon.findAll({
     order: [ [sequelize.fn('COUNT', sequelize.col('bibon.biba')), 'DESC'] ],
     attributes: [ [ sequelize.fn('COUNT', sequelize.col('bibon.biba')), 'bibon' ] ],
@@ -80,7 +80,7 @@ exports.bibon = async (data) => {
 };
 
 exports.bigbon = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let big_bibons = await BigBibon.findAll({
     order: [ [sequelize.fn('COUNT', sequelize.col('big_bibon.biba')), 'DESC'] ],
     attributes: [ [ sequelize.fn('COUNT', sequelize.col('big_bibon.biba')), 'big_bibon' ] ],
@@ -98,7 +98,7 @@ exports.bigbon = async (data) => {
 };
 
 exports.record = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   let users = await User.findAll({order: [ ['record_biba', 'DESC'] ], limit: 10})
   let ids = [];
   users.forEach(user => { ids.push(user.vk_id); });
@@ -119,7 +119,7 @@ exports.record = async (data) => {
 };
 
 exports.tops = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   if (await User.theCommandIsDisabledHere(2, data.user_id, data.from_id)) return;
   data.check_spam = false;
 
@@ -132,7 +132,7 @@ exports.tops = async (data) => {
 }
 
 exports.local_tops = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
   if (await User.theCommandIsDisabledHere(2, data.user_id, data.from_id)) return;
   data.check_spam = false;
 
@@ -145,7 +145,7 @@ exports.local_tops = async (data) => {
 }
 
 exports.local_biba = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('biba_top', user));
@@ -177,7 +177,7 @@ exports.local_biba = async (data) => {
 }
 
 exports.local_fap = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('fap_top', user));
@@ -209,7 +209,7 @@ exports.local_fap = async (data) => {
 }
 
 exports.local_money = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('coin_top', user));
@@ -226,7 +226,7 @@ exports.local_money = async (data) => {
       id: users[i].vk_id,
       first_name: vk_users[i].first_name,
       last_name: vk_users[i].last_name,
-      money: users[i].count_fap
+      money: users[i].money
     }
     send_users.push(send)
   }
@@ -241,7 +241,7 @@ exports.local_money = async (data) => {
 }
 
 exports.local_record = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('record_biba', user));
@@ -273,7 +273,7 @@ exports.local_record = async (data) => {
 }
 
 exports.local_bibon = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
   let local_top = await Top.getLocalTop(await Top.getTop('bibon_top', user));
@@ -298,10 +298,10 @@ exports.local_bibon = async (data) => {
 }
 
 exports.local_bigbon = async (data) => {
-  if (data.check_spam) if (await User.checkingSpam(data.user.id, data.user_id)) return;
+  if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
 
   let user = await User.findOne({ where: {vk_id: data.to_id} });
-  let local_top = await Top.getLocalTop(await Top.getTop('bibon_top', user));
+  let local_top = await Top.getLocalTop(await Top.getTop('bigbon_top', user));
 
   let big_bibons = await BigBibon.findAll({
     order: [ [sequelize.fn('COUNT', sequelize.col('big_bibon.biba')), 'DESC'] ],
