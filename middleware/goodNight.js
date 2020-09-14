@@ -13,7 +13,8 @@ exports.is_all = async () => {
  */
 exports.execute = async (data) => {
     if (data.alias === 'goodNight') {
-        if (!await Session.isExists(data.from_id, 'goodNightBlocked')) {
+        if (data.from_id !== data.to_id) return false;
+        if  (!await Session.isExists(data.from_id, 'goodNightBlocked')) {
             await Session.add(data.from_id, 'goodNightBlocked', '', false, 60 * 60 * 12);
             await Session.add(data.from_id, 'goodMorningTrigger', '', false, 60 * 60 * 24);
             await Session.add(data.from_id, 'messagesAfterGoodNight', '0', false, 60 * 60 * 24);
