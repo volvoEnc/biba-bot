@@ -25,14 +25,14 @@ exports.why = async (data) => {
   why = why.replace('!', '');
   why = why.replace('.', '');
   why = why.replace(',', '');
-  why = why.replace('я ', ' ты ');
+  why = why.replace(/(\s[яЯ]\s|^[яЯ])/iug, ' ты ');
   let words = why.split(' ');
   let phraze;
   do {
     words = shuffle(words);
     phraze = words.join(' ');
   } while (phraze == why && words.length > 1);
-  phraze = `Потому что, ${phraze}`;
+  phraze = `Потому что ${phraze}`;
   if (words.length <= 1) phraze = 'Потому что у тебя маленький член!';
   pre_send(phraze, data.user_id);
 }
