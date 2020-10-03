@@ -176,7 +176,11 @@ exports.goodMorning = async data => {
   })
 }
 
-exports.delete = async (data) => {
+exports.repeatMessage = async (data) => {
   if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
-  pre_send("😳", data.user_id);
+  await pre_send(data.command, data.user_id);
+}
+
+exports.hello = async (data) => {
+  await pre_send(render('Other/hello', {template: random.int(1, 6)}), data.user_id);
 }

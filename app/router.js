@@ -3,6 +3,7 @@ module.exports = class Router {
     this.modules = [];
     this.routes = require('../routes/command.js');
     this.sessionRoutes = require('../routes/session.js');
+    this.actionRoutes = require('../routes/actions.js');
     this.init();
     this.destroy_session = true;
   }
@@ -32,6 +33,7 @@ module.exports = class Router {
     else command = (JSON.parse(payload)).content;
 
     let isSessionCommand = false;
+    let isActionCommand = false;
     if (user !== null) {
       let sessionCommand = await Session.getRouteSession(user.id);
       if (sessionCommand !== null) {
@@ -39,10 +41,15 @@ module.exports = class Router {
         isSessionCommand = true;
       }
     }
-
     socketIo.emit('message', {text: command});
 
     let routes = isSessionCommand ? this.sessionRoutes : this.routes;
+    if (data.object.message.action !== undefined) {
+      command = data.object.message.action.type;
+      routes = this.actionRoutes;
+      isActionCommand = true;
+    }
+
     for (let route of routes) {
       let reg = new RegExp(route.command, 'i');
       if (reg.test(command)) {
@@ -59,7 +66,8 @@ module.exports = class Router {
           user_data: data.object.message.text.toLowerCase(),
           data: data,
           alias: route.name,
-          check_spam: true
+          check_spam: true,
+          isAction: isActionCommand
         };
         let toreg = new RegExp("(-[0-9]|[0-9])+", 'i');
         if (data.object.message.reply_message != undefined) {

@@ -10,6 +10,10 @@ module.exports = [
     // APP settings
     {command: "(^биба режим$)", controller: 'appController@gameBlokedToggle'},
 
+    // Protected user
+    {command: "(^кик)", controller: 'ProtectedController@obmaterit'},
+    {command: "(^мут)", controller: 'ProtectedController@obmaterit'},
+
     // Тестовые команды
     {command: "(!бибатест)", controller: 'shopController@list'},
     {command: "(!минуссила)", controller: 'testController@sub'},
@@ -29,7 +33,7 @@ module.exports = [
     {command: "(^биба нарисуй член)", controller: 'eventController@draw_chlen'},
     {command: "(споки|спок|я спать|доброй ночи)", controller: 'eventController@nudes', name: 'goodNight'},
     {command: "@goodMorning", controller: 'eventController@goodMorning', name: 'goodMorning'},
-    {command: "(😳)", controller: 'eventController@delete'},
+    {command: "(😳)", controller: 'eventController@repeatMessage'},
     // main commands
     {command: "(^биба все топы|^биба топс)", controller: 'topController@tops'},
     {command: "(^биба все мои топы)", controller: 'topController@local_tops'},
