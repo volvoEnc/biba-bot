@@ -28,6 +28,34 @@ exports.add = async data => {
     });
 };
 
+exports.delete = async data => {
+    let prepareRegexp = new RegExp("^биба.(удали|дропни|делит)", 'gi');
+    let deleteSpacesRegexp = new RegExp("\\s+", 'gi');
+    let prepareData = data.command.replace(prepareRegexp, '');
+    prepareData = prepareData.replace(deleteSpacesRegexp, '');
+
+    let words = prepareData.split(',');
+    let delete_words = 0;
+    await pre_send('Слова удаляются..', data.user_id);
+    await words.forEach(async word => {
+        if (word != undefined && word != '' && word.length >= 3) {
+            let w = await Words.checkWord(word);
+            if (w !== null) {
+                let res = morphy.getGramInfo(word);
+                if (res[0][0] != undefined) {
+                    let type_word = res[0][0]['pos'];
+                    if (type_word != '' || type_word != undefined || type_word != null) {
+                        await Words.deleteWord(word);
+                        await pre_send("Слово: '"+word+"' было успешно удалено", data.user_id);
+                    }
+                }
+            } else {
+                await pre_send("Слово: '"+word+"' не найдено", data.user_id);
+            }
+        }
+    });
+};
+
 exports.portrait = async data => {
     if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
     // if (data.from_id == data.user_id) return;

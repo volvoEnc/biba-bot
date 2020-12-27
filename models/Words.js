@@ -13,6 +13,9 @@ class Words extends Model {
     });
     return await new_word.save();
   }
+  static async deleteWord(word) {
+      return await this.destroy({where: {word : word}});
+  }
   static async checkWord(word) {
     return await Words.findOne({where: {word: word}});
   }
