@@ -20,6 +20,7 @@ module.exports = [
 
     // words
     {command: "(^биба запомни|^биба запиши)", controller: 'wordsController@add'},
+    {command: "(^биба удали|^биба делит)", controller: 'wordsController@delete'},
     {command: "(^биба кто я|биба что я|^биба расскажи обо мне|^биба опиши меня|^бкя)", controller: 'wordsController@portrait'},
     {command: "(^биба кто он|^биба что он|^биба кто она|^биба что она|^биба расскажи о нем|^биба расскажи о ней|^биба опиши его|биба опиши ее)", controller: 'wordsController@portraitRouter'},
     {command: "(^биба сколько слов|^биба сколько данных|^биба сколько записей)", controller: 'wordsController@stats'},
