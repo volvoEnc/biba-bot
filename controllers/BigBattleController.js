@@ -5,9 +5,8 @@ exports.start = async (data) => {
   let sub_strength = 25;
 
   // ERRORS
-
   if (user == null) {
-    return bot.send(render('error', {
+    return pre_send(render('error', {
       error: 'not found', template: random.int(1, 3), user: {id: data.from_id}
     }), data.user_id)
   }
@@ -19,7 +18,7 @@ exports.start = async (data) => {
 
   bb = await BigBibon.findOne({where: {user_id: user.id, createdAt: {[Op.gt]: Date.now()}}});
   if (bb != null) {
-    return bot.send(render('error', {
+    return pre_send(render('error', {
       error: 'big_biba_error',
       template: random.int(1, 3),
       time: Math.round((bb.createdAt - Date.now()) / 1000 / 60)
@@ -27,7 +26,7 @@ exports.start = async (data) => {
   }
   if (user.biba < 5) { return pre_send(render('error', {error: 'little_big_bibon', template: random.int(1, 3)}), data.user_id); }
   if (user.strength < sub_strength) {
-    return bot.send(render('error', {
+    return pre_send(render('error', {
       error: 'no_strength_big_bibon',
       template: random.int(1, 3)
     }), data.user_id);
@@ -65,7 +64,7 @@ exports.start = async (data) => {
     event_sys_name: 'BigBibon',
     time_exit: Date.now() + 1000 * 5
   });
-  return bot.send(render('StartBattle', {
+  return pre_send(render('StartBattle', {
     type: "big_biba",
     template: random.int(1, 3)
   }), data.user_id);
