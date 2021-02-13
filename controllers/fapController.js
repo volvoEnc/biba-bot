@@ -4,16 +4,14 @@ exports.fap = async (data) => {
     User.findOne({ where: {vk_id: data.from_id} }).then(async user => {
 
       if (user == null) {
-        return bot.send(render('error', {
+        return pre_send(render('error', {
           error: 'not found', template: random.int(1, 3), user: {id: data.from_id}
         }), data.user_id)
       }
-
-      let friend_fap = await Event.findOne({where: {to_id: user.vk_id}});
       let eventt = await Event.findOne({where: {user_id: user.id, event_sys_name: {[Op.or] : ['fap_biba', 'fap_you_biba']} }});
 
       if (eventt != null) {
-        bot.send(render('error', {
+        await pre_send(render('error', {
           error: eventt.event_sys_name,
           template: random.int(1, 3),
           first_name: res[0].first_name,
@@ -26,7 +24,7 @@ exports.fap = async (data) => {
       }
 
       else if (user.strength < 10) {
-        bot.send(render('error', {
+        await pre_send(render('error', {
           error: 'no strength',
           template: random.int(1, 3),
           first_name: res[0].first_name,
@@ -58,7 +56,7 @@ exports.fap = async (data) => {
 
         let sub_strength = 5;
         fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
-        user.change_strength(sub_strength, 'sub');
+        await user.change_strength(sub_strength, 'sub');
 
         let eventt;
         if (data.to_id == data.from_id || data.to_id < 0) {
@@ -70,7 +68,7 @@ exports.fap = async (data) => {
             time_exit: Date.now() + fap_time * 60 * 1000
           });
 
-          bot.send(render('fap', {
+          await pre_send(render('fap', {
             time: fap_time,
             template: random.int(1, 14),
             first_name: res[0].first_name,
@@ -83,38 +81,24 @@ exports.fap = async (data) => {
 
         }
         else {
+          let user2 = await User.findOne({where: {vk_id: data.to_id}})
+          let sub_strength = 10;
+          let fap_cof = ( Math.round(user2.biba) / 10 );
 
-          let friend_fap = await User.findOne({where: {vk_id: data.to_id}});
-          // if (friend_fap.event_id != null) {
-          //   bot.send(render('error', {
-          //     error: 'friend_not_allowed',
-          //     template: random.int(1, 3),
-          //     first_name: res[0].first_name,
-          //     last_name: res[0].last_name,
-          //     id: data.from_id
-          //   }), data.user_id, {
-          //     disable_mentions: 1
-          //   });
-          // } else {
+          if (user.biba >= 201){
+            fap_time = random.int(16, 18) * fap_cof;
+          } else if (user.biba >= 101){
+            fap_time = random.int(17, 19) * fap_cof;
+          } else if (user.biba >= 51){
+            fap_time = random.int(18, 20) * fap_cof;
+          } else if (user.biba >= 26){
+            fap_time = random.int(19, 21) * fap_cof;
+          } else {
+            fap_time = random.int(22, 23) * fap_cof;
+          }
 
-            let user2 = await User.findOne({where: {vk_id: data.to_id}})
-            let sub_strength = 10;
-            let fap_cof = ( Math.round(user2.biba) / 10 );
-
-            if (user.biba >= 201){
-              fap_time = random.int(16, 18) * fap_cof;
-            } else if (user.biba >= 101){
-              fap_time = random.int(17, 19) * fap_cof;
-            } else if (user.biba >= 51){
-             fap_time = random.int(18, 20) * fap_cof;
-           } else if (user.biba >= 26){
-             fap_time = random.int(19, 21) * fap_cof;
-           } else {
-              fap_time = random.int(22, 23) * fap_cof;
-            }
-
-            fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
-            user.change_strength(sub_strength, 'sub');
+          fap_time = fap_time < 1 ? 1 : Math.round(fap_time);
+          user.change_strength(sub_strength, 'sub');
 
             eventt = await Event.create({
               user_id: user.id,
@@ -126,7 +110,7 @@ exports.fap = async (data) => {
 
             bot.api('users.get', {user_ids: data.to_id, name_case: 'dat'}).then(async res2 => {
 
-              bot.send(render('fap', {
+              await pre_send(render('fap', {
                 time: fap_time,
                 template: random.int(1, 14),
                 first_name: res[0].first_name,

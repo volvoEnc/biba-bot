@@ -12,7 +12,7 @@ exports.mailing = async (data) => {
     ]
   });
   conv.forEach((cov, i) => {
-    bot.send(render('app/mailing'), cov.conversation_id);
+    pre_send(render('app/mailing'), cov.conversation_id);
   });
 };
 

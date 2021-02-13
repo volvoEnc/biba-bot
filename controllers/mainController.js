@@ -1,23 +1,18 @@
 const Op = Sequelize.Op;
 exports.tops = async (data) => {
   if (data.from_id == data.user_id)
-    return pre_send("Топы", data.user_id, { disable_mentions: 1, keyboard: await get_keyboard('RatingKeyboard', false) });
+    return await pre_send("Топы", data.user_id, { disable_mentions: 1, keyboard: await get_keyboard('RatingKeyboard', false) });
 };
 exports.help = async (data) => {
   if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
-  bot.send(render("app/help"), data.user_id)
-};
-exports.private_error = async (data) => {
-  bot.send('В ЛС боту дрочить нельзя. Иди в беседу, и бота туда.', data.object.message.peer_id)
+  await pre_send(render("app/help"), data.user_id)
 };
 exports.invite_chat = async () => {
-  bot.send('Бота добавили в новую беседу', process.env.VK_USER_ID)
+  await pre_send('Бота добавили в новую беседу', process.env.VK_USER_ID);
 };
 exports.conversation = async (data) => {
-
   let user = await User.findOne({where: {vk_id: data.from_id}});
   if (user == null) return;
-
   let conv = await Conversation.findOrCreate({
       where: {user_id: user.id},
       defaults: {
@@ -42,7 +37,7 @@ exports.info = async (data) => {
     attributes: [ [sequelize.fn('DISTINCT', sequelize.col('conversation_id')), 'conversation_id'] ]
   });
   let count_conv = covs.length;
-  return await bot.send(render('app/info', {
+  return await pre_send(render('app/info', {
     users: await User.count(),
     zero_users: zero_users,
     active_users: active_users,

@@ -1,5 +1,8 @@
 exports.index = async (eventt) => {
   let conversation = await Conversation.findOne({where: {user_id: eventt.user_id}});
+  if (conversation === null || conversation.conversation_id === null) {
+    return;
+  }
   let user = await User.findOne({where: {id: eventt.user_id}});
 
   if (user.biba > 10){

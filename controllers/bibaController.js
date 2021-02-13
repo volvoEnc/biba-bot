@@ -2,7 +2,7 @@ const Op = Sequelize.Op;
 exports.index = async (data) => {
 
   bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}).then(res => {
-    bot.send(render('bibametr', {
+    pre_send(render('bibametr', {
       biba: random.int(0, 30),
       template: random.int(1, 4),
       first_name: res[0].first_name,
@@ -69,7 +69,7 @@ exports.statistic = async (data) => {
   });
   let rec_biba = user.record_biba;
 
-  bot.send(render('profile/stata', {
+  await pre_send(render('profile/stata', {
     bigbons: await BigBibon.count({where: {user_id: user.id}}),
     win_bigbon: await BigBibon.count({where: {user_id: user.id, result: 1}}),
     lose_bigbon: await BigBibon.count({where: {user_id: user.id, result: 0}}),
@@ -120,7 +120,7 @@ exports.mytop = async (data) => {
     send_users.push(send)
   }
 
-  pre_send(render('profile/mytop', {
+  await pre_send(render('profile/mytop', {
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     biba_top: biba_top,
     record_biba: record_biba,
