@@ -32,7 +32,7 @@ module.exports = [
     {command: "^биба.*\\?$", controller: 'eventController@question'},
     {command: "(^биба напиши)", controller: 'eventController@write_to_image'},
     {command: "(^биба нарисуй член)", controller: 'eventController@draw_chlen'},
-    {command: "(споки|спок|я спать|доброй ночи)", controller: 'eventController@nudes', name: 'goodNight'},
+    {command: "(споки$|спок$|^я спать|доброй ночи$|сладких снов$)", controller: 'eventController@goodNight', name: 'goodNight'},
     {command: "@goodMorning", controller: 'eventController@goodMorning', name: 'goodMorning'},
     {command: "(😳)", controller: 'eventController@repeatMessage'},
     // main commands

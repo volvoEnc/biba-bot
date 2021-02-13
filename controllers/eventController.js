@@ -150,7 +150,7 @@ exports.draw_chlen = async (data) => {
   });
 };
 
-exports.nudes = async (data) => {
+exports.goodNight = async (data) => {
   let random_audio = random.int(0, 6);
   let filename = 'good_night/all_' + random_audio;
 
