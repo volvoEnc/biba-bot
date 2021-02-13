@@ -11,10 +11,10 @@ if type == "lose"
       | Взяв в руки первый попавшийся в руки предмет, [id#{user1.id}|ты] направился атаковать [id#{user1.id}|противника], но он воспользовался секретным приёмом и отправил [id#{user1.id}|тебя] в нокаут.
       | ⛔-#{user1.hp} очков жизни.
     when 4
-      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отбил все атаки [id#{user1.id}|противника], и во время боя начал вставать в секретную стойку. Молниеносно [id#{user2.id}|#{user2.first_name}] встал в стойку и ударил [id#{user1.id}|#{user1.last_name} #{user1.first_name}] по лбу. Ух.. это было что-то.
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отбил все атаки [id#{user1.id}|противника], и во время боя начал вставать в секретную стойку. Молниеносно [id#{user2.id}|#{user2.first_name}] ударил [id#{user1.id}|#{user1.last_name} #{user1.first_name}] по лбу. Ух.. это было что-то.
       | ⛔-#{user1.hp} очков жизни.
     when 5
-      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] достал щит и [id#{user1.id}|#{user1.first_name} #{user1.last_name}] не поздаровилось, ведь его атаки были не эффективно! [id#{user1.id}|#{user1.last_name} #{user1.first_name}] пришлось отступать, но этот [id#{user1.id}|неудачник] поскальзнулся на грязи! [id#{user2.id}|#{user2.first_name} #{user2.last_name}] достал меч и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] серию ударов!
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] достал щит и [id#{user1.id}|#{user1.first_name} #{user1.last_name}] не поздаровилось, ведь его атаки были не эффективны! [id#{user1.id}|#{user1.last_name} #{user1.first_name}] пришлось отступать, но этот [id#{user1.id}|неудачник] поскальзнулся на грязи! [id#{user2.id}|#{user2.first_name} #{user2.last_name}] достал меч и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] серию ударов!
       | ⛔-#{user1.hp} очков жизни.
 else if type == "win"
   case template
