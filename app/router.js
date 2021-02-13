@@ -27,7 +27,7 @@ module.exports = class Router {
         await this.modules.mainController.invite_chat();
       }
     }
-    let user = await User.findOne({where: {vk_id: data.object.message.from_id}});
+    let user = await User.getUser(data.object.message.from_id);
 
     if (payload == undefined) command = data.object.message.text.toLowerCase();
     else command = (JSON.parse(payload)).content;

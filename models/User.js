@@ -103,6 +103,20 @@ class User extends Model {
 
   /**
    *
+   * @param {int} vk_id - id вк
+   * @returns {Promise<boolean>}
+   */
+
+  static async getUser(vk_id) {
+    let user = await User.findOne({where: {vk_id: vk_id}});
+    if (!user) {
+      user = await User.create({vk_id: vk_id, money: 0});
+    }
+    return user;
+  }
+
+  /**
+   *
     * @param {int} code_error. 1 - ls, 2 - not ls
    * @param {int} user_id
    * @param {int} from_id

@@ -1,5 +1,6 @@
 const Model = Sequelize.Model;
 class Catalog extends Model {
+
   static async getProduct(category, name) {
     return await global.products[category][name]();
   }

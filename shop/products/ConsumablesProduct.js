@@ -39,7 +39,7 @@ exports.MediumPowerEngineer = async () => {
     auto_use: true,
     view: true,
     action: async (data) => {
-      return data.change_strength(75, 'add');
+      return data.user.change_strength(25, 'add');
     }
   };
 };
@@ -59,7 +59,7 @@ exports.BigPowerEngineer = async () => {
     auto_use: true,
     view: true,
     action: async (data) => {
-      return data.change_strength(250, 'add');
+      return data.user.change_strength(25, 'add');
     }
   };
 };
