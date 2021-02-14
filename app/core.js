@@ -5,10 +5,26 @@ const fs = require('fs');
 global.stack_messages = []; // Сообщения ожидающие отправку!
 
 
+/**
+ * Рендер шаблона на основе входных данных
+ *
+ * @param {string} name - название шаблона
+ * @param {object} data - объект данных после модификации
+ * @param {object|null} renderData - объект данных для рендера
+ * @returns {string}
+ */
+global.render = (name, renderData = null, data) => {
+  let conv_id = null;
+  let angryMode = false;
+  try {
+    conv_id = data.data.object.message.peer_id;
+  } catch (e) {}
+  if (conv_id != null) {
+    let rulePromise = Rules.getRule(conv_id, 'messageMode');
+    rulePromise.then(function (rule) {
 
-
-global.render = (name, data = {}) => {
-  let angryMode = Rules.getRule(77, 'messageMode');
+    }).catch();
+  }
   let filepath = `./views/${name}.pug`;
   if (angryMode) {
     filepath = `./views/${name}_angry.pug`
@@ -18,7 +34,7 @@ global.render = (name, data = {}) => {
   }
   let message;
   try {
-    message = pug.renderFile(filepath, data);
+    message = pug.renderFile(filepath, renderData);
   } catch (e) {
     message = 'Не удалось выполнить рендер шаблона: ' + filepath;
   }
