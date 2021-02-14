@@ -8,7 +8,8 @@
 
 module.exports = [
     // APP settings
-    {command: "(^биба режим$)", controller: 'appController@gameBlokedToggle'},
+    {command: "(^биба режим текст$)", controller: 'rulesController@messageModeToggle'},
+    {command: "(^биба режим$)", controller: 'rulesController@gameBlockedToggle'},
 
     // Protected user
     {command: "(^кик)", controller: 'ProtectedController@obmaterit'},

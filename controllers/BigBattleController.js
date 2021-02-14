@@ -42,10 +42,12 @@ exports.start = async (data) => {
   // Рандомный человек
   if (data.from_id == data.to_id) {
     let count_users = await User.count();
+    let attempts = 25;
     do {
+      attempts--;
       let random_user = random.int(0, (count_users - 1));
       user2 = await User.findOne({ offset: random_user });
-    } while (user2.id == user.id);
+    } while (user2.id == user.id && attempts > 0);
   }
   else {
     user2 = await User.findOne({where: {vk_id: data.to_id}});

@@ -102,15 +102,19 @@ class User extends Model {
   }
 
   /**
+   * Получение объекта пользователя
    *
    * @param {int} vk_id - id вк
-   * @returns {Promise<boolean>}
+   * @returns {Promise<array|null>}
    */
-
   static async getUser(vk_id) {
     let user = await User.findOne({where: {vk_id: vk_id}});
     if (!user) {
-      user = await User.create({vk_id: vk_id, money: 0});
+      try {
+        user = await User.create({vk_id: vk_id, money: 0});
+      } catch (e) {
+        return null;
+      }
     }
     return user;
   }

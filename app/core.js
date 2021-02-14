@@ -3,8 +3,27 @@ const path = require('path');
 const fs = require('fs');
 
 global.stack_messages = []; // Сообщения ожидающие отправку!
+
+
+
+
 global.render = (name, data = {}) => {
-  return pug.renderFile(`./views/${name}.pug`, data);
+  let angryMode = Rules.getRule(77, 'messageMode');
+  let filepath = `./views/${name}.pug`;
+  if (angryMode) {
+    filepath = `./views/${name}_angry.pug`
+    if (!fs.existsSync(filepath)) {
+      filepath = `./views/${name}.pug`;
+    }
+  }
+  let message;
+  try {
+    message = pug.renderFile(filepath, data);
+  } catch (e) {
+    message = 'Не удалось выполнить рендер шаблона: ' + filepath;
+  }
+
+  return message;
 }
 global.send = async (content, peer_id, param = {}) => {
   bot.options.api = { v: "5.103" }
@@ -95,12 +114,12 @@ global.init_src = async (path = './src') => {
   });
 }
 global.init_app = async () => {
-  init_middleware();
-  init_models();
-  init_events();
-  init_actions();
-  init_shop();
-  init_src();
+  await init_middleware();
+  await init_models();
+  await init_events();
+  await init_actions();
+  await init_shop();
+  await init_src();
 }
 // Перемешивание массива
 global.shuffle = (array) => {

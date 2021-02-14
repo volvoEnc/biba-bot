@@ -28,6 +28,11 @@ module.exports = class Router {
       }
     }
     let user = await User.getUser(data.object.message.from_id);
+    if (user == null) {
+      // Это тот случай, когда у нас несколько сообщений подряд, а пользователь еще не создан
+      // Тогда сообщения обрабатываются быстрее чем вставка в базу и появлялись дубли
+      return await pre_send(render('app/errors', {type: 'biba_conflict'}), data.object.message.from_id)
+    }
 
     if (payload == undefined) command = data.object.message.text.toLowerCase();
     else command = (JSON.parse(payload)).content;

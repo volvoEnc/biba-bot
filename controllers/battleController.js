@@ -46,14 +46,18 @@ exports.battle = async (data) => {
       let dip_plus = 15;
       let top = await Top.getUsers('bibon_users');
       let count_users;
+      let attempts = 25;
       do {
+        attempts--;
         count_users = await User.count({where: {biba: { [Op.and]: [ { [Op.gte]: (user.biba - dip) }, {[Op.lte]: (user.biba + dip_plus) } ] }} });
         dip += 5;
-      } while (count_users < top);
+      } while (count_users < top && attempts > 0);
+      attempts = 25;
       do {
+        attempts--;
         let random_user = random.int(0, (count_users - 1));
         user2 = await User.findOne({ offset: random_user, where: {biba: { [Op.and]: [ { [Op.gte]: (user.biba - dip) }, {[Op.lte]: (user.biba + dip) } ] }} });
-      } while (user2.id == user.id);
+      } while (user2.id == user.id && attempts > 0);
       vk_user2 = await bot.api('users.get', {user_ids: user2.vk_id, name_case: 'dat'});
     } else {
       user2 = await User.findOne({where: {vk_id: data.to_id}});

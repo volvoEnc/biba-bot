@@ -15,7 +15,7 @@ class Rules extends Model {
     this.enable = enable;
     return await this.save();
   }
-};
+}
 Rules.init({
     conversation_id: {
         type: Sequelize.BIGINT,
