@@ -1,0 +1,26 @@
+//- *coins power max_power last_name first_name *level biba event id
+
+if eventt.name == ""
+    - var eventing = "Ничем не занят"
+else if eventt != NULL
+    - var eventing = eventt.name
+
+if user.biba >= top.biba
+    | 👑 Профиль #{top_icon}[id#{vk_user.id}|#{vk_user.first_name} #{vk_user.last_name}]
+else if user.biba < top.biba
+    | 💬 Профиль #{top_icon}[id#{vk_user.id}|#{vk_user.first_name} #{vk_user.last_name}]
+|
+|
+| ✊🏻 Дроч Сила: #{user.strength}/#{user.max_strength}
+| 🥖 Твоя биба: #{user.biba} см
+| 💦 У тебя: #{plural(user.money, '%d дроч коин', '%d дроч коина', '%d дроч коинов')}
+|
+if eventt.time <= 0
+    | 🛌 Чем занят - #{eventing}
+else if eventt.time > 0
+    | 🏋 Чем занят - #{eventing} (Еще: #{plural(eventt.time, '%d минута', '%d минуты', '%d минут')})
+|
+|
+if user.biba < top.biba
+    - var top_biba = top.biba - user.biba
+    | ❗ Вам до топа не хватает #{Math.round(top_biba * 100) / 100} см!
