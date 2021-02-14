@@ -6,8 +6,10 @@ setInterval(async () => {
   });
   let peer_ids = [];
   covs.forEach(cov => { peer_ids.push(cov.conversation_id); });
+  if (peer_ids.length === 0) {
+    return;
+  }
   let res = await bot.api('messages.getConversationsById', {peer_ids: peer_ids});
-  console.log(peer_ids);
   res.items.forEach(item => {
     for (let i = 0; i < peer_ids.length; i++) {
       if (peer_ids[i] == item.peer.id) { peer_ids.splice(i, 1); }

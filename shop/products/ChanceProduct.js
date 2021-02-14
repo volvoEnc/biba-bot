@@ -21,7 +21,7 @@ exports.RingAbsolution = async () => {
   };
 };
 
-exports.Сlever = async () => {
+exports.Clever = async () => {
   return {
     name: "4-ёх листный клевер",
     description: "Повышает шанс победы на 0.5%",

@@ -47,6 +47,7 @@ try {
   init_app();
   bot.start();
   console.log('Бот запущен');
+  pre_send('Бот запущен', process.env.VK_USER_ID);
 } catch (e) {
   console.log('Ошибка при запуске');
 }

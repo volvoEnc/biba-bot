@@ -1,11 +1,11 @@
-// Предметы, влияющие на шанс победы
+// Предметы, повышающие количество выподаемых коинов и их шанс
 
 exports.HandOfMidas = async () => {
   return {
-    name: "Мидас",
-    description: "+3 дроч коина к выигранным коинам",
+    name: "Красивые глазки",
+    description: "+3 коина к выигрышу",
     category: "Монеты",
-    price: 200,
+    price: 450,
     max_count: 1,
     count: 0,
     system_category: "coin",
@@ -13,20 +13,20 @@ exports.HandOfMidas = async () => {
     stength: 0,
     once: false,
     priority: 200,
-    auto_use: true,
+    auto_use: false,
     view: true,
     action: async (data) => {
-      return data += 3.0;
+      return data += 3;
     }
   };
 };
 
 exports.BreakingAss = async () => {
   return {
-    name: "Взлом жопы противника",
-    description: "Повышает шанс выпадения дроч коинов на 1.0%",
+    name: "Взлом противника",
+    description: "+1 коин к выигрышу",
     category: "Монеты",
-    price: 80,
+    price: 75,
     max_count: 3,
     count: 0,
     system_category: "coin",
@@ -34,41 +34,20 @@ exports.BreakingAss = async () => {
     stength: 0,
     once: false,
     priority: 200,
-    auto_use: true,
+    auto_use: false,
     view: true,
     action: async (data) => {
-      return data += 1.0;
+      return data += 1;
     }
   };
-};  // Total 3%
+};
 
 exports.PrayerGodBiba = async () => {
   return {
     name: "Молитва биб богу",
-    description: "Повышает шанс выпадения дроч коинов на 1%",
+    description: "Повышает шанс выпадения дроч коинов на 30.0%",
     category: "Монеты",
-    price: 70,
-    max_count: 5,
-    count: 0,
-    system_category: "coin",
-    type: "chance_coin",
-    stength: 0,
-    once: false,
-    priority: 200,
-    auto_use: true,
-    view: true,
-    action: async (data) => {
-      return data += 1.0;
-    }
-  };
-};  // Total 8%
-
-exports.MagnetAss = async () => {
-  return {
-    name: "Магнитная жопа",
-    description: "Повышает шанс выпадения дроч коинов на 3.0%",
-    category: "Монеты",
-    price: 150,
+    price: 1250,
     max_count: 1,
     count: 0,
     system_category: "coin",
@@ -76,31 +55,52 @@ exports.MagnetAss = async () => {
     stength: 0,
     once: false,
     priority: 200,
-    auto_use: true,
+    auto_use: false,
     view: true,
     action: async (data) => {
-      return data += 3.0;
+      return data += 30.0;
     }
   };
-};  // Total 11%
+};
 
-exports.BibaKing = async () => {
+exports.MagnetAss = async () => {
   return {
-    name: "Бибный король",
-    description: "Повышает шанс выпадения дроч коинов на 1.0%",
+    name: "Уроки про бизнес",
+    description: "Повышает шанс выпадения дроч коинов на 2.0%",
     category: "Монеты",
-    price: 75,
-    max_count: 9,
+    price: 150,
+    max_count: 5,
     count: 0,
     system_category: "coin",
     type: "chance_coin",
     stength: 0,
     once: false,
     priority: 200,
-    auto_use: true,
+    auto_use: false,
     view: true,
     action: async (data) => {
-      return data += 1.1;
+      return data += 2.0;
     }
   };
-};  // Total 20%
+};
+
+exports.BibaKing = async () => {
+  return {
+    name: "Книжка про бизнес",
+    description: "Повышает шанс выпадения дроч коинов на 1.0%",
+    category: "Монеты",
+    price: 50,
+    max_count: 10,
+    count: 0,
+    system_category: "coin",
+    type: "chance_coin",
+    stength: 0,
+    once: false,
+    priority: 200,
+    auto_use: false,
+    view: true,
+    action: async (data) => {
+      return data += 1.0;
+    }
+  };
+};

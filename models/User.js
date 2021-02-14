@@ -102,6 +102,24 @@ class User extends Model {
   }
 
   /**
+   * Получение объекта пользователя
+   *
+   * @param {int} vk_id - id вк
+   * @returns {Promise<array|null>}
+   */
+  static async getUser(vk_id) {
+    let user = await User.findOne({where: {vk_id: vk_id}});
+    if (!user) {
+      try {
+        user = await User.create({vk_id: vk_id, money: 0});
+      } catch (e) {
+        return null;
+      }
+    }
+    return user;
+  }
+
+  /**
    *
     * @param {int} code_error. 1 - ls, 2 - not ls
    * @param {int} user_id

@@ -12,12 +12,12 @@ class Inventory extends Model {
      *
      * @param {string} itemName - Название предмета
      * @param {int} [count=1] - Количество добавляемого предмета
-     * @returns {Promise<boolean>} - Результат добавления предмета
+     * @returns {Promise<array|null>} - Результат добавления предмета
      */
     static async addItem(itemName, count = 1) {
         if (!await Catalog.checkExists(itemName)) {
             console.log('Item not exists');
-            return false;
+            return null;
         }
 
         let item = await this.getItem(itemName);
@@ -36,9 +36,9 @@ class Inventory extends Model {
         } catch (e) {
             console.log('При сохранении предмета в инвентарь, произошла ошибка: ');
             console.log(e);
-            return false;
+            return null;
         }
-        return true;
+        return item;
     }
 
     /**
@@ -103,31 +103,114 @@ class Inventory extends Model {
         return true;
     }
 
+    /**
+     * Проверка наличия предмета в бд
+     *
+     * @param {string} itemName - Название предмета
+     * @returns {Promise<boolean>} - Существует ли такой предмет в базе
+     */
     static async checkExistsItem(itemName) {
         let item = this.getItem(itemName);
         return item !== null;
     }
 
+    /**
+     * Количество товаров у пользователя
+     *
+     * @returns {Promise<int|null>} - Существует ли такой предмет в базе
+     */
     static async countItems() {
         return await this.count({where: {user_id: this.userId}});
     }
 
+    /**
+     * Получение товара из базы по названию
+     *
+     * @param {string} itemName - Название предмета
+     * @returns {Promise<array|null>} - товар либо null
+     */
     static async getItem(itemName) {
         return await this.findOne({where: {user_id: this.userId, item_name: itemName}});
     }
 
-    static async getCountItem(itemName) {
-        return (await this.getItem(itemName)).count;
+    /**
+     * Получение всей информации по товару из объектов в коде
+     *
+     * @param {string} itemName - Название предмета
+     * @param {string|null} categoryName - Название категории
+     * @returns {Promise<array|null>} - товар либо null
+     */
+    static async getItemFull(itemName, categoryName = null) {
+        if (categoryName === null) {
+            let item = this.getItem(itemName);
+            if (item) {
+                categoryName = item.categoryName;
+            } else {
+                return null;
+            }
+        }
+        let product = null;
+        try {
+            product = global.products[categoryName][itemName]();
+        } catch (e) {
+            return null;
+        }
+        return product;
     }
 
+    /**
+     * Получение количества товара у пользователя
+     *
+     * @param {string} itemName - Название предмета
+     * @returns {Promise<int>} - количество товара у пользователя
+     */
+    static async getCountItem(itemName) {
+        let item = await this.getItem(itemName);
+        if (item !== null) {
+            return item.count;
+        }
+        return 0;
+    }
+
+    /**
+     * Получение товаров по типу
+     *
+     * @param {string} typeName - тип товара
+     * @param {boolean} onlyActive - только активные
+     * @returns {Promise<array|null>} - массив товаров по типу
+     */
     static async getItemsByType(typeName, onlyActive = true) {
         return await this.findAll({where: {}});
     }
 
-    static async executeActionItem(items, data) {
+    /**
+     * Получение товаров по типу
+     *
+     * @param {string} typeName - тип товара
+     * @param {boolean} onlyActive - только активные
+     * @returns {Promise<array|null>} - массив товаров по типу
+     */
+    static async getItemsByTypeForUser(typeName, onlyActive = true) {
+        return await this.findAll({where: {}});
+    }
 
+    /**
+     * Получение количества товара у пользователя
+     *
+     * @param {array} item - Предмет (Full)
+     * @param {array|null} data - Данные для модификации
+     * @returns {Promise<boolean>} - результат выполнения action у предмета
+     */
+    static async executeActionItem(item, data = null) {
+        try {
+            item.action(data);
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 }
+
 Inventory.init({
     user_id: {
         type: Sequelize.BIGINT,
