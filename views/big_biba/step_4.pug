@@ -4,16 +4,16 @@ if type == "lose"
   case template
     when 1
       | Что происходит?! [id#{user2.id}|#{user2.first_name} #{user2.last_name}] использовал технику ниндзя и пропал на момент атаки! Где он..?
-      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] появился за спиной и присунул [id#{user1.id}|#{user1.first_name} #{user1.last_name}]!
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] появился за спиной и пронзал [id#{user1.id}|#{user1.first_name} #{user1.last_name}] печень!
       | ⛔-#{user1.hp} очков жизни.
     when 2
-      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отразил своей стальной бибой атаку и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] сокрушительный удар в жопу!
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отразил атаку стальным щитом и нанес [id#{user1.id}|#{user1.first_name} #{user1.last_name}] сокрушительный удар по почкам!
       | ⛔-#{user1.hp} очков жизни.
     when 3
-      | [id#{user1.id}|Лошара] промахнулся и теперь [id#{user2.id}|#{user2.first_name} #{user2.last_name}] готов прописать [id#{user1.id}|#{user1.last_name} #{user1.first_name}] смачного поджопника!
+      | [id#{user1.id}|Лошара] промахнулся и теперь [id#{user2.id}|#{user2.first_name} #{user2.last_name}] готов прописать [id#{user1.id}|#{user1.last_name} #{user1.first_name}] смачного пендоля!
       | ⛔-#{user1.hp} очков жизни.
     when 4
-      | [id#{user1.id}|#{user1.last_name} #{user1.first_name}] нужно сходить к окулисту, ведь он начал атаковать не того! Не, ну ты [id#{user1.id}|Лошара]. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] произнес заклинание и жопу его [id#{user1.id}|соперника] пронзало 100 сантиметровое дилдо!
+      | [id#{user1.id}|#{user1.last_name} #{user1.first_name}] нужно сходить к окулисту, ведь он начал атаковать не того! Не, ну ты [id#{user1.id}|Неудачник]. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] произнес заклинание и [id#{user1.id}|#{user.first_name}] пришлось не сладко!
       | ⛔-#{user1.hp} очков жизни.
     when 5
       | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] как Рикардо Милос увернулся от атак и показал [id#{user1.id}|#{user1.first_name} #{user1.last_name}] свой флекс!
@@ -30,8 +30,8 @@ if type == "win"
       | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] подумал, что у него стальная биба и попытался отразить атаку, но что-то пошло не так.
       | ✔ -#{user2.hp} очков жизни.
     when 4
-      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отражая атаку поскальзнулся на говне своего [id#{user1.id}|оппонента] и упал жопой на камень.
+      | [id#{user2.id}|#{user2.first_name} #{user2.last_name}] отражая атаку поскальзнулся на грязи .[id#{user1.id}|Оппонент] еще долго смеялся.
       | ✔ -#{user2.hp} очков жизни.
     when 5
-      | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] пришлось прибегнуть к запрещенной технике и укусить [id#{user2.id}|оппонента] за яйцо. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] стал орать от боли!
+      | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] пришлось прибегнуть к запрещенной технике и укусить [id#{user2.id}|оппонента] за ухо. [id#{user2.id}|#{user2.first_name} #{user2.last_name}] стал кричать от боли!
       | ✔ -#{user2.hp} очков жизни.

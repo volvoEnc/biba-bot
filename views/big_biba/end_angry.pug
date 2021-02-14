@@ -1,0 +1,32 @@
+//-  user1 - имен.
+//-  user2 - род.
+case template
+    when 1
+        | 💬 Итог битвы.
+        | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] произнес omae wa mou shindeiru и чуть ли не прикончил [id#{user2.id}|#{user2.first_name} #{user2.last_name}]!
+        | Надеюсь он еще вернется на поле боя..
+    when 2
+        | 💬 Итог битвы.
+        | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] сняв штаны прыгнул на [id#{user2.id}|#{user2.first_name} #{user2.last_name}] и проглотил его своей жопой!
+        | Выйдет он еще не скоро..
+    when 3
+        | 💬 Итог битвы.
+        | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] пронзил жопу [id#{user2.id}|#{user2.first_name} #{user2.last_name}] 27 раз. Затем [id#{user1.id}|#{user1.first_name}] оторвал яйцо у [id#{user2.id}|#{user2.first_name}] и сожрал его!
+        | Ну и мерзость..
+    when 4
+        | 💬 Итог битвы.
+        | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] обоссал кислотной мочой [id#{user2.id}|#{user2.first_name} #{user2.last_name}] и выиграл этот батл!
+    when 5
+        | 💬 Итог битвы.
+        | [id#{user1.id}|#{user1.first_name} #{user1.last_name}] на последок натравил на [id#{user2.id}|#{user2.first_name} #{user2.last_name}] стаю волков с 50 сантиметровыми бибами и выиграл этот турнир!
+        | [id#{user1.id}|#{user1.first_name}] зачем так жестоко?
+
+| <br> <br>
+if result == 1
+    | ✔ [id#{user1.id}|#{user1.first_name}] получает +#{biba} см! <br>
+if result == 0
+    | ⛔ У [id#{user2.id}|#{user2.first_name}] биба -#{biba} см! <br>
+| 🥖 Твоя биба : #{user_biba} см.
+|
+if money != 0
+    | 💰 +#{money} дроч коинов.
