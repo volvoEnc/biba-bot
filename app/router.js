@@ -33,6 +33,7 @@ module.exports = class Router {
       // Тогда сообщения обрабатываются быстрее чем вставка в базу и появлялись дубли
       return await pre_send(render('app/errors', {type: 'biba_conflict'}), data.object.message.from_id)
     }
+    await user.updateActive();
 
     if (payload == undefined) command = data.object.message.text.toLowerCase();
     else command = (JSON.parse(payload)).content;

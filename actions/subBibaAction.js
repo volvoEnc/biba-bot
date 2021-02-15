@@ -5,10 +5,16 @@ exports.index = async (eventt) => {
   }
   let user = await User.findOne({where: {id: eventt.user_id}});
 
-  if (user.biba > 10){
+  if (user.biba > 10) {
     let sub_biba = 0.5;
     sub_biba += (user.biba / 100) * 10;
     sub_biba = Math.round(sub_biba * 100) / 100;
+
+    let days = await user.getInactiveDays();
+    let cof = Math.floor(days / 5) + 1;
+
+    sub_biba = sub_biba * cof;
+
     user.biba -= sub_biba;
     user.biba = user.biba > 0 ? Math.round(user.biba * 100) / 100 : 0;
     user.save();

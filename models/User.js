@@ -20,6 +20,35 @@ class User extends Model {
     return true;
   }
 
+  /**
+   * Получить количество дней АФК у пользователя
+   *
+   * @returns {Promise<int>}
+   */
+  async getInactiveDays() {
+    let user = await User.findOne({
+      attributes: ['updatedAt'],
+      where: {id: this.id}
+    });
+    let date1 = new Date(user.dataValues.updatedAt);
+    let date2 = new Date();
+
+    return Math.floor((date2 - date1) / 1000 / 60 / 60 / 24);
+  }
+
+  /**
+   * Обновление даты последней активности у пользователя
+   *
+   * @returns {Promise<array>} успешность выполенения
+   */
+  async updateActive () {
+    return await User.update({
+      updatedAt: Date.now()
+    }, {
+      where: {id: this.id}
+    });
+  }
+
 
   async change_strength(count, type) {
     if (type == 'sub') {
@@ -180,11 +209,16 @@ User.init({
     type: Sequelize.FLOAT(5,2),
     defaultValue: 0
   },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: Date.now
+  },
 
 }, {
   sequelize,
   modelName: 'user',
-  tableName: 'users'
+  tableName: 'users',
+  updatedAt: false
 });
 
 global.User = User;
@@ -192,5 +226,8 @@ Bibon.belongsTo(User, {
   foreignKey: 'user_id'
 });
 BigBibon.belongsTo(User, {
+  foreignKey: 'user_id'
+});
+Event.belongsTo(User, {
   foreignKey: 'user_id'
 });
