@@ -40,7 +40,10 @@ module.exports = [
     {command: "(^биба все топы|^биба топс)", controller: 'topController@tops'},
     {command: "(^биба все мои топы)", controller: 'topController@local_tops'},
     {command: "(^биба помощь|^биба хелп|^biba help|^bib help|^биба команды|^команды бибы)", controller: 'mainController@help'},
+
+    {command: "(^биб инф юзер$)", controller: 'mainController@userInfo'},
     {command: "(^биба инфо|^биб инфо|^биб инф|^инфа биба)", controller: 'mainController@info'},
+
     {command: "(^мой топ бибон|^мой топ бибонс)", controller: 'topController@local_bibon'},
     {command: "(^мой топ бигбон|^мой топ бигбонс)", controller: 'topController@local_bigbon'},
     {command: "(^мой топ биб|^мой топ биба|^мой биба топ)", controller: 'topController@local_biba'},

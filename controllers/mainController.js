@@ -30,8 +30,9 @@ exports.conversation = async (data) => {
 
 exports.info = async (data) => {
   if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
-  let zero_users = await User.count({where: {biba: 0}});
-  let active_users = (await User.count()) - zero_users;
+  let inactiveDate = Date.now() - (1000 * 60 * 60 * 24 * 3);
+  let inactive_users = await User.count({where: {updatedAt: {[Op.lte]: inactiveDate}}});
+  let active_users = (await User.count()) - inactive_users;
   let covs = await Conversation.findAll({
     where: { conversation_id: { [Op.gte]: 2000000000 } },
     attributes: [ [sequelize.fn('DISTINCT', sequelize.col('conversation_id')), 'conversation_id'] ]
@@ -39,7 +40,7 @@ exports.info = async (data) => {
   let count_conv = covs.length;
   return await pre_send(render('app/info', {
     users: await User.count(),
-    zero_users: zero_users,
+    zero_users: inactive_users,
     active_users: active_users,
     conversations: count_conv,
     faps: await User.sum('count_fap'),
@@ -56,3 +57,48 @@ exports.info = async (data) => {
     bigbons_minus: await BigBibon.count({where: {result: 0}}),
   }), data.user_id);
 };
+
+exports.userInfo = async data => {
+  let msPerDay = 1000 * 60 * 60 * 24;
+  let date3 = Date.now() - (msPerDay * 3);
+  let date10 = Date.now() - (msPerDay * 10);
+  let date30 = Date.now() - (msPerDay * 30);
+
+
+  return await pre_send(render('app/users_info', {
+    users: await User.count(),
+    day3: {
+      active: await User.count({
+        where: {updatedAt: {[Op.gt]: date3}}
+      }),
+      inactive: await User.count({
+        where: {updatedAt: {[Op.lte]: date3}}
+      }),
+      new: await User.count({
+        where: {createdAt: {[Op.gte]: date3}}
+      }),
+    },
+    day10: {
+      active: await User.count({
+        where: {updatedAt: {[Op.gt]: date10}}
+      }),
+      inactive: await User.count({
+        where: {updatedAt: {[Op.lte]: date10}}
+      }),
+      new: await User.count({
+        where: {createdAt: {[Op.gte]: date10}}
+      }),
+    },
+    day30: {
+      active: await User.count({
+        where: {updatedAt: {[Op.gt]: date30}}
+      }),
+      inactive: await User.count({
+        where: {updatedAt: {[Op.lte]: date30}}
+      }),
+      new: await User.count({
+        where: {createdAt: {[Op.gte]: date30}}
+      }),
+    }
+  }, data), data.user_id);
+}
