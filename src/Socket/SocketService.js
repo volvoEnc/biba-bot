@@ -36,16 +36,13 @@ class SocketService {
 
     static saveMessage(data) {
         this.history.push(data);
-        if (this.history.length > 100) {
-            this.history.pop();
+        if (this.history.length > 5000) {
+            this.history.shift();
         }
     }
     static loadMessage(socket) {
-        let time = 100;
         this.history.forEach((message, index) => {
-            setTimeout(() => {
-                socket.emit('new_message', message);
-            }, time * index);
+            socket.emit('new_message', message);
         });
     }
     static botMessage(message) {
