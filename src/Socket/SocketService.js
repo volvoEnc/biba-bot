@@ -36,7 +36,7 @@ class SocketService {
 
     static saveMessage(data) {
         this.history.push(data);
-        if (this.history.length > 100) {
+        if (this.history.length > 5000) {
             this.history.shift();
         }
     }
