@@ -1,10 +1,12 @@
 require('dotenv').config();
 require('./app/core.js');
+require('./config.js');
 global.express = require('express');
 global.rq = require("request-promise-native");
 global.web_page = express();
 global.socketIo = require('socket.io')();
 global.Sequelize = require('sequelize');
+global.Op = Sequelize.Op;
 global.random = require('random');
 global.plural = require('plural-ru');
 global.sklonenie = require('sklonenie');

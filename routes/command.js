@@ -59,9 +59,12 @@ module.exports = [
     {command: "(^рейтинг биб|^рейт биб|^биб рейтинг|^биба рейтинг|^бибрейт|^рейтбиб|^биб рейт)", controller: 'topController@record'},
     {command: "(^супер бибон|^супер бибон$|^большой бибон|^большой бибон$|^бибонище|^бибонище$|^биг бибон|^биг бибон$|^бигбибон|^бигбибон$|^бигбон|бигбон$)", controller: 'BigBattleController@start'},
     {command: "(^бибон|бибон$|^бибан|бибан$)", controller: 'battleController@battle'},
-    {command: "(^биба)", controller: 'bibaController@profile'},
+
     {command: "(^дроч$|^дроч|^фап$|^фап|^дрочить$|^дрочить)", controller: 'fapController@fap'},
+    {command: "(^биба работа$|^биба работать$|^биба заработок$|^биба заработать$)", controller: 'actionController@moneyMining'},
+
     {command: "(^биб стата)", controller: 'bibaController@statistic'},
+    {command: "(^биба)", controller: 'bibaController@profile'},
 
     {command: "(^рассылка1p-qweYrhdUs$)", controller: 'testController@mailing'},
 
