@@ -14,13 +14,13 @@ exports.conversation = async (data) => {
   let user = await User.findOne({where: {vk_id: data.from_id}});
   if (user == null) return;
   let conv = await Conversation.findOrCreate({
-      where: {user_id: user.id},
-      defaults: {
-        user_id: user.id,
-        conversation_id: data.user_id,
-        saves: 0
-      }
-    });
+    where: {user_id: user.id},
+    defaults: {
+      user_id: user.id,
+      conversation_id: data.user_id,
+      saves: 0
+    }
+  });
   conv = conv[0];
   if (conv.conversation_id != data.user_id && conv.saves == 0) {
     conv.conversation_id = data.user_id;

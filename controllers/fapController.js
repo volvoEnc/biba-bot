@@ -4,33 +4,33 @@ exports.fap = async (data) => {
     User.findOne({ where: {vk_id: data.from_id} }).then(async user => {
 
       if (user == null) {
-        return pre_send(render('error', {
+        return pre_send(await render('error', {
           error: 'not found', template: random.int(1, 3), user: {id: data.from_id}
-        }), data.user_id)
+        }, data), data.user_id)
       }
       let eventt = await Event.findOne({where: {user_id: user.id, event_sys_name: {[Op.or] : ['fap_biba', 'fap_you_biba']} }});
 
       if (eventt != null) {
-        await pre_send(render('error', {
+        await pre_send(await render('error', {
           error: eventt.event_sys_name,
           template: random.int(1, 3),
           first_name: res[0].first_name,
           last_name: res[0].last_name,
           id: data.from_id,
           time_exit: Math.round((eventt.time_exit - Date.now()) / 1000 / 60)
-        }), data.user_id, {
+        }, data), data.user_id, {
           disable_mentions: 1
         });
       }
 
       else if (user.strength < 10) {
-        await pre_send(render('error', {
+        await pre_send(await render('error', {
           error: 'no strength',
           template: random.int(1, 3),
           first_name: res[0].first_name,
           last_name: res[0].last_name,
           id: data.from_id
-        }), data.user_id, {
+        }, data), data.user_id, {
           disable_mentions: 1
         });
       }
@@ -68,14 +68,14 @@ exports.fap = async (data) => {
             time_exit: Date.now() + fap_time * 60 * 1000
           });
 
-          await pre_send(render('fap', {
+          await pre_send(await render('fap', {
             time: fap_time,
             template: random.int(1, 14),
             first_name: res[0].first_name,
             last_name: res[0].last_name,
             id: data.from_id,
             fap: 'i'
-          }), data.user_id, {
+          }, data), data.user_id, {
             disable_mentions: 1
           });
 
@@ -110,7 +110,7 @@ exports.fap = async (data) => {
 
             bot.api('users.get', {user_ids: data.to_id, name_case: 'dat'}).then(async res2 => {
 
-              await pre_send(render('fap', {
+              await pre_send(await render('fap', {
                 time: fap_time,
                 template: random.int(1, 14),
                 first_name: res[0].first_name,
@@ -120,7 +120,7 @@ exports.fap = async (data) => {
                 f_first_name: res2[0].first_name,
                 f_last_name: res2[0].last_name,
                 f_id: data.to_id
-              }), data.user_id, {
+              }, data), data.user_id, {
                 disable_mentions: 1
               });
             });

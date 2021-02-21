@@ -44,7 +44,7 @@ exports.execute = async data => {
   }
   if (bloked) {
     if (!await Session.isExists(data.from_id, 'blockedCommandSpamControl')) {
-      await pre_send(render('app/errors', {type: 'command_blocked'}), data.user_id);
+      await pre_send(await render('app/errors', {type: 'command_blocked'}, data), data.user_id);
       await Session.add(data.from_id, 'blockedCommandSpamControl', '', false, 120);
     }
     return false;

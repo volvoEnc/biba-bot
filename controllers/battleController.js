@@ -11,28 +11,28 @@ exports.battle = async (data) => {
 
   // ERROR HANDLER
     if (user == null) {
-      return pre_send(render('error', {
+      return pre_send(await render('error', {
         error: 'not found', template: random.int(1, 3), user: vk_user1[0]
-      }), data.user_id)
+      }, data), data.user_id)
     }
     if (user.strength < sub_strength) {
-      return pre_send(render('error', {
+      return pre_send(await render('error', {
         error: 'no_strength_bibon',
         template: random.int(1, 3),
         first_name: vk_user1[0].first_name,
         last_name: vk_user1[0].last_name,
         id: data.from_id
-      }), data.user_id, { disable_mentions: 1 });
+      }, data), data.user_id, { disable_mentions: 1 });
     }
-    if (user.biba < 2) { return pre_send(render('error', {error: 'little_bibon', template: random.int(1, 3)}), data.user_id); }
+    if (user.biba < 2) { return pre_send(await render('error', {error: 'little_bibon', template: random.int(1, 3)}, data), data.user_id); }
     if (Date.now() - (1000 * 60) < user.bibon) {
       let time = Math.round((user.bibon - (Date.now() - (1000 * 60)) ) / 1000);
-      return pre_send(render('error', {
+      return pre_send(await render('error', {
         error: "bibon_error",
         template: random.int(1, 3),
         user: vk_user1[0],
         time: time
-      }), data.user_id);
+      }, data), data.user_id);
     }
     if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
     // END ERROR HANDLER
@@ -127,7 +127,7 @@ exports.battle = async (data) => {
     let total_biba = Math.round(user.biba * 100) / 100;
 
     setTimeout(async () => {
-      await pre_send(render('battle', {
+      await pre_send(await render('battle', {
         type: status,
         template: random.int(1, 17),
         biba: biba,
@@ -136,7 +136,7 @@ exports.battle = async (data) => {
         chance: chance,
         total_biba: total_biba,
         money: money
-      }), data.user_id, {
+      }, data), data.user_id, {
         disable_mentions: 1
       });
     }, 1500);
