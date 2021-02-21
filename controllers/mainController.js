@@ -5,7 +5,7 @@ exports.tops = async (data) => {
 };
 exports.help = async (data) => {
   if (data.check_spam) if (await User.checkSpam(data.user.id, data.user_id)) return;
-  await pre_send(render("app/help"), data.user_id)
+  await pre_send(await render("app/help", {}, data), data.user_id)
 };
 exports.invite_chat = async () => {
   await pre_send('Бота добавили в новую беседу', process.env.VK_USER_ID);
