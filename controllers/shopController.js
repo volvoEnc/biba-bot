@@ -2,6 +2,19 @@ exports.index = async (data) => {
   await pre_send('Магазин закрыт на карантин. Скоро откроемся...', data.user_id)
 };
 
+exports.isExitFromShop = async (data) => {
+  let cat = data.user_data;
+  if (cat === '00') {
+    await Session.remove(data.user.id, 'productsByCategory');
+    await Session.remove(data.user.id, 'catalog');
+    await Session.remove(data.user.id, 'productInfo');
+    await Session.remove(data.user.id, 'productInfoCategory');
+    await pre_send(await render('shop/shop_message', {shop: 'exit_shop'}, data), data.user_id);
+    return true;
+  }
+  return false;
+};
+
 // Вход в магазин и список категорий
 exports.list = async (data) => {
   let catalog = await Catalog.findAll({ attributes: [ [sequelize.fn('DISTINCT', sequelize.col('category')), 'category'] ] });
@@ -12,13 +25,17 @@ exports.list = async (data) => {
 };
 
 
-exports.catalog = async (data, session) => {
-  let cat = Number(data.user_data);
+exports.catalog = async data => {
+  let cat = data.user_data;
 
   // Выход из магазина
-  if (cat === 0) {
+  if (cat === '0') {
     await Session.remove(data.user.id, 'catalog');
     return await pre_send(render('shop/shop_message', {shop: 'exit_shop'}), data.user_id);
+  }
+
+  if (await MainRouter.modules.shopController.isExitFromShop(data)) {
+    return;
   }
 
   let catalog = await Catalog.findAll({ attributes: [ [sequelize.fn('DISTINCT', sequelize.col('category')), 'category'], "system_category" ] });
@@ -40,9 +57,13 @@ exports.catalog = async (data, session) => {
 exports.productsByCategory = async (data, session) => {
   let cmd = data.user_data;
 
-  if (cmd == 0) {
+  if (cmd === '0') {
     await Session.remove(data.user.id, 'productsByCategory');
     return await MainRouter.modules.shopController.list(data);
+  }
+
+  if (await MainRouter.modules.shopController.isExitFromShop(data)) {
+    return;
   }
 
   let category = await Session.get(data.user.id, 'productsByCategory');
@@ -65,12 +86,17 @@ exports.productsByCategory = async (data, session) => {
 
 // Действия с продуктом
 exports.productInfo = async (data) => {
-  let cmd = Number(data.user_data);
+  let cmd = data.user_data;
+
+  if (await MainRouter.modules.shopController.isExitFromShop(data)) {
+    return;
+  }
+
   let categoryName = await Session.get(data.user.id, 'productInfoCategory');
   let productName = await Session.get(data.user.id, 'productInfo');
   let product = await global.products[categoryName][productName]();
 
-  if (cmd === 0) {
+  if (cmd === '0') {
     data.user_data = await Session.get(data.user.id, 'previewData');
     await Session.remove(data.user.id, 'productInfo');
     await Session.remove(data.user.id, 'productInfoCategory');
@@ -78,7 +104,7 @@ exports.productInfo = async (data) => {
     return await MainRouter.modules.shopController.catalog(data);
   }
 
-  if (cmd === 1) {
+  if (cmd === '1') {
     Inventory.userId = data.user.id;
     let existCountItem = await Inventory.getCountItem(productName);
     if (existCountItem >= product.max_count && product.max_count !== 0) {
