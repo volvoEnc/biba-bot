@@ -4,9 +4,16 @@
 |
 
 - for ( let i = 0; i < users.length; i++ )
-  - var biba = plural(users[i].biba, '%d см', '%d см', '%d см');
-  - var place = offset + i - 1;
-  case i
+    - var biba = plural(users[i].biba, '%d см', '%d см', '%d см');
+    - var place = offset + i - 2;
+    if place < 1
+        - offset = offset + 1;
+        - place = place + 1;
+    if place == 0
+        - offset = offset + 1;
+        - place = place + 1;
+
+    case i
       when 0
           | #{place}. [id#{users[i].id}|#{users[i].first_name} #{users[i].last_name}]. Биба :  #{biba} <br>
       when 1
