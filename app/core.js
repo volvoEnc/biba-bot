@@ -18,9 +18,16 @@ global.render = async (name, renderData = null, data) => {
   let angryMode = false;
   try {
     conv_id = data.data.object.message.peer_id;
-  } catch (e) {}
+  } catch (e) {
+    try {
+      conv_id = data.peer_id;
+    } catch (e) {}
+  }
   if (conv_id != null) {
-    let rulePromise = await Rules.getRule(conv_id, 'messageMode');
+    let rule = await Rules.getRule(conv_id, 'messageMode');
+    if (rule != null) {
+      angryMode = rule.enable;
+    }
   }
   let filepath = `./views/${name}.pug`;
   if (angryMode) {
