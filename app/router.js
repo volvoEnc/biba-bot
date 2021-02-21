@@ -31,7 +31,7 @@ module.exports = class Router {
     if (user == null) {
       // Это тот случай, когда у нас несколько сообщений подряд, а пользователь еще не создан
       // Тогда сообщения обрабатываются быстрее чем вставка в базу и появлялись дубли
-      return await pre_send(render('app/errors', {type: 'biba_conflict'}), data.object.message.from_id)
+      return await pre_send(await render('app/errors', {type: 'biba_conflict'}, data), data.object.message.from_id)
     }
     await user.updateActive();
 

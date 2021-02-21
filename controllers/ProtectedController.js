@@ -7,5 +7,5 @@ exports.obmaterit = async (data) => {
     if (data.to_id != process.env.VK_USER_ID) return;
 
     let user = await bot.api('users.get', {user_ids: data.from_id});
-    await pre_send(render('Other/badWords', {template: random.int(1, 5), user: user[0]}), data.user_id);
+    await pre_send(await render('Other/badWords', {template: random.int(1, 5), user: user[0]}, data), data.user_id);
 }

@@ -16,14 +16,14 @@ exports.index = async (occasion) => {
 
   if (occasion.event_sys_name == 'fap_biba') {
     user.biba += add_dick;
-    pre_send(render('fap_end', {
+    await pre_send(await render('fap_end', {
       template: random.int(1, 14),
       first_name: vk_user[0].first_name,
       last_name: vk_user[0].last_name,
       id: user.vk_id,
       dick: Math.abs(add_dick).toFixed(2),
       fap: 'i'
-    }), occasion.peer_id);
+    }, occasion), occasion.peer_id);
   }
   else {
     let friend = await User.findOne({where: {vk_id: occasion.to_id}});
@@ -42,7 +42,7 @@ exports.index = async (occasion) => {
     let add_money = random.int(-10, 3);
     add_money = add_money < 0 ? 0 : add_money;
     user.money += add_money;
-    pre_send(render('fap_end', {
+    await pre_send(await render('fap_end', {
       template: random.int(1, 14),
       first_name: vk_user[0].first_name,
       last_name: vk_user[0].last_name,
@@ -51,7 +51,7 @@ exports.index = async (occasion) => {
       friend: vk_friend[0],
       fap: 'you',
       money: add_money
-    }), occasion.peer_id, { disable_mentions: 1 });
+    }, occasion), occasion.peer_id, { disable_mentions: 1 });
   }
   await user.biba_record();
   return user.save();

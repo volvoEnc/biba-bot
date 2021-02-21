@@ -18,7 +18,7 @@ exports.botSettingsValidate = async data => {
         users = await bot.api('messages.getConversationMembers', {peer_id: data.user_id});
     } catch (e) {
         if (e.error_code == 917) {
-            await pre_send(render('app/errors', { type: 'bot_is_not_admin' }), data.user_id);
+            await pre_send(await render('app/errors', { type: 'bot_is_not_admin' }, data), data.user_id);
             return false;
         } else {
             return false;

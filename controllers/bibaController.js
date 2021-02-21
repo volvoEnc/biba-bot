@@ -30,14 +30,14 @@ exports.profile = async (data) => {
   let keyboard;
   let top = await Top.getUsers('profile_biba');
   if (eventt != null) {
-    ev.name = render('events', { template: random.int(1, 3), eventt: eventt.event_sys_name }, data);
+    ev.name = await render('events', { template: random.int(1, 3), eventt: eventt.event_sys_name }, data);
     ev.time = Math.round(  (eventt.time_exit - Date.now() ) / (1000 * 60) );
   }
-  if (created) await pre_send(render('register', { template: random.int(1, 5), user: vk_user[0] }, data), data.user_id)
+  if (created) await pre_send(await render('register', { template: random.int(1, 5), user: vk_user[0] }, data), data.user_id)
 
   if (data.from_id == data.user_id) keyboard = await get_keyboard('MainKeyboard', false);
   else keyboard = await get_keyboard('ProfileKeyboard');
-  return pre_send(render('profile', {
+  return pre_send(await render('profile', {
     vk_user: vk_user[0], user: user, eventt: ev,
     top: top
   }, data), data.user_id, { disable_mentions: 1, keyboard: keyboard });
@@ -69,7 +69,7 @@ exports.statistic = async (data) => {
   });
   let rec_biba = user.record_biba;
 
-  await pre_send(render('profile/stata', {
+  await pre_send(await render('profile/stata', {
     bigbons: await BigBibon.count({where: {user_id: user.id}}),
     win_bigbon: await BigBibon.count({where: {user_id: user.id, result: 1}}),
     lose_bigbon: await BigBibon.count({where: {user_id: user.id, result: 0}}),
@@ -85,7 +85,7 @@ exports.statistic = async (data) => {
     lose_bibon: lose_bibon != null ? lose_bibon.dataValues.bibon : 0,
     sm_plus_bibon: await Bibon.sum('biba', {where: {user_id: user.id, result: 1}}),
     sm_minus_bibon: await Bibon.sum('biba', {where: {user_id: user.id, result: 0}})
-  }), data.user_id, {
+  }, data), data.user_id, {
     disable_mentions: 1,
   });
 };
@@ -120,7 +120,7 @@ exports.mytop = async (data) => {
     send_users.push(send)
   }
 
-  await pre_send(render('profile/mytop', {
+  await pre_send(await render('profile/mytop', {
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     biba_top: biba_top,
     record_biba: record_biba,
@@ -130,7 +130,7 @@ exports.mytop = async (data) => {
     offset: local_top,
     bibon_top: bibon_top,
     bigbon_top: bigbon_top,
-  }), data.user_id, {
+  }, data), data.user_id, {
     disable_mentions: 1,
   })
 }

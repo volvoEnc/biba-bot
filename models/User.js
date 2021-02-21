@@ -108,7 +108,7 @@ class User extends Model {
       else if (checking_spam == 10){
         checking_spam += 1;
         time_exit = await Session.updateTime(user_id, 'spam', checking_spam, 150);
-        pre_send(render('error', {
+        await pre_send(await render('error', {
           error: 'spam', template: 3, time_exit: Math.round((time_exit - Date.now()) / 1000 / 60)
         }), user_vk_id);
         return true;
@@ -122,7 +122,7 @@ class User extends Model {
         checking_spam += 1;
         time_exit = await Session.updateTime(user_id,'spam', checking_spam, 5);
         if ((Math.round((time_exit - Date.now()) / 1000)) < 0) template = 4;
-        pre_send(render('error', {
+        await pre_send(await render('error', {
           error: 'spam', template: template, time_exit: Math.round((time_exit - Date.now()) / 1000)
         }), user_vk_id);
         return true;
@@ -158,7 +158,7 @@ class User extends Model {
   static async theCommandIsDisabledHere(code_error, user_id, from_id){
     if (code_error == 1){
       if (from_id == user_id){
-        pre_send(render('error', {
+        await pre_send(await render('error', {
           error: 'the_command_is_disabled_here', template: code_error
         }), user_id);
         return true;
@@ -166,7 +166,7 @@ class User extends Model {
     }
     else if (code_error == 2){
       if (from_id != user_id){
-        pre_send(render('error', {
+        await pre_send(await render('error', {
           error: 'the_command_is_disabled_here', template: code_error
         }), user_id);
         return true;
