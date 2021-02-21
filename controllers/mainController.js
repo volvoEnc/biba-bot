@@ -38,7 +38,7 @@ exports.info = async (data) => {
     attributes: [ [sequelize.fn('DISTINCT', sequelize.col('conversation_id')), 'conversation_id'] ]
   });
   let count_conv = covs.length;
-  return await pre_send(render('app/info', {
+  return await pre_send(await render('app/info', {
     users: await User.count(),
     zero_users: inactive_users,
     active_users: active_users,
@@ -55,7 +55,7 @@ exports.info = async (data) => {
     bibon_minus: await Bibon.count({where: {result: 0}}),
     bigbons_plus: await BigBibon.count({where: {result: 1}}),
     bigbons_minus: await BigBibon.count({where: {result: 0}}),
-  }), data.user_id);
+  }, data), data.user_id);
 };
 
 exports.userInfo = async data => {
@@ -65,7 +65,7 @@ exports.userInfo = async data => {
   let date30 = Date.now() - (msPerDay * 30);
 
 
-  return await pre_send(render('app/users_info', {
+  return await pre_send(await render('app/users_info', {
     users: await User.count(),
     day3: {
       active: await User.count({
