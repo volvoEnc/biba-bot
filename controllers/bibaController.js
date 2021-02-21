@@ -1,14 +1,14 @@
 const Op = Sequelize.Op;
 exports.index = async (data) => {
 
-  bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}).then(res => {
-    pre_send(render('bibametr', {
+  bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}).then(async res => {
+    await pre_send(await render('bibametr', {
       biba: random.int(0, 30),
       template: random.int(1, 4),
       first_name: res[0].first_name,
       last_name: res[0].last_name,
       id: data.to_id
-    }), data.user_id)
+    }, data), data.user_id)
   })
 }
 
@@ -17,7 +17,7 @@ exports.profile = async (data) => {
   let user = await User.findOne({where: {vk_id: data.to_id}});
   let created = false;
   if (user == null && data.from_id != data.to_id) {
-    return pre_send(render('error', {error: 'new_user_error', template: random.int(1, 3), user: {id: data.to_id}}, data), data.user_id)
+    return pre_send(await render('error', {error: 'new_user_error', template: random.int(1, 3), user: {id: data.to_id}}, data), data.user_id)
   }
   if (user == null && data.from_id == data.to_id) {
     created = true;

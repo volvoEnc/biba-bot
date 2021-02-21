@@ -11,19 +11,16 @@ global.stack_messages = []; // Сообщения ожидающие отпра�
  * @param {string} name - название шаблона
  * @param {object} data - объект данных после модификации
  * @param {object|null} renderData - объект данных для рендера
- * @returns {string}
+ * @returns {Promise <string>}
  */
-global.render = (name, renderData = null, data) => {
+global.render = async (name, renderData = null, data) => {
   let conv_id = null;
   let angryMode = false;
   try {
     conv_id = data.data.object.message.peer_id;
   } catch (e) {}
   if (conv_id != null) {
-    let rulePromise = Rules.getRule(conv_id, 'messageMode');
-    rulePromise.then(function (rule) {
-
-    }).catch();
+    let rulePromise = await Rules.getRule(conv_id, 'messageMode');
   }
   let filepath = `./views/${name}.pug`;
   if (angryMode) {
