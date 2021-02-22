@@ -127,6 +127,12 @@ class Session extends Model {
         return session.expires_at + (expires_at * 1000);
     }
 
+    async executeCallback() {
+        if (this.action_on_dead != null) {
+
+        }
+    }
+
 }
 Session.init({
     peer_id: {
@@ -144,6 +150,10 @@ Session.init({
     is_route: {
         type: Sequelize.BOOLEAN,
         allowNull: false
+    },
+    action_on_dead: {
+        type: Sequelize.STRING(255),
+        allowNull: true
     },
     expires_at: {
         type: Sequelize.BIGINT,
