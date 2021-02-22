@@ -21,7 +21,7 @@ exports.list = async (data) => {
   let categories = [];
   catalog.forEach(category => { categories.push(category.dataValues.category); });
   await Session.add(data.user.id, 'catalog', '', true);
-  return await pre_send(render('shop/categories', {categories: categories}), data.user_id);
+  return await pre_send(await render('shop/categories', {categories: categories}, data), data.user_id);
 };
 
 
@@ -31,7 +31,7 @@ exports.catalog = async data => {
   // Выход из магазина
   if (cat === '0') {
     await Session.remove(data.user.id, 'catalog');
-    return await pre_send(render('shop/shop_message', {shop: 'exit_shop'}), data.user_id);
+    return await pre_send(await render('shop/shop_message', {shop: 'exit_shop'}, data), data.user_id);
   }
 
   if (await MainRouter.modules.shopController.isExitFromShop(data)) {
@@ -43,14 +43,14 @@ exports.catalog = async data => {
   catalog.forEach(category => { categories.push(category.dataValues.system_category); });
 
   let select = categories[cat - 1];
-  if (select === undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
+  if (select === undefined) { return pre_send(await render('error', {error: 'catalog_not_found', template: random.int(1, 3)}, data), data.user_id); }
   let category = await Catalog.findAll({where: {system_category: select}});
 
   await Session.remove(data.user.id, 'catalog');
   await Session.add(data.user.id, 'productsByCategory', select, true, 90);
   await Session.add(data.user.id, 'previewData', cat, false, null);
 
-  return await pre_send(render('shop/products', {products:category}), data.user_id);
+  return await pre_send(await render('shop/products', {products:category}, data), data.user_id);
 };
 
 // Продукты в категории
@@ -73,15 +73,15 @@ exports.productsByCategory = async (data, session) => {
   products.forEach(p => { prd.push(p.system_name); });
 
   let select = prd[cmd - 1];
-  if (select === undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
+  if (select === undefined) { return pre_send(await render('error', {error: 'catalog_not_found', template: random.int(1, 3)}, data), data.user_id); }
 
   await Session.add(data.user.id, 'productInfo', select, true, 90);
   await Session.add(data.user.id, 'productInfoCategory', category, false, 90);
 
   let product = await global.products[category][select]();
-  if (product === undefined) { return pre_send(render('error', {error: 'catalog_not_found', template: random.int(1, 3)}), data.user_id); }
+  if (product === undefined) { return pre_send(await render('error', {error: 'catalog_not_found', template: random.int(1, 3)}, data), data.user_id); }
 
-  return pre_send(render('shop/product', {product: product}), data.user_id);
+  return pre_send(await render('shop/product', {product: product}, data), data.user_id);
 };
 
 // Действия с продуктом
@@ -108,25 +108,25 @@ exports.productInfo = async (data) => {
     Inventory.userId = data.user.id;
     let existCountItem = await Inventory.getCountItem(productName);
     if (existCountItem >= product.max_count && product.max_count !== 0) {
-      return await pre_send(render('shop/shop_message', {shop: 'max_count', count: product.max_count}), data.user_id);
+      return await pre_send(await render('shop/shop_message', {shop: 'max_count', count: product.max_count}, data), data.user_id);
     }
     if (await data.user.changeMoney(-product.price)) {
       let buyersItem = await Inventory.addItem(productName, 1);
       if (!buyersItem) {
         await data.user.changeMoney(product.price)
-        await pre_send(render('shop/shop_message', {shop: 'error_buy', money: data.user.money}), data.user_id);
+        await pre_send(await render('shop/shop_message', {shop: 'error_buy', money: data.user.money}, data), data.user_id);
         return;
       }
-      await pre_send(render('shop/shop_message', {shop: 'item_purchased', money: data.user.money}), data.user_id);
+      await pre_send(await render('shop/shop_message', {shop: 'item_purchased', money: data.user.money}, data), data.user_id);
       if (product.auto_use) {
         await Inventory.executeActionItem(product, data);
       }
     } else {
       let countNotMoney = product.price - data.user.money;
-      await pre_send(render('shop/shop_message', {shop: 'not_money', money: data.user.money, not_money: countNotMoney}), data.user_id);
+      await pre_send(render('shop/shop_message', {shop: 'not_money', money: data.user.money, not_money: countNotMoney}, data), data.user_id);
     }
-    return setTimeout(function () {
-      return pre_send(render('shop/product', {product: product}), data.user_id);
+    return setTimeout(async function () {
+      return pre_send(await render('shop/product', {product: product}, data), data.user_id);
     }, 1500)
   }
 };

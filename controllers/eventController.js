@@ -7,11 +7,11 @@ exports.who = async (data) => {
   } catch (e) {
     // Нет прав админа
     if (e.error_code == 917) {
-      return pre_send(render('app/errors', { type: 'bot_is_not_admin' }), data.user_id);
+      return pre_send(await render('app/errors', { type: 'bot_is_not_admin' }, data), data.user_id);
     } else { return; }
   }
   let random_user = users.profiles[random.int(0, (users.profiles.length - 1))];
-  return pre_send(render('biba_who', {user: random_user, template: random.int(1, 10)}), data.user_id, {disable_mentions: 1});
+  return pre_send(await render('biba_who', {user: random_user, template: random.int(1, 10)}, data), data.user_id, {disable_mentions: 1});
 };
 
 exports.why = async (data) => {
@@ -159,7 +159,7 @@ exports.goodNight = async (data) => {
 
   let audio_message = await uploadVoiceMessageToVk(data, filename);
   let vk_user = await bot.api('users.get', {user_ids: data.from_id});
-  await pre_send(render('VoiceWishes/GoodNight', {user: vk_user[0], template: random.int(1, 5)}), data.user_id)
+  await pre_send(await render('VoiceWishes/GoodNight', {user: vk_user[0], template: random.int(1, 5)}, data), data.user_id)
   await pre_send(null, data.user_id, {
     attachment: 'doc'+audio_message.owner_id+'_'+audio_message.id
   })
@@ -170,7 +170,7 @@ exports.goodMorning = async data => {
   let filename = 'good_morning/all_' + random_audio;
   let audio_message = await uploadVoiceMessageToVk(data, filename);
   let vk_user = await bot.api('users.get', {user_ids: data.from_id});
-  await pre_send(render('VoiceWishes/GoodMorning', {user: vk_user[0], template: random.int(1, 5)}), data.user_id)
+  await pre_send(await render('VoiceWishes/GoodMorning', {user: vk_user[0], template: random.int(1, 5)}, data), data.user_id)
   await pre_send(null, data.user_id, {
     attachment: 'doc'+audio_message.owner_id+'_'+audio_message.id
   })
@@ -182,5 +182,5 @@ exports.repeatMessage = async (data) => {
 }
 
 exports.hello = async (data) => {
-  await pre_send(render('Other/hello', {template: random.int(1, 6)}), data.user_id);
+  await pre_send(await render('Other/hello', {template: random.int(1, 6)}, data), data.user_id);
 }

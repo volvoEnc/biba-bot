@@ -11,9 +11,9 @@ exports.mailing = async (data) => {
       [sequelize.fn('DISTINCT', sequelize.col('conversation_id')), 'conversation_id']
     ]
   });
-  conv.forEach((cov, i) => {
-    pre_send(render('app/mailing'), cov.conversation_id);
-  });
+  for (let cov of conv){
+    await pre_send(await render('app/mailing', {}, data), cov.conversation_id);
+  }
 };
 
 exports.sub = async (data) => {

@@ -19,11 +19,11 @@ exports.index = async (eventt) => {
     user.biba = user.biba > 0 ? Math.round(user.biba * 100) / 100 : 0;
     user.save();
 
-    return pre_send(render("events", {
+    return pre_send(await render("events", {
       eventt: "day_biba",
       template: random.int(1, 5),
       vk_user: (await bot.api('users.get', {user_ids: user.vk_id, name_case: 'gen'}))[0],
       biba: sub_biba
-    }), conversation.conversation_id);
+    }, eventt), conversation.conversation_id);
   }
 };

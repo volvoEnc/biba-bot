@@ -16,7 +16,7 @@ exports.bibs = async (data) => {
     }
     send_users.push(send)
   }
-  pre_send(render('rating/rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
+  await pre_send(await render('rating/rating', { users: send_users }, data), data.user_id, { disable_mentions: 1 });
 };
 
 exports.faps = async (data) => {
@@ -37,7 +37,7 @@ exports.faps = async (data) => {
     }
     send_users.push(send)
   }
-  pre_send(render('rating/fap_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
+  await pre_send(await render('rating/fap_rating', { users: send_users }, data), data.user_id, { disable_mentions: 1 });
 };
 
 exports.coin = async (data) => {
@@ -58,7 +58,7 @@ exports.coin = async (data) => {
     }
     send_users.push(send)
   }
-  pre_send(render('rating/coins_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
+  await pre_send(await render('rating/coins_rating', { users: send_users }, data), data.user_id, { disable_mentions: 1 });
 };
 
 exports.bibon = async (data) => {
@@ -76,7 +76,7 @@ exports.bibon = async (data) => {
     let send = Object.assign(vk_users[i], {bibons: bibons[i].dataValues.bibon});
     send_users.push(send)
   }
-  pre_send(render('rating/bibons_rating', { users: send_users }), data.user_id, { disable_mentions: 1 })
+  await pre_send(await render('rating/bibons_rating', { users: send_users }, data), data.user_id, { disable_mentions: 1 })
 };
 
 exports.bigbon = async (data) => {
@@ -94,7 +94,7 @@ exports.bigbon = async (data) => {
     let send = Object.assign(vk_users[i], {big_bibons: big_bibons[i].dataValues.big_bibon});
     send_users.push(send)
   }
-  pre_send(render('rating/bigbons_rating', { users: send_users }), data.user_id, { disable_mentions: 1 })
+  await pre_send(await render('rating/bigbons_rating', { users: send_users }, data), data.user_id, { disable_mentions: 1 })
 };
 
 exports.record = async (data) => {
@@ -115,7 +115,7 @@ exports.record = async (data) => {
     }
     send_users.push(send)
   }
-  pre_send(render('rating/record_rating', { users: send_users }), data.user_id, { disable_mentions: 1 });
+  await pre_send(await render('rating/record_rating', { users: send_users }, data), data.user_id, { disable_mentions: 1 });
 };
 
 exports.tops = async (data) => {
@@ -167,11 +167,11 @@ exports.local_biba = async (data) => {
     send_users.push(send)
   }
 
-  pre_send(render('rating/local_rating', {
+  await pre_send(await render('rating/local_rating', {
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     users: send_users,
     offset: local_top,
-  }), data.user_id, {
+  }, data), data.user_id, {
     disable_mentions: 1,
   })
 }
@@ -199,11 +199,11 @@ exports.local_fap = async (data) => {
     send_users.push(send)
   }
 
-  pre_send(render('rating/local_fap_rating', {
+  await pre_send(await render('rating/local_fap_rating', {
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     users: send_users,
     offset: local_top,
-  }), data.user_id, {
+  }, data), data.user_id, {
     disable_mentions: 1,
   })
 }
@@ -231,11 +231,11 @@ exports.local_money = async (data) => {
     send_users.push(send)
   }
 
-  pre_send(render('rating/local_coins_rating', {
+  await pre_send(await render('rating/local_coins_rating', {
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     users: send_users,
     offset: local_top,
-  }), data.user_id, {
+  }, data), data.user_id, {
     disable_mentions: 1,
   })
 }
@@ -263,11 +263,11 @@ exports.local_record = async (data) => {
     send_users.push(send)
   }
 
-  pre_send(render('rating/local_record_rating', {
+  await pre_send(await render('rating/local_record_rating', {
     user: (await bot.api('users.get', {user_ids: data.to_id, name_case: 'gen'}))[0],
     users: send_users,
     offset: local_top,
-  }), data.user_id, {
+  }, data), data.user_id, {
     disable_mentions: 1,
   })
 }
@@ -291,10 +291,10 @@ exports.local_bibon = async (data) => {
     let send = Object.assign(vk_users[i], {bibons: bibons[i].dataValues.bibon});
     send_users.push(send)
   }
-  pre_send(render('rating/local_bibons_rating', {
+  await pre_send(await render('rating/local_bibons_rating', {
     users: send_users,
     offset: local_top
-  }), data.user_id, { disable_mentions: 1 })
+  }, data), data.user_id, { disable_mentions: 1 })
 }
 
 exports.local_bigbon = async (data) => {
@@ -316,8 +316,8 @@ exports.local_bigbon = async (data) => {
     let send = Object.assign(vk_users[i], {big_bibons: big_bibons[i].dataValues.big_bibon});
     send_users.push(send)
   }
-  pre_send(render('rating/local_bigbons_rating', {
+  await pre_send(await render('rating/local_bigbons_rating', {
     users: send_users,
     offset: local_top
-  }), data.user_id, { disable_mentions: 1 })
+  }, data), data.user_id, { disable_mentions: 1 })
 }

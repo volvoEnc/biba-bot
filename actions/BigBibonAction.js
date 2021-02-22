@@ -17,11 +17,11 @@ exports.index = async (eventt) => {
       event_sys_name: 'BigBibon',
       time_exit: Date.now() + 1000 * 3
     });
-    return pre_send(render('big_biba/start', {
+    return pre_send(await render('big_biba/start', {
       template: random.int(1, 5),
       user1: (await bot.api('users.get', {user_ids: user.vk_id}))[0],
       user2: (await bot.api('users.get', {user_ids: user2.vk_id, name_case: 'acc'}))[0]
-    }), eventt.peer_id, { disable_mentions: 1 });
+    }, eventt), eventt.peer_id, { disable_mentions: 1 });
   }
   //END
   if (bb.step == 'end') {
@@ -43,7 +43,7 @@ exports.index = async (eventt) => {
     }
     user_biba = Math.round(user_biba * 100) / 100;
 
-    pre_send(render('big_biba/end', {
+    await pre_send(await render('big_biba/end', {
       template: random.int(1, 5),
       user1: (await bot.api('users.get', {user_ids: user.vk_id}))[0],
       user2: (await bot.api('users.get', {user_ids: user2.vk_id, name_case: 'acc'}))[0],
@@ -51,7 +51,7 @@ exports.index = async (eventt) => {
       user_biba: user_biba,
       money: bb.money,
       result: bb.result
-    }), eventt.peer_id, { disable_mentions: 1 });
+    }, eventt), eventt.peer_id, { disable_mentions: 1 });
     await user.biba_record();
     await user.save();
     await user2.save();
@@ -61,11 +61,11 @@ exports.index = async (eventt) => {
 
   // Action
   if (bb.step % 2 != 0) {
-    pre_send(render(`big_biba/step_${bb.step}`, {
+    await pre_send(await render(`big_biba/step_${bb.step}`, {
       template: random.int(1, 5),
       user1: (await bot.api('users.get', {user_ids: user.vk_id}))[0],
       user2: (await bot.api('users.get', {user_ids: user2.vk_id, name_case: 'dat'}))[0],
-    }), eventt.peer_id, {disable_mentions: 1});
+    }, eventt), eventt.peer_id, {disable_mentions: 1});
     await Event.create({
       user_id: user.id,
       peer_id: eventt.peer_id,
@@ -84,12 +84,12 @@ exports.index = async (eventt) => {
     let result = random.int(0, 1000);
     if (result > 500) bb.opponent_hp -= rnb_hp;
     else bb.user_hp -= rnb_hp;
-    pre_send(render(`big_biba/step_${bb.step}`, {
+    await pre_send(await render(`big_biba/step_${bb.step}`, {
       template: random.int(1, 5),
       user1: Object.assign((await bot.api('users.get', {user_ids: user.vk_id, name_case: 'dat'}))[0], {hp: rnb_hp}),
       user2: Object.assign((await bot.api('users.get', {user_ids: user2.vk_id, name_case: 'nom'}))[0], {hp: rnb_hp}),
       type: result > 500 ? 'win' : 'lose'
-    }), eventt.peer_id, {disable_mentions: 1});
+    }, eventt), eventt.peer_id, {disable_mentions: 1});
 
 
     // END Action
