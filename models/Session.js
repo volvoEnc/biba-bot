@@ -14,9 +14,10 @@ class Session extends Model {
      * @param {string=} value - Значение сессии
      * @param {boolean} [isRoute=false] - это сессия является маршрутом?
      * @param {int|null} [expiresAt=60] - Время жизни сессии в секундах
+     * @param {string|null} [callback=null] - Action который будет вызван при смерти сессии
      * @returns {Promise<boolean>}
      */
-    static async add(peerId, name, value, isRoute = false, expiresAt) {
+    static async add(peerId, name, value, isRoute = false, expiresAt, callback = null) {
         // Если null сессия безсрочная
         if (expiresAt !== null) {
             if (expiresAt === undefined) {
@@ -30,6 +31,7 @@ class Session extends Model {
             name: name,
             value: value,
             is_route: isRoute,
+            action_on_dead: callback,
             expires_at: expiresAt
         });
         try {
@@ -84,7 +86,7 @@ class Session extends Model {
      * @returns {Promise<boolean>}
      */
     static async remove(peerId, name) {
-        return await this.destroy({where: {peer_id : peerId, name : name}});
+        return this.destroy({where: {peer_id: peerId, name: name}});
     }
 
     /**
@@ -94,17 +96,17 @@ class Session extends Model {
      * @returns {Promise<int>}
      */
     static async removeAll(peerId) {
-        return await this.destroy({where: {peer_id : peerId}});
+        return this.destroy({where: {peer_id : peerId}});
     }
 
     /**
-     * Удаление "протухших" сессий
+     * Получение "протухших" сессий
      *
      * @param {number} [expireTime=Date.now()]
-     * @returns {Promise<int>}
+     * @returns {Promise<Session[]>}
      */
-    static async removeExpire(expireTime = Date.now()) {
-        return await this.destroy({where: {expires_at: {[Op.lte]: expireTime}}});
+    static async getExpiredSessions(expireTime = Date.now()) {
+        return this.findAll({where: {expires_at: {[Op.lte]: expireTime}}})
     }
 
     /**
@@ -127,9 +129,17 @@ class Session extends Model {
         return session.expires_at + (expires_at * 1000);
     }
 
+
+    /**
+     * Выполнить "предсмертный крик"
+     */
     async executeCallback() {
         if (this.action_on_dead != null) {
-
+            try {
+                await actions[this.action_on_dead].index(this);
+            } catch (e) {
+                console.error('Session execute error: ' + this.action_on_dead + '. Error: ' + e)
+            }
         }
     }
 
