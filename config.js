@@ -1,5 +1,19 @@
 global.config = {
     actions: {
+        /**
+         * Описание полей в action
+         *
+         * name - название события
+         * tpl - шаблоны для текста
+         *
+         * * success - если в событие есть успешное завершение, то рендерится шаблон из success
+         * * error - вызывается если в собитие есть не успешное завершение
+         * * profile - обязательное, вызывается при просмотре профиля
+         * * start - обязательное, вызывается при старте события
+         *
+         * * * filename - обязательное, путь до шаблона
+         * * * count - обязательное, количество вариантов для случайной выборки текста
+         */
         moneyMining: {
             name: 'moneyMining',
             tpl: {
@@ -20,13 +34,9 @@ global.config = {
         fap: {
             name: 'fap_biba',
             tpl: {
-                success: {
-                    filename: 'actions/fap/success',
-                    count: 3
-                },
-                error: {
-                    filename: 'actions/fap/error',
-                    count: 3
+                processed: {
+                    filename: 'actions/fap/processed',
+                    count: 14
                 },
                 profile: {
                     filename: 'actions/fap/profile',
