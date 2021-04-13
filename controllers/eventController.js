@@ -158,6 +158,10 @@ exports.goodNight = async (data) => {
   else if (data.from_id === 133124411) filename = 'good_night/ilia';
 
   let audio_message = await uploadVoiceMessageToVk(data, filename);
+  if (typeof audio_message === 'undefined') {
+    await pre_send('Ошибка загрузки аудио. И разраб тут не при делах!', data.user_id);
+    return;
+  }
   let vk_user = await bot.api('users.get', {user_ids: data.from_id});
   await pre_send(await render('VoiceWishes/GoodNight', {user: vk_user[0], template: random.int(1, 5)}, data), data.user_id)
   await pre_send(null, data.user_id, {
