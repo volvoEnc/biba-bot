@@ -49,7 +49,7 @@ global.send = async (content, peer_id, param = {}) => {
   bot.options.api = { v: "5.103" }
   try { await bot.send(content, peer_id, Object.assign(param, {random_id: Date.now()})); }
   catch (e) { return e; }
-  bot.options.api = { v: "5.80" }
+  bot.options.api = { v: "5.95" }
   return true;
 }
 global.pre_send = async (content, peer_id, param = {}) => {

@@ -17,7 +17,11 @@ global.Keyboard = Keyboard;
 global.MainRouter = new (require('./app/router.js'));
 global.bot = new Bot({
   token: process.env.VK_API_TOKEN,
-  group_id: process.env.VK_API_GROUP_ID
+  group_id: process.env.VK_API_GROUP_ID,
+  api: {
+    v: 5.95, // >= 5.80
+    lang: 'ru'
+  }
 });
 global.morphy = new Morphy('ru', {
     storage: Morphy.STORAGE_MEM,
